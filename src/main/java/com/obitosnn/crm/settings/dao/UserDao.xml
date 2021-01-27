@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
+
+    <select id="selectAll" resultType="User">
+        select `id`, `loginAct`,`name`, `loginPwd`, `email`,
+        `expireTime`, `lockState`, `deptno`, `allowIps`, `createTime`,
+        `createBy`, `editTime`, `editBy` from tbl_user
+    </select>
+
+    <select id="selectUserByUsernameAndPassword" resultType="User">
+        select `id`, `loginAct`,`name`, `loginPwd`, `email`,
+        `expireTime`, `lockState`, `deptno`, `allowIps`, `createTime`,
+        `createBy`, `editTime`, `editBy` from tbl_user where `loginAct` = #{loginAct}
+        and `loginPwd` = #{loginPwd}
+    </select>
+
+</mapper>
