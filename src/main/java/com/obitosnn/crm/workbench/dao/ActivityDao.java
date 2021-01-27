@@ -3,6 +3,7 @@ package com.obitosnn.crm.workbench.dao;
 import com.obitosnn.crm.workbench.domain.Activity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -13,8 +14,8 @@ public interface ActivityDao {
 
     Integer insertActivity(Activity activity);
 
-    Long getActivityTotal();
+    Long getActivityTotal(Map<String, Object> map);
 
-    List<Activity> getActivityList();
+    List<Activity> getActivityList(Map<String, Object> map);
 
 }

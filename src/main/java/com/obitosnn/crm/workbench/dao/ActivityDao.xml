@@ -50,19 +50,19 @@
         <where>
             
             <if test="name != null and name != ''">
-                a.`name` = #{name}
+                a.`name` like '%' #{name} '%'
             </if>
             
             <if test="owner != null and owner != ''">
-                a.`owner` = u.`id`
+                and u.`name` = #{owner}
             </if>
 
             <if test="startDate != null and startDate != ''">
-                a.`startDate` &gt; #{startDate}
+                and a.`startDate` &gt;= #{startDate}
             </if>
 
             <if test="endDate != null and endDate != ''">
-                a.`endDate` &lt; #{endDate}
+                and a.`endDate` &lt;= #{endDate}
             </if>
 
         </where>
@@ -73,7 +73,39 @@
 
     <select id="getActivityTotal" resultType="long">
 
-        select count(*) from tbl_activity
+        select count(*) from (
+
+        select
+
+        a.`id`
+
+        from tbl_activity a
+        inner join tbl_user u
+        on a.`owner` = u.`id`
+
+        <where>
+
+            <if test="name != null and name != ''">
+                a.`name` like '%' #{name} '%'
+            </if>
+
+            <if test="owner != null and owner != ''">
+                and u.`name` = #{owner}
+            </if>
+
+            <if test="startDate != null and startDate != ''">
+                and a.`startDate` &gt;= #{startDate}
+            </if>
+
+            <if test="endDate != null and endDate != ''">
+                and a.`endDate` &lt;= #{endDate}
+            </if>
+
+        </where>
+
+        order by a.`createTime` desc
+
+        ) tbl_activity
 
     </select>
 
