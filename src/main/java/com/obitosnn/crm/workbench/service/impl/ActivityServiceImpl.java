@@ -50,8 +50,8 @@ public class ActivityServiceImpl implements ActivityService {
     public PageVo<Activity> getActivityPageVo(Map<String, Object> map) {
         int pageNo = Integer.parseInt((String) map.get("pageNo"));
         int pageSize =  Integer.parseInt((String) map.get("pageSize"));
-        List<Activity> aList = activityDao.getActivityList();
         PageHelper.startPage(pageNo, pageSize);
+        List<Activity> aList = activityDao.getActivityList();
         PageVo<Activity> pageVo = new PageVo<>();
         Long total = activityDao.getActivityTotal();
         pageVo.setTotal(total);

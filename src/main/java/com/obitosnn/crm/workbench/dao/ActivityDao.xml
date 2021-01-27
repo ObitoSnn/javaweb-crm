@@ -41,11 +41,7 @@
         a.`name`,
         u.`name` as owner,
         a.`startDate`,
-        a.`endDate`,
-        a.`cost`,
-        a.`description`,
-        a.`createTime`,
-        a.`createBy`
+        a.`endDate`
 
         from tbl_activity a
         inner join tbl_user u

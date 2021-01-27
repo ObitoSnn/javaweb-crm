@@ -3,6 +3,11 @@
 <html>
 <head>
 	<%@ include file="../../common/base_css_jquery.jsp"%>
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
 <meta charset="UTF-8">
 <script type="text/javascript">
 
@@ -98,6 +103,7 @@
 						//保存失败后相关的操作
 						alert(data.errorMsg);
 						if ("非法的结束日期" == errorMsg) {
+							//回显数据
 							$("#create-name").val("${requestScope.activity.name}")
 							$("#create-cost").val("${requestScope.activity.cost}")
 							$("#create-description").val("${requestScope.activity.description}")
@@ -154,17 +160,41 @@
 				var html = "";
 				$.each(data.dataList, function (i, obj) {
 
-                    html += '<tr class="active">';
-                    html += '<td><input type="checkbox" id="' + obj.id + '" /></td>';
-                    html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
-                    html += '<td>' + obj.owner + '</td>';
-                    html += '<td>' + obj.startDate + '</td>';
-                    html += '<td>' + obj.endDate + '</td>';
-                    html += '</tr>';
+					html += '<tr class="active">';
+					html += '<td><input type="checkbox" id="' + obj.id + '" /></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
+					html += '<td>' + obj.owner + '</td>';
+					html += '<td>' + obj.startDate + '</td>';
+					html += '<td>' + obj.endDate + '</td>';
+					html += '</tr>';
 
-                });
+				});
 
-                $("#showActivityTBody").html(html);
+				$("#showActivityTBody").html(html);
+
+				var totalPages = data.total % pageSize == 0 ? data.total / pageSize : Math.ceil(data.total / pageSize);
+
+
+				//数据处理完毕后，结合分页插件展现每页数据
+				$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//该回调函数是在点击分页组件的时候触发的
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
 
 			}
 		});
@@ -403,38 +433,7 @@
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+				<div id="activityPage"></div>
 			</div>
 			
 		</div>
