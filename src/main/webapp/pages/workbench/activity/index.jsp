@@ -31,7 +31,7 @@
 
 			//获取后台用户数据，供下拉框显示
 			$.ajax({
-				url : "activity/ajaxGetUserList",
+				url : "workbench/activity/ajaxGetUserList",
 				type : "get",
 				dataType : "json",
 				success : function (data) {
@@ -57,7 +57,7 @@
 		$("#addActivitySaveBtn").click(function () {
 
 			$.ajax({
-				url : "activity/saveActivity",
+				url : "workbench/activity/saveActivity",
 				data : {
 					"name" : $.trim($("#create-name").val()),
 					"startDate" : $.trim($("#create-startDate").val()),
@@ -106,22 +106,69 @@
 				}
 			});
 
-			//页面加载完毕后调用分页方法
-			//默认打开第一页，展现2条记录
-			pageList(1, 2);
 
 		});
+
+
 		/*
 			对于所有关系型数据库，做前端的分页相关操作的基础组件
 			就是pageNo和pageSize
 			pageNo：页码
 			pageSize：每页展现的记录数
-		 */
-		function pageList(pageNo, pageSize) {
 
-		}
+			调用pageList方法的时机
+			1）点击左侧菜单中的“市场活动”超链接
+			2）添加，修改，删除后，需要刷新市场活动列表
+			3）点击查询按钮时，需要刷新市场活动列表
+			4）点击分页组件时，需要刷新市场活动列表
+		 */
+
+		//页面加载完毕后调用分页方法
+		//默认打开第一页，展现2条记录
+		pageList(1, 3);
+
+
 	});
-	
+	//分页方法
+	function pageList(pageNo, pageSize) {
+		$.ajax({
+			url : "workbench/activity/pageList",
+			data : {
+
+				"pageNo" : pageNo,
+				"pageSize" : pageSize,
+				"name" : $.trim($("#input-name").val()),
+				"owner" : $.trim($("#input-owner").val()),
+				"startDate" : $.trim($("#input-startDate").val()),
+				"endDate" : $.trim($("#input-endDate").val())
+
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+
+				/*
+                    data
+                        {"total":总记录数,"dataList":[{市场活动},{}...]}
+                 */
+				var html = "";
+				$.each(data.dataList, function (i, obj) {
+
+                    html += '<tr class="active">';
+                    html += '<td><input type="checkbox" id="' + obj.id + '" /></td>';
+                    html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
+                    html += '<td>' + obj.owner + '</td>';
+                    html += '<td>' + obj.startDate + '</td>';
+                    html += '<td>' + obj.endDate + '</td>';
+                    html += '</tr>';
+
+                });
+
+                $("#showActivityTBody").html(html);
+
+			}
+		});
+	}
 </script>
 </head>
 <body>
@@ -274,14 +321,14 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input id="input-name" class="form-control" type="text">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input id="input-owner" class="form-control" type="text">
 				    </div>
 				  </div>
 
@@ -289,17 +336,17 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input id="input-startDate" class="form-control" type="text" id="startTime" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input id="input-endDate" class="form-control" type="text" id="endTime">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default">查询</button>
 				  
 				</form>
 			</div>
@@ -336,11 +383,11 @@
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="showActivityTBody">
 						<tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
+                            <td>zhangsan111</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
 						</tr>

@@ -27,7 +27,7 @@
         <!--检验用户是否登录-->
         <mvc:interceptor>
             <mvc:mapping path="/user/**"/>
-            <mvc:mapping path="/activity/**"/>
+            <mvc:mapping path="/workbench/**"/>
             <!--不拦截登录请求-->
             <mvc:exclude-mapping path="/user/ajaxLogin"/>
             <bean class="com.obitosnn.crm.web.handler.LoginInterceptor"/>

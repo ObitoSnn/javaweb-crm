@@ -1,6 +1,9 @@
 package com.obitosnn.crm.workbench.dao;
 
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
+
+import java.util.List;
 
 /**
  * @Author ObitoSnn
@@ -10,5 +13,9 @@ import com.obitosnn.crm.workbench.domain.Activity;
 public interface ActivityDao {
 
     Integer insertActivity(Activity activity);
+
+    Long getActivityTotal();
+
+    List<Activity> getActivityList();
 
 }

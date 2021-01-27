@@ -1,8 +1,10 @@
 package com.obitosnn.crm.workbench.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.dao.UserDao;
 import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ActivityDao;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.service.ActivityService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -43,4 +46,16 @@ public class ActivityServiceImpl implements ActivityService {
         return true;
     }
 
+    @Override
+    public PageVo<Activity> getActivityPageVo(Map<String, Object> map) {
+        int pageNo = Integer.parseInt((String) map.get("pageNo"));
+        int pageSize =  Integer.parseInt((String) map.get("pageSize"));
+        List<Activity> aList = activityDao.getActivityList();
+        PageHelper.startPage(pageNo, pageSize);
+        PageVo<Activity> pageVo = new PageVo<>();
+        Long total = activityDao.getActivityTotal();
+        pageVo.setTotal(total);
+        pageVo.setDataList(aList);
+        return pageVo;
+    }
 }

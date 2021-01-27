@@ -2,9 +2,11 @@ package com.obitosnn.crm.workbench.service;
 
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -16,5 +18,7 @@ public interface ActivityService {
     List<User> getUserList();
 
     boolean saveActivity(Activity activity) throws FailToSaveException;
+
+    PageVo<Activity> getActivityPageVo(Map<String, Object> map);
 
 }

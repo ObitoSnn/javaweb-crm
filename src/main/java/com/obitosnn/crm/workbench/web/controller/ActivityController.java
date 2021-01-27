@@ -4,6 +4,7 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ import java.util.Map;
  * @Description:
  * @Date 2021/1/26 13:58
  */
-@RequestMapping(value = {"/activity"})
 @Controller
+@RequestMapping(value = {"/workbench/activity"})
 public class ActivityController {
     @Autowired
     private ActivityService activityService;
@@ -64,6 +65,42 @@ public class ActivityController {
         map.put("success", isSuccess);
         System.out.println("==========数据保存成功==========");
         return map;
+    }
+
+
+    @RequestMapping(value = {"/pageList"})
+    @ResponseBody
+    public PageVo pageList(HttpServletRequest request, Activity activity) {
+        System.out.println("==========ActivityController.pageList()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+         /*
+
+            pageNo
+            pageSize
+            name
+            owner
+            startDate
+            endDate
+
+            {"total":总记录数,"dataList":[{市场活动},{}...]}
+
+         */
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
+        //添加请求参数pageNo
+        map.put("pageNo", pageNo);
+        //添加请求参数pageSize
+        map.put("pageSize", pageSize);
+        //添加请求参数name
+        map.put("name", activity.getName());
+        //添加请求参数owner
+        map.put("owner", activity.getOwner());
+        //添加请求参数startDate
+        map.put("startDate", activity.getStartDate());
+        //添加请求参数endDate
+        map.put("endDate", activity.getEndDate());
+        //将PageVo传给页面
+        return activityService.getActivityPageVo(map);
     }
 
 }
