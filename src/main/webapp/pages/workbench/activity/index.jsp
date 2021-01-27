@@ -13,6 +13,16 @@
 
 	$(function(){
 
+		//时间控件
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd', //显示格式
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
+
 		// 给打开创建市场活动操作的模态窗口绑定单击事件
 		$("#addBtn").click(function () {
 
@@ -131,8 +141,14 @@
 
 		//页面加载完毕后调用分页方法
 		//默认打开第一页，展现2条记录
-		pageList(1, 3);
+		pageList(1, 2);
 
+		//给查询按钮绑定单击事件
+		$("#searchBtn").click(function () {
+
+			pageList(1, 2);
+
+		});
 
 	});
 	//分页方法
@@ -366,17 +382,17 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input id="input-startDate" class="form-control" type="text" id="startTime" />
+					  <input id="input-startDate" class="form-control time" type="text" id="startTime" placeholder="请选择日期"/>
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input id="input-endDate" class="form-control" type="text" id="endTime">
+					  <input id="input-endDate" class="form-control time" type="text" id="endTime" placeholder="请选择日期"/>
 				    </div>
 				  </div>
 				  
-				  <button type="button" class="btn btn-default">查询</button>
+				  <button id="searchBtn" type="button" class="btn btn-default">查询</button>
 				  
 				</form>
 			</div>
