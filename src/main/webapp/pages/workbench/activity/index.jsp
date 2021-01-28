@@ -146,6 +146,12 @@
 		//给查询按钮绑定单击事件
 		$("#searchBtn").click(function () {
 
+			//查询之前将文本框信息保存至隐藏域中
+			$("#hidden-name").val($.trim($("#input-name").val()));
+			$("#hidden-owner").val($.trim($("#input-owner").val()));
+			$("#hidden-startDate").val($.trim($("#input-startDate").val()));
+			$("#hidden-endDate").val($.trim($("#input-endDate").val()));
+
 			pageList(1, 2);
 
 		});
@@ -153,6 +159,13 @@
 	});
 	//分页方法
 	function pageList(pageNo, pageSize) {
+
+		//分页之前从隐藏域中取出文本框信息
+		$("#input-name").val($.trim($("#hidden-name").val()));
+		$("#input-owner").val($.trim($("#hidden-owner").val()));
+		$("#input-startDate").val($.trim($("#hidden-startDate").val()));
+		$("#input-endDate").val($.trim($("#hidden-endDate").val()));
+
 		$.ajax({
 			url : "workbench/activity/pageList",
 			data : {
@@ -218,6 +231,11 @@
 </script>
 </head>
 <body>
+
+	<input type="hidden" id="hidden-name"/>
+	<input type="hidden" id="hidden-owner"/>
+	<input type="hidden" id="hidden-startDate"/>
+	<input type="hidden" id="hidden-endDate"/>
 
 	<!-- 创建市场活动的模态窗口 -->
 	<div class="modal fade" id="createActivityModal" role="dialog">
