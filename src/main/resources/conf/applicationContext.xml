@@ -76,10 +76,9 @@
                 rollback-for：指定的异常类型，全限定类名，发生异常一定回滚事务，多个异常类型用,隔开
                     默认是运行时异常
             -->
-            <!--<tx:method name="login" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>-->
             <!--使用通配符，指定多个方法-->
-            <!--<tx:method name="add*" propagation="" isolation="" rollback-for=""/>-->
-            <tx:method name="saveActivity" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
+            <tx:method name="save*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
+            <tx:method name="delete*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
         </tx:attributes>
     </tx:advice>
 
