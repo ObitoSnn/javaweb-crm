@@ -156,6 +156,25 @@
 
 		});
 
+		//复选框绑定单击事件
+		$("input[name='checkbox-manager']").click(function () {
+
+			$("input[name='checkbox-single']").prop("checked", this.checked);
+
+		});
+
+		/*
+			动态生成的元素，是不能够以普通绑定事件的形式来进行操作的
+				动态生成的元素，要以on方法的形式来触发事件
+				语法：
+					$(需要绑定元素的有效的外层元素的jquery对象).on(绑定事件的方式,需要绑定的元素的jquery对象,回调函数)
+		*/
+		$("#showActivityTBody").on("click",$("input[name='checkbox-single']"),function () {
+			//复选框选中的个数和复选框的个数一致时触发控制所有复选框的复选框选中
+			$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']").length == $("input[name='checkbox-single']:checked").length);
+
+		});
+
 	});
 	//分页方法
 	function pageList(pageNo, pageSize) {
@@ -190,7 +209,7 @@
 				$.each(data.dataList, function (i, obj) {
 
 					html += '<tr class="active">';
-					html += '<td><input type="checkbox" id="' + obj.id + '" /></td>';
+					html += '<td><input name="checkbox-single" type="checkbox" id="' + obj.id + '" /></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.owner + '</td>';
 					html += '<td>' + obj.startDate + '</td>';
@@ -440,7 +459,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input name="checkbox-manager" type="checkbox"/></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
@@ -451,7 +470,7 @@
 						<tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan111</td>
+                            <td>zhangsan</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
 						</tr>
