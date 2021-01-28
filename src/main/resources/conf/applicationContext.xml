@@ -83,7 +83,7 @@
         </tx:attributes>
     </tx:advice>
 
-    <!--声明系统设置模块中dao对象
+    <!--声明dao对象
         SqlSession.getMapper(Class<T> tClass);
         MapperScannerConfigurer：在内部调用getMapper(Class<T> tClass)，生成每个dao接口代理对象
     -->
@@ -95,18 +95,15 @@
            getMapper(Class<T> tClass)得到每个接口的dao对象。
            创建好的dao对象放入到spring的容器中
            dao对象的名称默认是接口名首字母小写
+
+           使用,或;分割多个包
        -->
-        <property name="basePackage" value="com.obitosnn.crm.settings.dao"/>
+        <property name="basePackage" value="com.obitosnn.crm.settings.dao,com.obitosnn.crm.workbench.dao"/>
     </bean>
     <!--声明系统设置模块中Service对象-->
     <context:component-scan base-package="com.obitosnn.crm.settings.service"/>
 
     <!--声明工作台模块Service对象-->
     <context:component-scan base-package="com.obitosnn.crm.workbench.service"/>
-    <!--创建工作台模块Dao对象-->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="sqlSessionFactoryBeanName" value="factory"/>
-        <property name="basePackage" value="com.obitosnn.crm.workbench.dao"/>
-    </bean>
 
 </beans>
