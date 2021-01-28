@@ -18,4 +18,6 @@ public interface ActivityDao {
 
     List<Activity> getActivityList(Map<String, Object> map);
 
+    Integer deleteByIds(String[] ids);
+
 }

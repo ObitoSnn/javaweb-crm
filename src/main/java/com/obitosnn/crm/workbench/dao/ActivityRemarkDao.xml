@@ -4,4 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ActivityRemarkDao">
+
+    <select id="selectByIds" resultType="int">
+
+        select
+        count(*)
+        from tbl_activity_remark
+        where `activityId` in
+        <foreach collection="array" item="aId" open="(" close=")" separator=",">
+            #{aId}
+        </foreach>
+
+    </select>
+
+    <delete id="deleteByIds">
+
+        delete from tbl_activity_remark
+        where `activityId` in
+        <foreach collection="array" item="aId" open="(" close=")" separator=",">
+            #{aId}
+        </foreach>
+
+    </delete>
+
 </mapper>

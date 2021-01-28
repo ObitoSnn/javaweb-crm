@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -51,9 +52,8 @@ public class ActivityController {
         //设置创建人
         String createBy = ((User) request.getSession().getAttribute("user")).getCreateBy();
         activity.setCreateBy(createBy);
-        boolean isSuccess = false;
         try {
-            isSuccess = activityService.saveActivity(activity);
+            activityService.saveActivity(activity);
         } catch (FailToSaveException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
@@ -62,7 +62,7 @@ public class ActivityController {
             }
             throw new FailToSaveException(errorMsg);
         }
-        map.put("success", isSuccess);
+        map.put("success", true);
         System.out.println("==========数据保存成功==========");
         return map;
     }
@@ -70,7 +70,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
-    public PageVo pageList(HttpServletRequest request, Activity activity) {
+    public PageVo<Activity> pageList(HttpServletRequest request, Activity activity) {
         System.out.println("==========ActivityController.pageList()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
          /*
@@ -101,6 +101,25 @@ public class ActivityController {
         map.put("endDate", activity.getEndDate());
         //将PageVo传给页面
         return activityService.getActivityPageVo(map);
+    }
+
+    @RequestMapping(value = {"/deleteActivity"})
+    @ResponseBody
+    public Map<String, Object> deleteActivity(HttpServletRequest request) throws FailToDeleteException {
+        System.out.println("==========ActivityController.deleteActivity()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        try {
+            activityService.deleteActivity(ids);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new FailToDeleteException(errorMsg);
+        }
+        map.put("success", true);
+        System.out.println("==========数据删除成功==========");
+        return map;
     }
 
 }

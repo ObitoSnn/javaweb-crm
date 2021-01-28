@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.service;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.vo.PageVo;
@@ -20,5 +21,7 @@ public interface ActivityService {
     boolean saveActivity(Activity activity) throws FailToSaveException;
 
     PageVo<Activity> getActivityPageVo(Map<String, Object> map);
+
+    boolean deleteActivity(String[] ids) throws FailToDeleteException;
 
 }

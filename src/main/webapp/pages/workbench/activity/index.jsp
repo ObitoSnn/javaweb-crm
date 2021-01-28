@@ -175,9 +175,55 @@
 
 		});
 
+		//给删除按钮绑定单击事件
+		$("#deleteBtn").click(function () {
+			//找出选中状态的复选框的jquery对象
+			var $checkBoxes = $("input[name='checkbox-single']:checked");
+
+			if ($checkBoxes.length == 0) {
+				alert("请选择要删除的市场活动信息");
+			} else {
+
+				if (confirm("你确定要删除所选信息吗？")) {
+					//url : workbench/activity/deleteActivity?id=xx&id=xx
+					var param = "";
+
+					for (var i = 0; i < $checkBoxes.length; i++) {
+						param += "id=" + $($checkBoxes[i]).val();
+						//不是最后一个
+						if (i < $checkBoxes.length - 1) {
+							param += "&";
+						}
+					}
+					$.ajax({
+						url : "workbench/activity/deleteActivity",
+						data : param,
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data:
+                                    {"success" : true/false,"errorMsg":错误信息}
+                            */
+							if (data.success) {
+								//刷新页面数据
+								pageList(1, 2);
+							} else {
+								alert(data.errorMsg);
+							}
+						}
+					});
+				}
+			}
+
+		});
+
 	});
 	//分页方法
 	function pageList(pageNo, pageSize) {
+
+		//刷新后台数据之前取消总复选框的选中状态
+		$("input[name='checkbox-manager']").prop("checked", false);
 
 		//分页之前从隐藏域中取出文本框信息
 		$("#input-name").val($.trim($("#hidden-name").val()));
@@ -209,7 +255,7 @@
 				$.each(data.dataList, function (i, obj) {
 
 					html += '<tr class="active">';
-					html += '<td><input name="checkbox-single" type="checkbox" id="' + obj.id + '" /></td>';
+					html += '<td><input name="checkbox-single" type="checkbox" value="' + obj.id + '" /></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.owner + '</td>';
 					html += '<td>' + obj.startDate + '</td>';
@@ -451,7 +497,7 @@
 					-->
 				  <button id="addBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button id="deleteBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>

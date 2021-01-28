@@ -1,11 +1,13 @@
 package com.obitosnn.crm.workbench.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.dao.UserDao;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ActivityDao;
+import com.obitosnn.crm.workbench.dao.ActivityRemarkDao;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class ActivityServiceImpl implements ActivityService {
     private UserDao userDao;
     @Autowired
     private ActivityDao activityDao;
+    @Autowired
+    private ActivityRemarkDao activityRemarkDao;
 
     @Override
     public List<User> getUserList() {
@@ -57,5 +61,24 @@ public class ActivityServiceImpl implements ActivityService {
         pageVo.setTotal(total);
         pageVo.setDataList(aList);
         return pageVo;
+    }
+
+    @Override
+    public boolean deleteActivity(String[] ids) throws FailToDeleteException {
+        //查询所有要删除的市场活动备注(tbl_activity_remark)表中要删除的数据
+        Integer selectActivityRemarkCount = activityRemarkDao.selectByIds(ids);
+        //删除市场活动备注(tbl_activity_remark，实际删除条数)
+        Integer deleteActivityRemarkCount = activityRemarkDao.deleteByIds(ids);
+        if (!selectActivityRemarkCount.equals(deleteActivityRemarkCount)) {
+            //要删除的市场活动备注数量与被删除的市场活动备注数量不相等，删除失败
+            throw new FailToDeleteException("删除失败");
+        }
+        //删除市场活动(tbl_activity)
+        Integer deleteActivityCount = activityDao.deleteByIds(ids);
+        if (deleteActivityCount != ids.length) {
+            //删除市场活动的数量与请求参数中id数组的长度不等，删除失败
+            throw new FailToDeleteException("删除失败");
+        }
+        return true;
     }
 }
