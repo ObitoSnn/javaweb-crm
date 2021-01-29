@@ -33,7 +33,7 @@
         )
     </insert>
 
-    <select id="getActivityList" resultType="com.obitosnn.crm.workbench.domain.Activity">
+    <select id="getActivityList" resultType="Activity">
 
         select
 
@@ -118,5 +118,30 @@
         </foreach>
 
     </delete>
+
+    <select id="getActivityById" resultType="Activity">
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `startDate`,
+        `endDate`,
+        `cost`,
+        `description`
+        from tbl_activity where `id` = #{id}
+    </select>
+
+    <update id="updateActivity">
+        update tbl_activity set
+        `owner` = #{owner},
+        `name` = #{name},
+        `startDate` = #{startDate},
+        `endDate` = #{endDate},
+        `cost` = #{cost},
+        `description` = #{description},
+        `editTime` = #{editTime},
+        `editBy` = #{editBy}
+        where `id` = #{id}
+    </update>
 
 </mapper>

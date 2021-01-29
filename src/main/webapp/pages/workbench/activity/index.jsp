@@ -10,7 +10,6 @@
 	<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
 <meta charset="UTF-8">
 <script type="text/javascript">
-
 	$(function(){
 
 		//时间控件
@@ -56,11 +55,11 @@
 					 */
 					var optionHtml = "<option></option>";
 					$.each(data, function (i, obj) {
-                        optionHtml += "<option id='" + obj.id + "'>" + obj.name + "</option>";
+                        optionHtml += "<option value='" + obj.id + "'>" + obj.name + "</option>";
 					});
                     $("#create-owner").html(optionHtml);
-                    var selectElement = $("#${sessionScope.user.id}")[0];
-                    selectElement.selected = true;
+                    //设置所有者下拉框为当前登录用户
+					$("#create-owner").val("${sessionScope.user.id}");
                     $("#createActivityModal").modal("show");
 				}
 
@@ -74,6 +73,7 @@
 			$.ajax({
 				url : "workbench/activity/saveActivity",
 				data : {
+					"owner" : $.trim($("#create-owner").val()),
 					"name" : $.trim($("#create-name").val()),
 					"startDate" : $.trim($("#create-startDate").val()),
 					"endDate" : $.trim($("#create-endDate").val()),
@@ -84,7 +84,7 @@
 				dataType : "json",
 				success : function (data) {
 					/*
-						data : {"success":"true/false"}
+						data : {"success":"true/false","errorMsg":错误信息}
 					*/
 					if (data.success) {
 						//保存成功
@@ -109,19 +109,14 @@
 
 						//关闭模态窗口
 						$("#createActivityModal").modal("hide");
+
+						//刷新页面数据
+						pageList(1, 2);
 					} else {
-						//保存失败后相关的操作
 						alert(data.errorMsg);
-						if ("非法的结束日期" == errorMsg) {
-							//回显数据
-							$("#create-name").val("${requestScope.activity.name}")
-							$("#create-cost").val("${requestScope.activity.cost}")
-							$("#create-description").val("${requestScope.activity.description}")
-						}
 					}
 				}
 			});
-
 
 		});
 
@@ -215,6 +210,89 @@
 					});
 				}
 			}
+
+		});
+
+        //给修改按钮绑定单击事件
+        $("#editBtn").click(function () {
+
+
+			var $checkbox = $("input[name='checkbox-single']:checked");
+			//市场活动的id
+			var id = $checkbox.val();
+
+			if ($checkbox.length == 0) {
+				alert("请选择要修改的市场活动信息");
+			} else if ($checkbox.length > 1) {
+				alert("最多只能修改一个市场活动信息");
+			} else {
+				$.ajax({
+					url : "workbench/activity/getUserListAndActivity",
+					data : {
+						"id" : id
+					},
+					type : "get",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data:
+                                {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
+                        */
+						var html = "<option></option>";
+						$.each(data.uList, function (i, obj) {
+							html += "<option value='" + obj.id +"'>" + obj.name + "</option>";
+						});
+						//下拉框填写信息
+						$("#edit-owner").html(html);
+						//将市场活动的id保存至隐藏域
+						$("#edit-id").val(data.activity.id);
+						$("#edit-owner").val(data.activity.owner);
+						$("#edit-name").val(data.activity.name);
+						$("#edit-startDate").val(data.activity.startDate);
+						$("#edit-endDate").val(data.activity.endDate);
+						$("#edit-cost").val(data.activity.cost);
+						$("#edit-description").val(data.activity.description);
+					}
+				});
+				//打开修改市场活动的模态窗口
+				$("#editActivityModal").modal("show");
+			}
+        });
+
+		//给更新按钮绑定单击事件
+		$("#updateActivityBtn").click(function () {
+
+			$.ajax({
+				url : "workbench/activity/updateActivity",
+				data : {
+					"id" : $.trim($("#edit-id").val()),
+					"owner" : $.trim($("#edit-owner").val()),
+					"name" : $.trim($("#edit-name").val()),
+					"startDate" : $.trim($("#edit-startDate").val()),
+					"endDate" : $.trim($("#edit-endDate").val()),
+					"cost" : $.trim($("#edit-cost").val()),
+					"description" : $.trim($("#edit-description").val())
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					/*
+						data : {"success":"true/false","errorMsg":错误信息}
+					*/
+					if (data.success) {
+						//更新成功
+
+						//关闭模态窗口
+						$("#editActivityModal").modal("hide");
+
+						//刷新页面数据
+						pageList(1, 2);
+					} else {
+						//更新失败后相关的操作
+						alert(data.errorMsg);
+					}
+				}
+			});
 
 		});
 
@@ -362,7 +440,7 @@
 							表示关闭模态窗口
 					-->
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button id="addActivitySaveBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button id="addActivitySaveBtn" type="button" class="btn btn-primary">保存</button>
 				</div>
 			</div>
 		</div>
@@ -381,42 +459,50 @@
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form">
-					
+
+						<input id="edit-id" type="hidden">
+
 						<div class="form-group">
-							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-marketActivityOwner">
-                                    <option>lisi</option>
+								<select class="form-control" id="edit-owner">
+
 								</select>
 							</div>
-                            <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-name">
                             </div>
 						</div>
 
 						<div class="form-group">
-							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
+							<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control time" id="edit-startDate" readonly>
 							</div>
-							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
+							<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control time" id="edit-endDate" readonly>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-cost" class="col-sm-2 control-label">成本</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-cost" value="5,000">
+								<input type="text" class="form-control" id="edit-cost">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+								<!--
+									关于文本域(textarea)
+										1）一定是要以标签对的形式来呈现，正常情况下标签对要紧紧的挨着
+										2）textarea虽然是以标签对的形式来呈现的，但是它也是属于表单元素范畴
+											我们所有的对于textarea的取值和赋值操作，我们统一使用val()方法(而不是html()方法)
+								-->
+								<textarea class="form-control" rows="3" id="edit-description"></textarea>
 							</div>
 						</div>
 						
@@ -425,7 +511,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button id="updateActivityBtn" type="button" class="btn btn-primary">更新</button>
 				</div>
 			</div>
 		</div>
@@ -465,13 +551,13 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input id="input-startDate" class="form-control time" type="text" id="startTime" placeholder="请选择日期"/>
+					  <input id="input-startDate" class="form-control" type="text" id="startTime" placeholder="请输入日期"/>
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input id="input-endDate" class="form-control time" type="text" id="endTime" placeholder="请选择日期"/>
+					  <input id="input-endDate" class="form-control" type="text" id="endTime" placeholder="请输入日期"/>
 				    </div>
 				  </div>
 				  
@@ -496,7 +582,7 @@
 						应该由我们自己写js代码操控
 					-->
 				  <button id="addBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button id="editBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button id="deleteBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
@@ -513,20 +599,7 @@
 						</tr>
 					</thead>
 					<tbody id="showActivityTBody">
-						<tr class="active">
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-                            <td>2020-10-10</td>
-                            <td>2020-10-20</td>
-                        </tr>
+
 					</tbody>
 				</table>
 			</div>

@@ -3,6 +3,7 @@ package com.obitosnn.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.dao.UserDao;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.vo.PageVo;
@@ -78,6 +79,26 @@ public class ActivityServiceImpl implements ActivityService {
         if (deleteActivityCount != ids.length) {
             //删除市场活动的数量与请求参数中id数组的长度不等，删除失败
             throw new FailToDeleteException("删除失败");
+        }
+        return true;
+    }
+
+    @Override
+    public Activity getActivityById(String id) {
+        return activityDao.getActivityById(id);
+    }
+
+    @Override
+    public boolean updateActivity(Activity activity) throws FailToUpdateException {
+        String startDate = activity.getStartDate();
+        String endDate = activity.getEndDate();
+        if (startDate.compareTo(endDate) > 0) {
+            throw new FailToUpdateException("非法的结束日期");
+        }
+        Integer count = activityDao.updateActivity(activity);
+        if (count != 1) {
+            //数据没有修改成功
+            throw new FailToUpdateException("服务器出现故障，数据未修改成功，请联系客服");
         }
         return true;
     }

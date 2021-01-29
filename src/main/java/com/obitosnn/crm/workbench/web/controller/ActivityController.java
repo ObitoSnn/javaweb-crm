@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
@@ -42,24 +43,18 @@ public class ActivityController {
     public Map<String, Object> saveActivity(HttpServletRequest request, Activity activity) throws FailToSaveException {
         System.out.println("==========ActivityController.saveActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
-        String id = ((User) request.getSession().getAttribute("user")).getId();
         //设置主键
         activity.setId(UUIDUtil.getUUID());
-        //设置所有者，即tbl_user中的id字段
-        activity.setOwner(id);
         //设置创建时间
         activity.setCreateTime(DateTimeUtil.getSysTime());
         //设置创建人
-        String createBy = ((User) request.getSession().getAttribute("user")).getCreateBy();
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
         activity.setCreateBy(createBy);
         try {
             activityService.saveActivity(activity);
         } catch (FailToSaveException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            if ("非法的结束日期".equals(errorMsg)) {
-                request.setAttribute("activity", activity);
-            }
             throw new FailToSaveException(errorMsg);
         }
         map.put("success", true);
@@ -122,4 +117,40 @@ public class ActivityController {
         return map;
     }
 
+    @RequestMapping(value = {"/getUserListAndActivity"})
+    @ResponseBody
+    public Map<String, Object> getUserListAndActivity(String id) {
+        System.out.println("==========ActivityController.getUserListAndActivity()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        /*
+            {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
+         */
+        List<User> uList = activityService.getUserList();
+        Activity activity = activityService.getActivityById(id);
+        map.put("uList", uList);
+        map.put("activity", activity);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateActivity"})
+    @ResponseBody
+    public Map<String, Object> updateActivity(HttpServletRequest request, Activity activity) throws FailToUpdateException {
+        System.out.println("==========ActivityController.updateActivity()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        //设置修改时间
+        activity.setEditTime(DateTimeUtil.getSysTime());
+        //设置修改人
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        activity.setEditBy(editBy);
+        try {
+            activityService.updateActivity(activity);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            throw new FailToUpdateException(errorMsg);
+        }
+        map.put("success", true);
+        System.out.println("==========数据修改成功==========");
+        return map;
+    }
 }

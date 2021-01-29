@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.web.handler;
 
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +35,18 @@ public class WorkBenchGlobalExceptionHandler {
     @ResponseBody
     public Map<String, Object> deleteActivityException(Exception e) {
         System.out.println("===================WorkBenchGlobalExceptionHandler.deleteActivityException()执行了===================\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        String errorMsg = e.getMessage();
+        //将回传数据放入map中，解析成json
+        map.put("success", false);
+        map.put("errorMsg", errorMsg);
+        return map;
+    }
+
+    @ExceptionHandler(value = {FailToUpdateException.class})
+    @ResponseBody
+    public Map<String, Object> updateActivityException(Exception e) {
+        System.out.println("===================WorkBenchGlobalExceptionHandler.updateActivityException()执行了===================\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String errorMsg = e.getMessage();
         //将回传数据放入map中，解析成json
