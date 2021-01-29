@@ -70,54 +70,69 @@
 		// 给保存市场活动按钮绑定单击事件
 		$("#addActivitySaveBtn").click(function () {
 
-			$.ajax({
-				url : "workbench/activity/saveActivity",
-				data : {
-					"owner" : $.trim($("#create-owner").val()),
-					"name" : $.trim($("#create-name").val()),
-					"startDate" : $.trim($("#create-startDate").val()),
-					"endDate" : $.trim($("#create-endDate").val()),
-					"cost" : $.trim($("#create-cost").val()),
-					"description" : $.trim($("#create-description").val())
-				},
-				type : "post",
-				dataType : "json",
-				success : function (data) {
-					/*
-						data : {"success":"true/false","errorMsg":错误信息}
-					*/
-					if (data.success) {
-						//保存成功
+			var inputOwnerText = $.trim($("#create-owner").val());
+			var inputNameText = $.trim($("#create-name").val());
+			var inputStartDateText = $.trim($("#create-startDate").val());
+			var inputEndDateText = $.trim($("#create-endDate").val());
+			var inputCostText = $.trim($("#create-cost").val());
+			var inputDescriptionText = $.trim($("#create-description").val());
 
+			//检验文本框内容，不能为空
+			if (inputOwnerText == "" || inputNameText == "" ||
+			inputStartDateText == "" || inputStartDateText == "" ||
+			inputEndDateText == "" || inputCostText == "" ||
+			inputDescriptionText == "") {
+				alert("请填写相关信息");
+			} else {
+				$.ajax({
+					url : "workbench/activity/saveActivity",
+					data : {
+						"owner" : $.trim($("#create-owner").val()),
+						"name" : $.trim($("#create-name").val()),
+						"startDate" : $.trim($("#create-startDate").val()),
+						"endDate" : $.trim($("#create-endDate").val()),
+						"cost" : $.trim($("#create-cost").val()),
+						"description" : $.trim($("#create-description").val())
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
 						/*
-							注意：
-								我们拿到了form表单的jquery对象
-								对于表单的jquery对象，提供了submit()方法让我们提交表单
-								但是表单的jquery对象，没有为我们提供reset()方法让我们重置表单
+                            data : {"success":"true/false","errorMsg":错误信息}
+                        */
+						if (data.success) {
+							//保存成功
 
-								虽然jquery对象没有为我们提供reset()方法，但是原生的js为我们提供了reset方法
-								所以我们要将jquery对象转换为原生的dom对象
+							/*
+                                注意：
+                                    我们拿到了form表单的jquery对象
+                                    对于表单的jquery对象，提供了submit()方法让我们提交表单
+                                    但是表单的jquery对象，没有为我们提供reset()方法让我们重置表单
 
-								jquery对象转换为dom对象：
-									jquery对象[小标]
+                                    虽然jquery对象没有为我们提供reset()方法，但是原生的js为我们提供了reset方法
+                                    所以我们要将jquery对象转换为原生的dom对象
 
-								dom对象转换为jquery对象：
-									$(dom)
-						*/
-						//关闭模态窗口前清空文本框内容
-						$("#addActivityForm")[0].reset();
+                                    jquery对象转换为dom对象：
+                                        jquery对象[小标]
 
-						//关闭模态窗口
-						$("#createActivityModal").modal("hide");
+                                    dom对象转换为jquery对象：
+                                        $(dom)
+                            */
+							//关闭模态窗口前清空文本框内容
+							$("#addActivityForm")[0].reset();
 
-						//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
-						pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+							//关闭模态窗口
+							$("#createActivityModal").modal("hide");
 
-					} else {
-						alert(data.errorMsg);
+							//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+							pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
+						} else {
+							alert(data.errorMsg);
+						}
 					}
-				}
-			});
+				});
+			}
 
 		});
 
