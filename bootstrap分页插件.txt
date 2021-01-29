@@ -1,0 +1,19 @@
+BootStrap分页插件bs_pagination：
+<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
+添加css文件和js文件
+    注意：
+        在添加插件js文件之前要确保添加了bootstrap本体js文件
+
+
+页面数据更新后，在哪一页还回到哪一页
+关键代码
+pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+    ,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
+    $("#activityPage").bs_pagination('getOption', 'currentPage')：操作后停留在当前页
+    $("#activityPage").bs_pagination('getOption', 'rowsPerPage')：操作后维持已经设置好的每页展现记录数
+
+说明：
+    插件的功能代码不需要掌握，插件都是本着"拿来就用"的原则，会通过查阅资料知道如何使用即可
