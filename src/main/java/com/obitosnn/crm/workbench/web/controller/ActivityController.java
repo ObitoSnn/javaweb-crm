@@ -8,6 +8,7 @@ import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
+import com.obitosnn.crm.workbench.domain.ActivityRemark;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -157,11 +158,23 @@ public class ActivityController {
 
     @RequestMapping(value = {"/getActivityDetail"})
     public ModelAndView getActivityDetail(String id) {
+        System.out.println("==========ActivityController.getActivityDetail()执行了==========\n");
         ModelAndView mv = new ModelAndView();
         Activity activity = activityService.getActivityDetailById(id);
         mv.addObject("activity", activity);
         //请求转发至 pages/workbench/activity/detail.jsp
         mv.setViewName("/pages/workbench/activity/detail.jsp");
         return mv;
+    }
+
+    @RequestMapping(value = {"/getActivityRemarkList"})
+    @ResponseBody
+    public Map<String, Object> getActivityRemarkList(String id) {
+        System.out.println("==========ActivityController.getActivityRemarkList()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"activityRemarkList":[{"市场活动备注1"},...]}
+        List<ActivityRemark> activityRemarkList = activityService.getActivityRemarkListByActivityId(id);
+        map.put("activityRemarkList", activityRemarkList);
+        return map;
     }
 }

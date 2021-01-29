@@ -27,4 +27,17 @@
 
     </delete>
 
+    <select id="getActivityRemarkListByActivityId" resultType="ActivityRemark">
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editTime`,
+        `editBy`,
+        `editFlag`,
+        `activityId`
+        from tbl_activity_remark where `activityId` = #{id}
+    </select>
+
 </mapper>

@@ -10,6 +10,7 @@ import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ActivityDao;
 import com.obitosnn.crm.workbench.dao.ActivityRemarkDao;
 import com.obitosnn.crm.workbench.domain.Activity;
+import com.obitosnn.crm.workbench.domain.ActivityRemark;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,5 +107,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Activity getActivityDetailById(String id) {
         return activityDao.getActivityDetailById(id);
+    }
+
+    @Override
+    public List<ActivityRemark> getActivityRemarkListByActivityId(String id) {
+        return activityRemarkDao.getActivityRemarkListByActivityId(id);
     }
 }

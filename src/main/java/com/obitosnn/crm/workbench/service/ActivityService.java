@@ -6,6 +6,7 @@ import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
+import com.obitosnn.crm.workbench.domain.ActivityRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,7 @@ public interface ActivityService {
     boolean updateActivity(Activity activity) throws FailToUpdateException;
 
     Activity getActivityDetailById(String id);
+
+    List<ActivityRemark> getActivityRemarkListByActivityId(String id);
 
 }
