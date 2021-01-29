@@ -110,8 +110,9 @@
 						//关闭模态窗口
 						$("#createActivityModal").modal("hide");
 
-						//刷新页面数据
-						pageList(1, 2);
+						//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+						pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
 					} else {
 						alert(data.errorMsg);
 					}
@@ -147,7 +148,10 @@
 			$("#hidden-startDate").val($.trim($("#input-startDate").val()));
 			$("#hidden-endDate").val($.trim($("#input-endDate").val()));
 
-			pageList(1, 2);
+			//查询操作后，刷新页面数据，回到第一页，每页显示数据数不变
+			pageList(1
+					,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
 
 		});
 
@@ -201,8 +205,9 @@
                                     {"success" : true/false,"errorMsg":错误信息}
                             */
 							if (data.success) {
-								//刷新页面数据
-								pageList(1, 2);
+								//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+								// pageList(1, 2);
+								pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 							} else {
 								alert(data.errorMsg);
 							}
@@ -285,8 +290,9 @@
 						//关闭模态窗口
 						$("#editActivityModal").modal("hide");
 
-						//刷新页面数据
-						pageList(1, 2);
+						//修改数据后，刷新页面数据，留在当前页面，每页显示数据数不变
+						pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 					} else {
 						//更新失败后相关的操作
 						alert(data.errorMsg);
