@@ -19,8 +19,8 @@ public class SettingsGlobalExceptionHandler {
 
     @ExceptionHandler(value = {LoginException.class})
     @ResponseBody
-    public Map<String, Object> ajaxLoginException(Exception e) {
-        System.out.println("===================SettingsGlobalExceptionHandler.ajaxLoginException()执行了===================\n");
+    public Map<String, Object> loginException(Exception e) {
+        System.out.println("===================SettingsGlobalExceptionHandler.loginException()执行了===================\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String errorMsg = e.getMessage();
         //将回传数据放入map中，解析成json

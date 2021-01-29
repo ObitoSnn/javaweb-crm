@@ -29,7 +29,7 @@
             <mvc:mapping path="/user/**"/>
             <mvc:mapping path="/workbench/**"/>
             <!--不拦截登录请求-->
-            <mvc:exclude-mapping path="/user/ajaxLogin"/>
+            <mvc:exclude-mapping path="/user/login"/>
             <bean class="com.obitosnn.crm.web.handler.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
