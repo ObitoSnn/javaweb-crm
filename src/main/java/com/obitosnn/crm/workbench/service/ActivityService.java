@@ -29,4 +29,6 @@ public interface ActivityService {
 
     boolean updateActivity(Activity activity) throws FailToUpdateException;
 
+    Activity getActivityDetailById(String id);
+
 }

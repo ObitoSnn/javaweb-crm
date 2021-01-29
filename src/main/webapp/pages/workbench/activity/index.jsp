@@ -340,7 +340,7 @@
 
 					html += '<tr class="active">';
 					html += '<td><input name="checkbox-single" type="checkbox" value="' + obj.id + '" /></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/activity/detail.jsp\';">' + obj.name + '</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/getActivityDetail?id=' + obj.id + '\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.owner + '</td>';
 					html += '<td>' + obj.startDate + '</td>';
 					html += '<td>' + obj.endDate + '</td>';

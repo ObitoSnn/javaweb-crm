@@ -39,7 +39,7 @@
 
         a.`id`,
         a.`name`,
-        u.`name` as owner,
+        u.`name` as `owner`,
         a.`startDate`,
         a.`endDate`
 
@@ -143,5 +143,27 @@
         `editBy` = #{editBy}
         where `id` = #{id}
     </update>
+
+    <select id="getActivityDetailById" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`,
+        a.`cost`,
+        a.`description`,
+        a.`createTime`,
+        a.`createBy`,
+        a.`editTime`,
+        a.`editBy`
+        from tbl_activity a
+        inner join tbl_user u
+        on a.`owner` = u.`id`
+        where a.`id` = #{id}
+
+
+    </select>
 
 </mapper>

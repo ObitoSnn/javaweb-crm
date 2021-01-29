@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -152,5 +153,15 @@ public class ActivityController {
         map.put("success", true);
         System.out.println("==========数据修改成功==========");
         return map;
+    }
+
+    @RequestMapping(value = {"/getActivityDetail"})
+    public ModelAndView getActivityDetail(String id) {
+        ModelAndView mv = new ModelAndView();
+        Activity activity = activityService.getActivityDetailById(id);
+        mv.addObject("activity", activity);
+        //请求转发至 pages/workbench/activity/detail.jsp
+        mv.setViewName("/pages/workbench/activity/detail.jsp");
+        return mv;
     }
 }
