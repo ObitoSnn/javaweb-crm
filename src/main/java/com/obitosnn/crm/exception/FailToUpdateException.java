@@ -6,7 +6,7 @@ package com.obitosnn.crm.exception;
  * @Description:
  * @Date 2021/1/29 13:43
  */
-public class FailToUpdateException extends RuntimeException {
+public class FailToUpdateException extends Exception {
     public FailToUpdateException() {
         super();
     }

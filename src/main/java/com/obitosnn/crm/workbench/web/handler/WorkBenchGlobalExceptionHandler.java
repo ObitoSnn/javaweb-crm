@@ -19,6 +19,7 @@ import java.util.Map;
 @ControllerAdvice
 public class WorkBenchGlobalExceptionHandler {
 
+    @Deprecated
     @ExceptionHandler(value = {FailToSaveException.class})
     @ResponseBody
     public Map<String, Object> saveActivityOrActivityRemarkException(Exception e) {
@@ -31,6 +32,7 @@ public class WorkBenchGlobalExceptionHandler {
         return map;
     }
 
+    @Deprecated
     @ExceptionHandler(value = {FailToDeleteException.class})
     @ResponseBody
     public Map<String, Object> deleteActivityOrActivityRemarkException(Exception e) {
@@ -43,10 +45,23 @@ public class WorkBenchGlobalExceptionHandler {
         return map;
     }
 
+    @Deprecated
     @ExceptionHandler(value = {FailToUpdateException.class})
     @ResponseBody
     public Map<String, Object> updateActivityException(Exception e) {
         System.out.println("===================WorkBenchGlobalExceptionHandler.updateActivityException()执行了===================\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        String errorMsg = e.getMessage();
+        //将回传数据放入map中，解析成json
+        map.put("success", false);
+        map.put("errorMsg", errorMsg);
+        return map;
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseBody
+    public Map<String, Object> globalExceptionHandler(Exception e) {
+        System.out.println("===================WorkBenchGlobalExceptionHandler.globalExceptionHandler()执行了===================\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String errorMsg = e.getMessage();
         //将回传数据放入map中，解析成json

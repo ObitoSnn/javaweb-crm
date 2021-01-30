@@ -42,7 +42,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/saveActivity"})
     @ResponseBody
-    public Map<String, Object> saveActivity(HttpServletRequest request, Activity activity) throws FailToSaveException {
+    public Map<String, Object> saveActivity(HttpServletRequest request, Activity activity) throws Exception {
         System.out.println("==========ActivityController.saveActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //设置主键
@@ -58,7 +58,7 @@ public class ActivityController {
         } catch (FailToSaveException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            throw new FailToSaveException(errorMsg);
+            throw new Exception(errorMsg);
         }
         map.put("success", success);
         System.out.println("==========数据保存成功==========");
@@ -103,7 +103,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/deleteActivity"})
     @ResponseBody
-    public Map<String, Object> deleteActivity(HttpServletRequest request) throws FailToDeleteException {
+    public Map<String, Object> deleteActivity(HttpServletRequest request) throws Exception {
         System.out.println("==========ActivityController.deleteActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String[] ids = request.getParameterValues("id");
@@ -114,7 +114,7 @@ public class ActivityController {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
-            throw new FailToDeleteException(errorMsg);
+            throw new Exception(errorMsg);
         }
         map.put("success", success);
         System.out.println("==========数据删除成功==========");
@@ -138,7 +138,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/updateActivity"})
     @ResponseBody
-    public Map<String, Object> updateActivity(HttpServletRequest request, Activity activity) throws FailToUpdateException {
+    public Map<String, Object> updateActivity(HttpServletRequest request, Activity activity) throws Exception {
         System.out.println("==========ActivityController.updateActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //设置修改时间
@@ -152,7 +152,7 @@ public class ActivityController {
         } catch (FailToUpdateException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            throw new FailToUpdateException(errorMsg);
+            throw new Exception(errorMsg);
         }
         map.put("success", success);
         System.out.println("==========数据修改成功==========");
@@ -183,7 +183,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/deleteActivityRemark"})
     @ResponseBody
-    public Map<String, Object> deleteActivityRemarkById(String id) throws FailToDeleteException {
+    public Map<String, Object> deleteActivityRemarkById(String id) throws Exception {
         System.out.println("==========ActivityController.deleteActivityRemarkById()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"errorMsg":错误信息}
@@ -194,7 +194,7 @@ public class ActivityController {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
-            throw new FailToDeleteException(errorMsg);
+            throw new Exception(errorMsg);
         }
         map.put("success", success);
         return map;
@@ -202,7 +202,7 @@ public class ActivityController {
 
     @RequestMapping(value = {"/saveActivityRemark"})
     @ResponseBody
-    public Map<String, Object> saveActivityRemark(HttpServletRequest request, ActivityRemark activityRemark) throws FailToSaveException {
+    public Map<String, Object> saveActivityRemark(HttpServletRequest request, ActivityRemark activityRemark) throws Exception {
         System.out.println("==========ActivityController.saveActivityRemark()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"activityRemark":{市场活动备注}}
@@ -224,7 +224,7 @@ public class ActivityController {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
-            throw new FailToSaveException(errorMsg);
+            throw new Exception(errorMsg);
         }
         map.put("success", success);
         map.put("activityRemark", activityRemark);
