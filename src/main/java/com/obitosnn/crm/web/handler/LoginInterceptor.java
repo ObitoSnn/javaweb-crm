@@ -18,10 +18,6 @@ public class LoginInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
         String servletPath = request.getServletPath();
         System.out.println("==========LoginInterceptor.preHandler()执行了,拦截的路径是[" + servletPath + "]==========\n");
-        if ("/user/ajaxLogin".equals(servletPath)) {
-            //登录操作
-            return true;
-        }
         //判断session域中是否有数据
         Object user = request.getSession().getAttribute("user");
         if (user == null) {
