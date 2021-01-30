@@ -33,8 +33,8 @@ public class WorkBenchGlobalExceptionHandler {
 
     @ExceptionHandler(value = {FailToDeleteException.class})
     @ResponseBody
-    public Map<String, Object> deleteActivityException(Exception e) {
-        System.out.println("===================WorkBenchGlobalExceptionHandler.deleteActivityException()执行了===================\n");
+    public Map<String, Object> deleteActivityOrActivityRemarkException(Exception e) {
+        System.out.println("===================WorkBenchGlobalExceptionHandler.deleteActivityOrActivityRemarkException()执行了===================\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String errorMsg = e.getMessage();
         //将回传数据放入map中，解析成json

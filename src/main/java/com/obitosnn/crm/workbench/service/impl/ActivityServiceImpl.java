@@ -113,4 +113,13 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityRemark> getActivityRemarkListByActivityId(String id) {
         return activityRemarkDao.getActivityRemarkListByActivityId(id);
     }
+
+    @Override
+    public boolean deleteActivityRemarkById(String id) throws FailToDeleteException {
+        Integer count = activityRemarkDao.deleteActivityRemarkById(id);
+        if (count != 1) {
+            throw new FailToDeleteException("删除失败");
+        }
+        return true;
+    }
 }

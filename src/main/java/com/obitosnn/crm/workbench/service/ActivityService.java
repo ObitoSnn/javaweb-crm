@@ -34,4 +34,5 @@ public interface ActivityService {
 
     List<ActivityRemark> getActivityRemarkListByActivityId(String id);
 
+    boolean deleteActivityRemarkById(String id) throws FailToDeleteException;
 }

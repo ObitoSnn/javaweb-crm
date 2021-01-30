@@ -70,7 +70,11 @@
 				 */
 				var html = "";
 				$.each(data.activityRemarkList, function (i, obj) {
-					html += '<div class="remarkDiv" style="height: 60px;">';
+				    /*
+				        javascript:void(0);
+				            将超链接禁用，只能以触发事件的形式来操作
+				     */
+					html += '<div id="' + obj.id + '" class="remarkDiv" style="height: 60px;">';
 					html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
 					html += '<div style="position: relative; top: -40px; left: 40px;" >';
 					html += '<h5>' + obj.noteContent +'</h5>';
@@ -78,7 +82,7 @@
 					html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
 					html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
 					html += '&nbsp;&nbsp;&nbsp;&nbsp;';
-					html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + obj.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
 					html += '</div>';
 					html += '</div>';
 					html += '</div>';
@@ -89,6 +93,36 @@
 			}
 		});
 	}
+
+	function deleteRemark(id) {
+
+        if (confirm("你确定要删除该备注吗？")) {
+
+           $.ajax({
+                url : "workbench/activity/deleteActivityRemark",
+                data : {
+                    "id" : id
+                },
+                type : "post",
+                dataType : "json",
+                success : function (data) {
+                    /*
+                        data
+                            {"success":true/false,"errorMsg":错误信息}
+                     */
+                    if (data.success) {
+                        //删除成功
+                        //将删除的备注移除
+                        $("#"+id).remove();
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            });
+
+        }
+
+    }
 
 </script>
 

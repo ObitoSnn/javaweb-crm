@@ -40,4 +40,10 @@
         from tbl_activity_remark where `activityId` = #{id}
     </select>
 
+    <delete id="deleteActivityRemarkById">
+
+        delete from tbl_activity_remark where `id` = #{id}
+
+    </delete>
+
 </mapper>

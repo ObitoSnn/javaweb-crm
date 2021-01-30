@@ -177,4 +177,22 @@ public class ActivityController {
         map.put("activityRemarkList", activityRemarkList);
         return map;
     }
+
+    @RequestMapping(value = {"/deleteActivityRemark"})
+    @ResponseBody
+    public Map<String, Object> deleteActivityRemarkById(String id) throws FailToDeleteException {
+        System.out.println("==========ActivityController.deleteActivityRemarkById()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"errorMsg":错误信息}
+        try {
+            activityService.deleteActivityRemarkById(id);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new FailToDeleteException(errorMsg);
+        }
+        map.put("success", true);
+        return map;
+    }
 }
