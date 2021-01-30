@@ -21,8 +21,8 @@ public class WorkBenchGlobalExceptionHandler {
 
     @ExceptionHandler(value = {FailToSaveException.class})
     @ResponseBody
-    public Map<String, Object> saveActivityException(Exception e) {
-        System.out.println("===================WorkBenchGlobalExceptionHandler.saveActivityException()执行了===================\n");
+    public Map<String, Object> saveActivityOrActivityRemarkException(Exception e) {
+        System.out.println("===================WorkBenchGlobalExceptionHandler.saveActivityOrActivityRemarkException()执行了===================\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String errorMsg = e.getMessage();
         //将回传数据放入map中，解析成json

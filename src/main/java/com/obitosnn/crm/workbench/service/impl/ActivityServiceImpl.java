@@ -57,9 +57,9 @@ public class ActivityServiceImpl implements ActivityService {
         int pageNo = Integer.parseInt((String) map.get("pageNo"));
         int pageSize =  Integer.parseInt((String) map.get("pageSize"));
         PageHelper.startPage(pageNo, pageSize);
-        List<Activity> aList = activityDao.getActivityList(map);
+        List<Activity> aList = activityDao.selectActivityList(map);
         PageVo<Activity> pageVo = new PageVo<>();
-        Long total = activityDao.getActivityTotal(map);
+        Long total = activityDao.selectActivityTotal(map);
         pageVo.setTotal(total);
         pageVo.setDataList(aList);
         return pageVo;
@@ -86,7 +86,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Activity getActivityById(String id) {
-        return activityDao.getActivityById(id);
+        return activityDao.selectActivityById(id);
     }
 
     @Override
@@ -106,12 +106,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Activity getActivityDetailById(String id) {
-        return activityDao.getActivityDetailById(id);
+        return activityDao.selectActivityDetailById(id);
     }
 
     @Override
     public List<ActivityRemark> getActivityRemarkListByActivityId(String id) {
-        return activityRemarkDao.getActivityRemarkListByActivityId(id);
+        return activityRemarkDao.selectActivityRemarkListByActivityId(id);
     }
 
     @Override
@@ -121,5 +121,19 @@ public class ActivityServiceImpl implements ActivityService {
             throw new FailToDeleteException("删除失败");
         }
         return true;
+    }
+
+    @Override
+    public boolean saveActivityRemark(ActivityRemark activityRemark) throws FailToSaveException {
+        Integer count = activityRemarkDao.insertActivityRemark(activityRemark);
+        if (count != 1) {
+            throw new FailToSaveException("备注保存失败");
+        }
+        return true;
+    }
+
+    @Override
+    public ActivityRemark getActivityRemarkById(String id) {
+        return activityRemarkDao.selectActivityRemarkById(id);
     }
 }

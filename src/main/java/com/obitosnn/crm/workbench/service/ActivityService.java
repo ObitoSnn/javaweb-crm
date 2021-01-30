@@ -35,4 +35,8 @@ public interface ActivityService {
     List<ActivityRemark> getActivityRemarkListByActivityId(String id);
 
     boolean deleteActivityRemarkById(String id) throws FailToDeleteException;
+
+    boolean saveActivityRemark(ActivityRemark activityRemark) throws FailToSaveException;
+
+    ActivityRemark getActivityRemarkById(String id);
 }

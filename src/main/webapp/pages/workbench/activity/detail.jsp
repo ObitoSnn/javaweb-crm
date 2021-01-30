@@ -52,6 +52,53 @@
         $("#remarkBody").on("mouseout",".remarkDiv",function(){
             $(this).children("div").children("div").hide();
         })
+
+        //给保存市场活动备注按钮绑定单击事件
+        $("#saveActivityRemarkBtn").click(function () {
+
+            $.ajax({
+                url : "workbench/activity/saveActivityRemark",
+                data : {
+                    "noteContent" : $.trim($("#remark").val()),
+                    "activityId" : "${requestScope.activity.id}"
+                },
+                type : "post",
+                dataType : "json",
+                success : function (data) {
+
+                    /*
+                        data
+                            {"success":true/false,"activityRemark":{市场活动备注}}
+                     */
+                    if (data.success) {
+                        var html = "";
+                        html += '<div id="' + data.activityRemark.id + '" class="remarkDiv" style="height: 60px;">';
+                        html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
+                        html += '<div style="position: relative; top: -40px; left: 40px;" >';
+                        html += '<h5>' + data.activityRemark.noteContent +'</h5>';
+                        html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${requestScope.activity.name}</b> <small style="color: gray;"> ' + data.activityRemark.createTime + '由' + data.activityRemark.createBy + '</small>';
+                        html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+                        html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+                        html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.activityRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        //在显示文本域的上方追加备注信息
+                        $("#remarkDiv").before(html);
+
+                        //清空文本域内容
+                        $("#remark").val("");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            });
+
+        });
+
+
 	});
 	//获取市场活动备注信息
 	function getActivityRemarkList() {
@@ -87,7 +134,7 @@
 					html += '</div>';
 					html += '</div>';
 				});
-
+                //在显示文本域的上方追加备注信息
 				$("#remarkDiv").before(html);
 
 			}
@@ -294,7 +341,7 @@
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button id="saveActivityRemarkBtn" type="button" class="btn btn-primary">保存</button>
 				</p>
 			</form>
 		</div>

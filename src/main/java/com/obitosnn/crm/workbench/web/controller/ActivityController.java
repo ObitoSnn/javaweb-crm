@@ -52,14 +52,15 @@ public class ActivityController {
         //设置创建人
         String createBy = ((User) request.getSession().getAttribute("user")).getName();
         activity.setCreateBy(createBy);
+        boolean success = false;
         try {
-            activityService.saveActivity(activity);
+            success = activityService.saveActivity(activity);
         } catch (FailToSaveException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             throw new FailToSaveException(errorMsg);
         }
-        map.put("success", true);
+        map.put("success", success);
         System.out.println("==========数据保存成功==========");
         return map;
     }
@@ -106,15 +107,16 @@ public class ActivityController {
         System.out.println("==========ActivityController.deleteActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String[] ids = request.getParameterValues("id");
+        boolean success = false;
         try {
-            activityService.deleteActivity(ids);
+            success = activityService.deleteActivity(ids);
         } catch (FailToDeleteException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
             throw new FailToDeleteException(errorMsg);
         }
-        map.put("success", true);
+        map.put("success", success);
         System.out.println("==========数据删除成功==========");
         return map;
     }
@@ -144,14 +146,15 @@ public class ActivityController {
         //设置修改人
         String editBy = ((User) request.getSession().getAttribute("user")).getName();
         activity.setEditBy(editBy);
+        boolean success = false;
         try {
-            activityService.updateActivity(activity);
+            success = activityService.updateActivity(activity);
         } catch (FailToUpdateException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             throw new FailToUpdateException(errorMsg);
         }
-        map.put("success", true);
+        map.put("success", success);
         System.out.println("==========数据修改成功==========");
         return map;
     }
@@ -184,15 +187,47 @@ public class ActivityController {
         System.out.println("==========ActivityController.deleteActivityRemarkById()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"errorMsg":错误信息}
+        boolean success = false;
         try {
-            activityService.deleteActivityRemarkById(id);
+            success = activityService.deleteActivityRemarkById(id);
         } catch (FailToDeleteException e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
             throw new FailToDeleteException(errorMsg);
         }
-        map.put("success", true);
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/saveActivityRemark"})
+    @ResponseBody
+    public Map<String, Object> saveActivityRemark(HttpServletRequest request, ActivityRemark activityRemark) throws FailToSaveException {
+        System.out.println("==========ActivityController.saveActivityRemark()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"activityRemark":{市场活动备注}}
+        //设置id
+        String id = UUIDUtil.getUUID();
+        activityRemark.setId(id);
+        //设置createTime
+        activityRemark.setCreateTime(DateTimeUtil.getSysTime());
+        //设置createBy
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        activityRemark.setCreateBy(createBy);
+        //设置editFlag
+        activityRemark.setEditFlag("0");
+        boolean success = false;
+        try {
+            success = activityService.saveActivityRemark(activityRemark);
+            activityRemark = activityService.getActivityRemarkById(id);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new FailToSaveException(errorMsg);
+        }
+        map.put("success", success);
+        map.put("activityRemark", activityRemark);
         return map;
     }
 }

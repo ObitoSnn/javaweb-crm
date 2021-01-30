@@ -27,7 +27,7 @@
 
     </delete>
 
-    <select id="getActivityRemarkListByActivityId" resultType="ActivityRemark">
+    <select id="selectActivityRemarkListByActivityId" resultType="ActivityRemark">
         select
         `id`,
         `noteContent`,
@@ -37,7 +37,7 @@
         `editBy`,
         `editFlag`,
         `activityId`
-        from tbl_activity_remark where `activityId` = #{id}
+        from tbl_activity_remark where `activityId` = #{id} order by `createTime` desc
     </select>
 
     <delete id="deleteActivityRemarkById">
@@ -45,5 +45,37 @@
         delete from tbl_activity_remark where `id` = #{id}
 
     </delete>
+
+    <insert id="insertActivityRemark">
+
+        insert into tbl_activity_remark(
+            `id`,
+            `noteContent`,
+            `createTime`,
+            `createBy`,
+            `editFlag`,
+            `activityId`
+        )
+        values(
+            #{id},
+            #{noteContent},
+            #{createTime},
+            #{createBy},
+            #{editFlag},
+            #{activityId}
+        )
+
+    </insert>
+
+    <select id="selectActivityRemarkById" resultType="ActivityRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`
+        from tbl_activity_remark where `id` = #{id}
+
+    </select>
 
 </mapper>
