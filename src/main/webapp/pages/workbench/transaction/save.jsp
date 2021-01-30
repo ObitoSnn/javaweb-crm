@@ -1,15 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="../../jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<%@ include file="../../common/base_css_jquery.jsp"%>
+<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 </head>
 <body>
@@ -33,7 +30,7 @@
 						  </div>
 						</form>
 					</div>
-					<table id="activityTable4" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
+					<table id="activityTable3" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
 								<td></td>
@@ -115,55 +112,55 @@
 	
 	
 	<div style="position:  relative; left: 30px;">
-		<h3>更新交易</h3>
+		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">更新</button>
+			<button type="button" class="btn btn-primary">保存</button>
 			<button type="button" class="btn btn-default">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
 	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
-			<label for="edit-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="edit-transactionOwner">
-				  <option selected>zhangsan</option>
+				<select class="form-control" id="create-transactionOwner">
+				  <option>zhangsan</option>
 				  <option>lisi</option>
 				  <option>wangwu</option>
 				</select>
 			</div>
-			<label for="edit-amountOfMoney" class="col-sm-2 control-label">金额</label>
+			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-amountOfMoney" value="5,000">
+				<input type="text" class="form-control" id="create-amountOfMoney">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="edit-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-transactionName" value="动力节点-交易01">
+				<input type="text" class="form-control" id="create-transactionName">
 			</div>
-			<label for="edit-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-expectedClosingDate" value="2017-02-07">
+				<input type="text" class="form-control" id="create-expectedClosingDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="edit-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-accountName" value="动力节点" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
-			<label for="edit-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="edit-transactionStage">
+			  <select class="form-control" id="create-transactionStage">
 			  	<option></option>
 			  	<option>资质审查</option>
 			  	<option>需求分析</option>
 			  	<option>价值建议</option>
 			  	<option>确定决策者</option>
 			  	<option>提案/报价</option>
-			  	<option selected>谈判/复审</option>
+			  	<option>谈判/复审</option>
 			  	<option>成交</option>
 			  	<option>丢失的线索</option>
 			  	<option>因竞争丢失关闭</option>
@@ -172,26 +169,26 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="edit-transactionType" class="col-sm-2 control-label">类型</label>
+			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="edit-transactionType">
+				<select class="form-control" id="create-transactionType">
 				  <option></option>
 				  <option>已有业务</option>
-				  <option selected>新业务</option>
+				  <option>新业务</option>
 				</select>
 			</div>
-			<label for="edit-possibility" class="col-sm-2 control-label">可能性</label>
+			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-possibility" value="90">
+				<input type="text" class="form-control" id="create-possibility">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="edit-clueSource" class="col-sm-2 control-label">来源</label>
+			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="edit-clueSource">
+				<select class="form-control" id="create-clueSource">
 				  <option></option>
-				  <option selected>广告</option>
+				  <option>广告</option>
 				  <option>推销电话</option>
 				  <option>员工介绍</option>
 				  <option>外部介绍</option>
@@ -207,16 +204,16 @@
 				  <option>聊天</option>
 				</select>
 			</div>
-			<label for="edit-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-activitySrc" value="发传单">
+				<input type="text" class="form-control" id="create-activitySrc">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="edit-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-contactsName" value="李四">
+				<input type="text" class="form-control" id="create-contactsName">
 			</div>
 		</div>
 		
