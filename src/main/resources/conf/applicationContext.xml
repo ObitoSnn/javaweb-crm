@@ -106,4 +106,7 @@
     <!--声明工作台模块Service对象-->
     <context:component-scan base-package="com.obitosnn.crm.workbench.service"/>
 
+    <!--声明切面-->
+    <bean class="com.obitosnn.crm.aspect.ControllerAspect" id="controllerAspect"/>
+
 </beans>

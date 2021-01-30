@@ -33,14 +33,12 @@ public class ActivityController {
     @RequestMapping(value = {"/ajaxGetUserList"})
     @ResponseBody
     public List<User> ajaxGetUserList() {
-        System.out.println("==========ActivityController.ajaxGetUserList()执行了==========\n");
         return activityService.getUserList();
     }
 
     @RequestMapping(value = {"/saveActivity"})
     @ResponseBody
     public Map<String, Object> saveActivity(HttpServletRequest request, Activity activity) throws Exception {
-        System.out.println("==========ActivityController.saveActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //设置主键
         activity.setId(UUIDUtil.getUUID());
@@ -66,7 +64,6 @@ public class ActivityController {
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
     public PageVo<Activity> pageList(HttpServletRequest request, Activity activity) {
-        System.out.println("==========ActivityController.pageList()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
          /*
 
@@ -101,7 +98,6 @@ public class ActivityController {
     @RequestMapping(value = {"/deleteActivity"})
     @ResponseBody
     public Map<String, Object> deleteActivity(HttpServletRequest request) throws Exception {
-        System.out.println("==========ActivityController.deleteActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         String[] ids = request.getParameterValues("id");
         boolean success = false;
@@ -121,7 +117,6 @@ public class ActivityController {
     @RequestMapping(value = {"/getUserListAndActivity"})
     @ResponseBody
     public Map<String, Object> getUserListAndActivity(String id) {
-        System.out.println("==========ActivityController.getUserListAndActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         /*
             {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
@@ -136,7 +131,6 @@ public class ActivityController {
     @RequestMapping(value = {"/updateActivity"})
     @ResponseBody
     public Map<String, Object> updateActivity(HttpServletRequest request, Activity activity) throws Exception {
-        System.out.println("==========ActivityController.updateActivity()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //设置修改时间
         activity.setEditTime(DateTimeUtil.getSysTime());
@@ -158,7 +152,6 @@ public class ActivityController {
 
     @RequestMapping(value = {"/getActivityDetail"})
     public ModelAndView getActivityDetail(String id) {
-        System.out.println("==========ActivityController.getActivityDetail()执行了==========\n");
         ModelAndView mv = new ModelAndView();
         Activity activity = activityService.getActivityDetailById(id);
         mv.addObject("activity", activity);
@@ -170,7 +163,6 @@ public class ActivityController {
     @RequestMapping(value = {"/getActivityRemarkList"})
     @ResponseBody
     public Map<String, Object> getActivityRemarkList(String id) {
-        System.out.println("==========ActivityController.getActivityRemarkList()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"activityRemarkList":[{"市场活动备注1"},...]}
         List<ActivityRemark> activityRemarkList = activityService.getActivityRemarkListByActivityId(id);
@@ -181,7 +173,6 @@ public class ActivityController {
     @RequestMapping(value = {"/deleteActivityRemark"})
     @ResponseBody
     public Map<String, Object> deleteActivityRemarkById(String id) throws Exception {
-        System.out.println("==========ActivityController.deleteActivityRemarkById()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"errorMsg":错误信息}
         boolean success = false;
@@ -200,7 +191,6 @@ public class ActivityController {
     @RequestMapping(value = {"/saveActivityRemark"})
     @ResponseBody
     public Map<String, Object> saveActivityRemark(HttpServletRequest request, ActivityRemark activityRemark) throws Exception {
-        System.out.println("==========ActivityController.saveActivityRemark()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"activityRemark":{市场活动备注}}
         //设置id
@@ -231,7 +221,6 @@ public class ActivityController {
     @RequestMapping(value = {"/updateActivityRemark"})
     @ResponseBody
     public Map<String, Object> updateActivityRemark(HttpServletRequest request, ActivityRemark activityRemark, String id) throws Exception {
-        System.out.println("==========ActivityController.updateActivityRemark()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //{"success":true/false,"activityRemark":{市场活动备注},"errorMsg":错误信息}
         //设置editTime

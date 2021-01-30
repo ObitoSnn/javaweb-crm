@@ -28,7 +28,6 @@ public class UserController {
     @RequestMapping("/login")
     @ResponseBody
     public Map<String, Object> login(HttpServletRequest request, User user) throws LoginException {
-        System.out.println("==========UserController.login()执行了==========\n");
         Map<String, Object> map = new HashMap<String, Object>();
         //客户端ip
         String allowIps = request.getRemoteAddr();
