@@ -33,7 +33,7 @@
         )
     </insert>
 
-    <select id="getActivityList" resultType="Activity">
+    <select id="selectActivityList" resultType="Activity">
 
         select
 
@@ -71,7 +71,7 @@
 
     </select>
 
-    <select id="getActivityTotal" resultType="long">
+    <select id="selectActivityTotal" resultType="long">
 
         select count(*) from (
 
@@ -119,7 +119,7 @@
 
     </delete>
 
-    <select id="getActivityById" resultType="Activity">
+    <select id="selectActivityById" resultType="Activity">
         select
         `id`,
         `owner`,
@@ -144,7 +144,7 @@
         where `id` = #{id}
     </update>
 
-    <select id="getActivityDetailById" resultType="Activity">
+    <select id="selectActivityDetailById" resultType="Activity">
 
         select
         a.`id`,

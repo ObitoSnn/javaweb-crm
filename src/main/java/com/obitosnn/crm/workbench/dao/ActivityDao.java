@@ -14,16 +14,16 @@ public interface ActivityDao {
 
     Integer insertActivity(Activity activity);
 
-    Long getActivityTotal(Map<String, Object> map);
+    Long selectActivityTotal(Map<String, Object> map);
 
-    List<Activity> getActivityList(Map<String, Object> map);
+    List<Activity> selectActivityList(Map<String, Object> map);
 
     Integer deleteByIds(String[] ids);
 
-    Activity getActivityById(String id);
+    Activity selectActivityById(String id);
 
     Integer updateActivity(Activity activity);
 
-    Activity getActivityDetailById(String id);
+    Activity selectActivityDetailById(String id);
     
 }
