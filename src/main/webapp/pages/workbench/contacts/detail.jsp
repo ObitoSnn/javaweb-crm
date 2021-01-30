@@ -1,12 +1,9 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
+	<%@ include file="../../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
-
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-
 <script type="text/javascript">
 
 	//默认情况下取消和保存按钮是隐藏的
@@ -367,7 +364,7 @@
 		
 		<!-- 备注1 -->
 		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">
+			<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>哎呦！</h5>
 				<font color="gray">联系人</font> <font color="gray">-</font> <b>李四先生-北京动力节点</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>
@@ -381,7 +378,7 @@
 		
 		<!-- 备注2 -->
 		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">
+			<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>呵呵！</h5>
 				<font color="gray">联系人</font> <font color="gray">-</font> <b>李四先生-北京动力节点</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>
