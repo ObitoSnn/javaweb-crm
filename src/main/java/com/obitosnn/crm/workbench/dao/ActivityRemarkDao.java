@@ -22,4 +22,6 @@ public interface ActivityRemarkDao {
     Integer insertActivityRemark(ActivityRemark activityRemark);
 
     ActivityRemark selectActivityRemarkById(String id);
+
+    Integer updateActivityRemarkById(ActivityRemark activityRemark);
 }

@@ -1,8 +1,5 @@
 package com.obitosnn.crm.workbench.web.controller;
 
-import com.obitosnn.crm.exception.FailToDeleteException;
-import com.obitosnn.crm.exception.FailToSaveException;
-import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
@@ -55,7 +52,7 @@ public class ActivityController {
         boolean success = false;
         try {
             success = activityService.saveActivity(activity);
-        } catch (FailToSaveException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             throw new Exception(errorMsg);
@@ -110,7 +107,7 @@ public class ActivityController {
         boolean success = false;
         try {
             success = activityService.deleteActivity(ids);
-        } catch (FailToDeleteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
@@ -149,7 +146,7 @@ public class ActivityController {
         boolean success = false;
         try {
             success = activityService.updateActivity(activity);
-        } catch (FailToUpdateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             throw new Exception(errorMsg);
@@ -190,7 +187,7 @@ public class ActivityController {
         boolean success = false;
         try {
             success = activityService.deleteActivityRemarkById(id);
-        } catch (FailToDeleteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理
@@ -220,7 +217,37 @@ public class ActivityController {
         try {
             success = activityService.saveActivityRemark(activityRemark);
             activityRemark = activityService.getActivityRemarkById(id);
-        } catch (FailToSaveException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("activityRemark", activityRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateActivityRemark"})
+    @ResponseBody
+    public Map<String, Object> updateActivityRemark(HttpServletRequest request, ActivityRemark activityRemark, String id) throws Exception {
+        System.out.println("==========ActivityController.updateActivityRemark()执行了==========\n");
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"activityRemark":{市场活动备注},"errorMsg":错误信息}
+        //设置editTime
+        String editTime = DateTimeUtil.getSysTime();
+        activityRemark.setEditTime(editTime);
+        //设置editBy
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        activityRemark.setEditBy(editBy);
+        //设置editFlag为1
+        activityRemark.setEditFlag("1");
+        //获取的请求参数即为备注信息的id
+        activityRemark.setId(id);
+        boolean success = false;
+        try {
+            success = activityService.updateActivityRemark(activityRemark);
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             //抛出异常，给WorkBenchGlobalExceptionHandler处理

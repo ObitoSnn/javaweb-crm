@@ -136,4 +136,13 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityRemark getActivityRemarkById(String id) {
         return activityRemarkDao.selectActivityRemarkById(id);
     }
+
+    @Override
+    public boolean updateActivityRemark(ActivityRemark activityRemark) throws FailToUpdateException {
+        Integer count = activityRemarkDao.updateActivityRemarkById(activityRemark);
+        if (count != 1) {
+            throw new FailToUpdateException("备注修改失败");
+        }
+        return true;
+    }
 }

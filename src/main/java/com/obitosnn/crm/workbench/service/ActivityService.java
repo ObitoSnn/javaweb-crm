@@ -39,4 +39,6 @@ public interface ActivityService {
     boolean saveActivityRemark(ActivityRemark activityRemark) throws FailToSaveException;
 
     ActivityRemark getActivityRemarkById(String id);
+
+    boolean updateActivityRemark(ActivityRemark activityRemark) throws FailToUpdateException;
 }
