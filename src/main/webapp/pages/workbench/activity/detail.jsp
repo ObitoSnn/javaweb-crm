@@ -152,7 +152,7 @@
                             {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
                      */
 
-                    var html = "<option></option>";
+                    var html = "";
 
                     $.each(data.uList, function (i, userObj) {
                         html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";

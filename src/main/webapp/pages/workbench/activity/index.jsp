@@ -54,7 +54,7 @@
 						data
 							[{用户1},{2},{2},....]
 					 */
-					var optionHtml = "<option></option>";
+					var optionHtml = "";
 					$.each(data, function (i, obj) {
                         optionHtml += "<option value='" + obj.id + "'>" + obj.name + "</option>";
 					});
@@ -259,7 +259,7 @@
                             data:
                                 {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
                         */
-						var html = "<option></option>";
+						var html = "";
 						$.each(data.uList, function (i, obj) {
 							html += "<option value='" + obj.id +"'>" + obj.name + "</option>";
 						});
