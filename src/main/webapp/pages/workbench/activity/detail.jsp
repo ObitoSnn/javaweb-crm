@@ -209,6 +209,30 @@
                 }
             });
         });
+
+        //给删除市场活动按钮绑定单击事件
+        $("#deleteActivityBtn").click(function () {
+
+            if (confirm("你确定要删除所选信息吗？")) {
+                $.ajax({
+                    url : "workbench/activity/deleteActivity",
+                    data : {
+                        "id" : "${requestScope.activity.id}"
+                    },
+                    type : "post",
+                    dataType : "json",
+                    success : function (data) {
+                        if (data.success) {
+                            location.href = "pages/workbench/activity/index.jsp";
+                        } else {
+                            alert(data.errorMsg);
+                        }
+                    }
+                });
+            }
+
+        });
+
 	});
 	//获取市场活动备注信息
 	function getActivityRemarkList() {
@@ -406,7 +430,7 @@
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
 			<button id="editActivityBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button id="deleteActivityBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
