@@ -1,10 +1,9 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
+	<%@ include file="../../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
 	//页面加载完毕
@@ -32,7 +31,7 @@
 		});
 		
 		//展示市场活动页面
-		window.open("type/index.html","workareaFrame");
+		window.open("pages/settings/dictionary/type/index.jsp","workareaFrame");
 		
 	});
 	
@@ -125,7 +124,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../../../login.html';">确定</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='login.jsp';">确定</button>
 				</div>
 			</div>
 		</div>
@@ -141,8 +140,8 @@
 						<span class="glyphicon glyphicon-user"></span> zhangsan <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="../../workbench/index.html"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
-						<li><a href="../index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
+						<li><a href="pages/workbench/index.jsp"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
+						<li><a href="pages/settings/index.jsp"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
@@ -159,8 +158,8 @@
 		<div id="navigation" style="left: 0px; width: 18%; position: relative; height: 100%; overflow:auto;">
 		
 			<ul id="no1" class="nav nav-pills nav-stacked">
-				<li class="liClass"><a href="type/index.html" target="workareaFrame"><span class="glyphicon glyphicon-book"></span> 字典类型</a></li>
-				<li class="liClass"><a href="value/index.html" target="workareaFrame"><span class="glyphicon glyphicon-list"></span> 字典值</a></li>
+				<li class="liClass"><a href="pages/settings/dictionary/type/index.jsp" target="workareaFrame"><span class="glyphicon glyphicon-book"></span> 字典类型</a></li>
+				<li class="liClass"><a href="pages/settings/dictionary/value/index.jsp" target="workareaFrame"><span class="glyphicon glyphicon-list"></span> 字典值</a></li>
 			</ul>
 			
 			<!-- 分割线 -->
