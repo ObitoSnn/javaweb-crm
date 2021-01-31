@@ -135,6 +135,46 @@
 
         });
 
+        //给编辑按钮绑定单击事件
+        $("#editActivityBtn").click(function () {
+            //获取市场活动id
+            var id = "${requestScope.activity.id}";
+
+            $.ajax({
+                url : "workbench/activity/getUserListAndActivity",
+                data : {
+                    "id" : id
+                },
+                type : "get",
+                dataType : "json",
+                success : function (data) {
+                    /*
+                        data
+                            {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
+                     */
+
+                    var html = "<option></option>";
+
+                    $.each(data.uList, function (i, userObj) {
+                        html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
+                    });
+                    //填写下拉框信息
+                    $("#edit-owner").html(html);
+
+                    $("#edit-owner").val(data.activity.owner);
+                    $("#edit-name").val(data.activity.name);
+                    $("#edit-startDate").val(data.activity.startDate);
+                    $("#edit-endDate").val(data.activity.endDate);
+                    $("#edit-cost").val(data.activity.cost);
+                    $("#edit-description").val(data.activity.description);
+
+
+                }
+            });
+            //打开修改市场信息模态窗口
+            $("#editActivityModal").modal("show");
+        });
+
 	});
 	//获取市场活动备注信息
 	function getActivityRemarkList() {
@@ -238,12 +278,12 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">修改备注</h4>
+                    <h4 class="modal-title" id="ActivityRemarkModalLabel">修改备注</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="edit-describe" class="col-sm-2 control-label">内容</label>
+                            <label for="edit-description" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">
                                 <textarea class="form-control" rows="3" id="noteContent"></textarea>
                             </div>
@@ -266,49 +306,46 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">修改市场活动</h4>
+                    <h4 class="modal-title" id="ActivityModalLabel">修改市场活动</h4>
                 </div>
                 <div class="modal-body">
 
                     <form class="form-horizontal" role="form">
 
                         <div class="form-group">
-                            <label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-marketActivityOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+                                <select class="form-control" id="edit-owner">
                                 </select>
                             </div>
-                            <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-name">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
+                            <label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+                                <input type="text" class="form-control" id="edit-startDate">
                             </div>
-                            <label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
+                            <label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+                                <input type="text" class="form-control" id="edit-endDate">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-cost" class="col-sm-2 control-label">成本</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-cost" value="5,000">
+                                <input type="text" class="form-control" id="edit-cost">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-describe" class="col-sm-2 control-label">描述</label>
+                            <label for="edit-description" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+                                <textarea class="form-control" rows="3" id="edit-description"></textarea>
                             </div>
                         </div>
 
@@ -334,7 +371,7 @@
 			<h3>市场活动-${requestScope.activity.name} <small>${requestScope.activity.startDate} ~ ${requestScope.activity.endDate}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button id="editActivityBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
