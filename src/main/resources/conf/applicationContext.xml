@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--加载配置文件-->
-    <context:property-placeholder location="classpath:conf/jdbc.properties"/>
+    <context:property-placeholder location="classpath:properties/jdbc.properties"/>
 
     <!--声明数据源DataSource(Druid数据库连接池)，作用：连接数据库-->
     <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource"
