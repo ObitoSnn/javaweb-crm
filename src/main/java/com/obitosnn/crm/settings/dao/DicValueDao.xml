@@ -5,6 +5,17 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DicValueDao">
 
+    <select id="selectDicValueByCode" resultType="DicValue">
+
+        select
+        `id`,
+        `value`,
+        `text`,
+        `orderNo`,
+        `typeCode`
+        from tbl_dic_value where `typeCode` = #{code}
+
+    </select>
 
 
 </mapper>

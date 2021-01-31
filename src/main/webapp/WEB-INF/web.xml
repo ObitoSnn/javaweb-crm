@@ -57,6 +57,13 @@
         <param-value>classpath:conf/applicationContext.xml</param-value>
     </context-param>
 
+    <!--注册监听器
+        将数据字典存入服务器内存中，解决数据字典存储问题
+    -->
+    <listener>
+        <listener-class>com.obitosnn.crm.web.listener.SysInitListener</listener-class>
+    </listener>
+
     <!--注册DispatcherServlet中央调度器
         创建springmvc容器
     -->

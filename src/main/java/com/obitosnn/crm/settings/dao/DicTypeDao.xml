@@ -5,6 +5,15 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DicTypeDao">
 
+    <select id="selectAllDicType" resultType="DicType">
+
+        select
+        `code`,
+        `name`,
+        `description`
+        from tbl_dic_type
+
+    </select>
 
 
 </mapper>
