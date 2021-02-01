@@ -12,8 +12,37 @@
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+
+		//给创建线索的按钮绑定单击事件
+		$("#addClueBtn").click(function () {
+
+			$.ajax({
+				url : "workbench/clue/getUserList",
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					/*
+						data
+							[{用户},...]
+					 */
+
+					var html = "";
+					$.each(data, function (i, userObj) {
+						html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
+					})
+					//为所有者下拉框填数据
+					$("#create-owner").html(html);
+
+					//默认选中当前登录的用户
+					$("#create-owner").val("${sessionScope.user.id}");
+
+					//打开模态窗口
+					$("#createClueModal").modal("show");
+				}
+			});
+
+		});
+
 		
 	});
 	
@@ -35,12 +64,9 @@
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="create-owner">
 								</select>
 							</div>
 							<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -436,7 +462,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 40px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createClueModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button id="addClueBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
