@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
@@ -29,11 +30,13 @@ import java.util.Map;
 public class ActivityController {
     @Autowired
     private ActivityService activityService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = {"/ajaxGetUserList"})
     @ResponseBody
     public List<User> ajaxGetUserList() {
-        return activityService.getUserList();
+        return userService.getUserList();
     }
 
     @RequestMapping(value = {"/saveActivity"})
@@ -121,7 +124,7 @@ public class ActivityController {
         /*
             {"uList":[{用户1},{用户2},...],"activity":"{市场活动}"}
          */
-        List<User> uList = activityService.getUserList();
+        List<User> uList = userService.getUserList();
         Activity activity = activityService.getActivityById(id);
         map.put("uList", uList);
         map.put("activity", activity);

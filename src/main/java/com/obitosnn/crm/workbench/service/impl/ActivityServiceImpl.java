@@ -5,7 +5,6 @@ import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.dao.UserDao;
-import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ActivityDao;
 import com.obitosnn.crm.workbench.dao.ActivityRemarkDao;
@@ -32,10 +31,6 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private ActivityRemarkDao activityRemarkDao;
 
-    @Override
-    public List<User> getUserList() {
-        return userDao.selectAll();
-    }
 
     @Override
     public boolean saveActivity(Activity activity) throws FailToSaveException {

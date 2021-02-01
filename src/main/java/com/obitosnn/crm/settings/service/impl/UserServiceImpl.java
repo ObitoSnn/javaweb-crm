@@ -8,6 +8,8 @@ import com.obitosnn.crm.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author ObitoSnn
  * @Description:
@@ -42,6 +44,11 @@ public class UserServiceImpl implements UserService {
             throw new LoginException("ip地址受限");
         }
         return loginUser;
+    }
+
+    @Override
+    public List<User> getUserList() {
+        return userDao.selectAll();
     }
 
 }
