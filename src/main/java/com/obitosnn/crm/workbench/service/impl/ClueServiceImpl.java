@@ -1,11 +1,16 @@
 package com.obitosnn.crm.workbench.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ClueDao;
 import com.obitosnn.crm.workbench.domain.Clue;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -23,6 +28,19 @@ public class ClueServiceImpl implements ClueService {
             throw new FailToSaveException("线索保存失败");
         }
         return true;
+    }
+
+    @Override
+    public PageVo<Clue> getCluePageVo(Map<String, Object> map) {
+        PageVo<Clue> pageVo = new PageVo<Clue>();
+        int pageNo = Integer.parseInt((String) map.get("pageNo"));
+        int pageSize = Integer.parseInt((String) map.get("pageSize"));
+        PageHelper.startPage(pageNo, pageSize);
+        List<Clue> dataList = clueDao.selectAllClueByMap(map);
+        pageVo.setDataList(dataList);
+        Long total = clueDao.selectTotal(map);
+        pageVo.setTotal(total);
+        return pageVo;
     }
 
 }

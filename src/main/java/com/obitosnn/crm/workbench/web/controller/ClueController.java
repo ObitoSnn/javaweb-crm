@@ -5,6 +5,7 @@ import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Clue;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,24 @@ public class ClueController {
         }
         map.put("success", success);
         return map;
+    }
+
+    @RequestMapping(value = {"/pageList"})
+    @ResponseBody
+    public PageVo<Clue> pageList(HttpServletRequest request, Clue clue) {
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("pageNo", pageNo);
+        map.put("pageSize", pageSize);
+        map.put("fullname", clue.getFullname());
+        map.put("company", clue.getCompany());
+        map.put("phone", clue.getPhone());
+        map.put("source", clue.getSource());
+        map.put("owner", clue.getOwner());
+        map.put("mphone", clue.getMphone());
+        map.put("state", clue.getState());
+       return  clueService.getCluePageVo(map);
     }
 
 }
