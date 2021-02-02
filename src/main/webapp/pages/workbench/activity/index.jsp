@@ -26,16 +26,6 @@
 		// 给打开创建市场活动操作的模态窗口绑定单击事件
 		$("#addBtn").click(function () {
 
-			//时间控件
-			$(".time").datetimepicker({
-				minView: "month",
-				language:  'zh-CN',
-				format: 'yyyy-mm-dd', //显示格式
-				autoclose: true,
-				todayBtn: true,
-				pickerPosition: "bottom-left"
-			});
-
 			/*
 				操作模态窗口的方式：
 				需要操作的模态窗口的jquery对象，调用modal方法，
