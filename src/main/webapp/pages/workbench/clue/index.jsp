@@ -203,7 +203,7 @@
 				$.each(data.dataList, function (i, obj) {
 					html += '<tr class="active">';
 					html += '<td><input name="checkbox-single" type="checkbox" value="' + obj.id + '" /></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/clue/detail.jsp\';">' + obj.fullname + '</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/getClueDetail?id=' + obj.id + '\';">' + obj.fullname + '</a></td>';
 					html += '<td>' + obj.company + '</td>';
 					html += '<td>' + obj.phone + '</td>';
 					html += '<td>' + obj.mphone + '</td>';

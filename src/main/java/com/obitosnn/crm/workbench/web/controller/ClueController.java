@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -75,6 +76,15 @@ public class ClueController {
         map.put("mphone", clue.getMphone());
         map.put("state", clue.getState());
        return  clueService.getCluePageVo(map);
+    }
+
+    @RequestMapping(value = {"/getClueDetail"})
+    public ModelAndView getClueDetailById(String id) {
+        ModelAndView mv = new ModelAndView();
+        Clue clue = clueService.getClueDetailById(id);
+        mv.addObject("clue", clue);
+        mv.setViewName("/pages/workbench/clue/detail.jsp");
+        return mv;
     }
 
 }

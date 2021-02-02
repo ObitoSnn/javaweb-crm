@@ -14,4 +14,6 @@ public interface ClueDao {
 
     List<Clue> selectAllClueByMap(Map<String, Object> map);
 
+    Clue getClueDetailById(String id);
+
 }

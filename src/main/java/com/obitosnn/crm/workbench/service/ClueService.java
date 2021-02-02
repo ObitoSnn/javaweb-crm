@@ -15,5 +15,7 @@ public interface ClueService {
     boolean saveClue(Clue clue) throws FailToSaveException;
 
     PageVo<Clue> getCluePageVo(Map<String, Object> map);
-    
+
+    Clue getClueDetailById(String id);
+
 }

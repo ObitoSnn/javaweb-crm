@@ -43,4 +43,9 @@ public class ClueServiceImpl implements ClueService {
         return pageVo;
     }
 
+    @Override
+    public Clue getClueDetailById(String id) {
+        return clueDao.getClueDetailById(id);
+    }
+
 }
