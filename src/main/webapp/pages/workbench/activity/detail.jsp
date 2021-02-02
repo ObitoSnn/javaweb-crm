@@ -3,6 +3,9 @@
 <html>
 <head>
 	<%@ include file="../../common/base_css_jquery.jsp"%>
+    <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet"/>
 <meta charset="UTF-8">
 <script type="text/javascript">
 
@@ -52,6 +55,16 @@
         $("#remarkBody").on("mouseout",".remarkDiv",function(){
             $(this).children("div").children("div").hide();
         })
+
+        //时间控件
+        $(".time").datetimepicker({
+            minView: "month",
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd', //显示格式
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
 
         //给保存市场活动备注按钮绑定单击事件
         $("#saveActivityRemarkBtn").click(function () {
@@ -385,11 +398,11 @@
                         <div class="form-group">
                             <label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-startDate">
+                                <input type="text" class="form-control time" id="edit-startDate">
                             </div>
                             <label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-endDate">
+                                <input type="text" class="form-control time" id="edit-endDate">
                             </div>
                         </div>
 
@@ -412,7 +425,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="updateActivity" type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                    <button id="updateActivity" type="button" class="btn btn-primary">更新</button>
                 </div>
             </div>
         </div>
