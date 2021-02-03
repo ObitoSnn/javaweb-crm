@@ -43,4 +43,6 @@ public interface ActivityService {
 
     List<Activity> getNotBindActivityListByClueId(String clueId);
 
+    List<Activity> getNotBindActivityListByName(String name);
+
 }

@@ -57,7 +57,51 @@
 
 		});
 
+		//给关联市场活动的模态窗口中的文本框绑定keydown事件
+		$("#activityNameInput").keydown(function (event) {
+			var name = $.trim($("#activityNameInput").val());
+			if (event.keyCode == 13) {
+				getNotBindActivityListByName(name);
+				//阻止模态窗口键入回车键刷新页面的默认行为
+				return false;
+			}
+		});
+
 	});
+
+	//通过名字获取未关联的市场活动列表
+	function getNotBindActivityListByName(name) {
+
+		$.ajax({
+			url : "workbench/clue/getNotBindActivityListByName",
+			data : {
+				"name" : name
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data
+						[{市场活动1},...]
+				 */
+				var html = "";
+				$.each(data, function (i, aObj) {
+					html += '<tr>';
+					html += '<td><input name="checkbox-single" value="' + aObj.id + '" type="checkbox"/></td>';
+					html += '<td>' + aObj.name + '</td>';
+					html += '<td>' + aObj.startDate + '</td>';
+					html += '<td>' + aObj.endDate + '</td>';
+					html += '<td>' + aObj.owner + '</td>';
+					html += '</tr>';
+				});
+				//给展现未关联市场活动列表的tbody填充数据
+				$("#showSearchActivityTBody").html(html);
+			}
+		});
+
+		$()
+
+	}
 
 	//获取未关联的市场活动列表
 	function getNotBindActivityListByClueId() {

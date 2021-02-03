@@ -147,4 +147,9 @@ public class ActivityServiceImpl implements ActivityService {
     public List<Activity> getNotBindActivityListByClueId(String clueId) {
         return activityDao.selectNotBindActivityListByClueId(clueId);
     }
+
+    @Override
+    public List<Activity> getNotBindActivityListByName(String name) {
+        return activityDao.selectNotBindActivityListByName(name);
+    }
 }

@@ -201,10 +201,31 @@
         from tbl_activity a
         inner join tbl_clue_activity_relation car
         on car.`activityId`=a.`id`
-        inner join tbl_user u
-        on u.`id`=a.`owner`
         where car.`clueId`=#{clueId}
         )
+
+    </select>
+
+    <select id="selectNotBindActivityListByName" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id`=a.`owner`
+        where a.`id` not in
+        (
+        select
+        a.`id`
+        from tbl_activity a
+        inner join tbl_clue_activity_relation car
+        on car.`activityId`=a.`id`
+        where car.`clueId`=#{clueId}
+        ) and a.`name` like '%' #{name} '%'
 
     </select>
 

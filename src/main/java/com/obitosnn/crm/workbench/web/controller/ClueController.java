@@ -166,4 +166,10 @@ public class ClueController {
     public List<Activity> getNotBindActivityListByClueId(String clueId) {
         return activityService.getNotBindActivityListByClueId(clueId);
     }
+
+    @RequestMapping(value = {"/getNotBindActivityListByName"})
+    @ResponseBody
+    public List<Activity> getNotBindActivityListByName(String name) {
+        return activityService.getNotBindActivityListByName(name);
+    }
 }

@@ -30,4 +30,6 @@ public interface ActivityDao {
 
     List<Activity> selectNotBindActivityListByClueId(String clueId);
 
+    List<Activity> selectNotBindActivityListByName(String name);
+
 }
