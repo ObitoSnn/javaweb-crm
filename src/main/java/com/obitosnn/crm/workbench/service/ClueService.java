@@ -26,4 +26,5 @@ public interface ClueService {
 
     boolean updateClueById(Clue clue) throws FailToUpdateException;
 
+    boolean deleteCarByCarId(String carId) throws FailToUpdateException;
 }

@@ -146,4 +146,18 @@ public class ClueController {
         return activityService.getActivityListByClueId(clueId);
     }
 
+    @RequestMapping(value = {"/unBindCarByCarId"})
+    @ResponseBody
+    public Map<String, Object> unBindCarByCarId(String carId) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = clueService.deleteCarByCarId(carId);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
 }

@@ -49,6 +49,7 @@
 
 	});
 
+	//展示与线索关联的市场活动列表
 	function getActivityListByClueId() {
 		$.ajax({
 			url : "workbench/clue/getActivityListByClueId",
@@ -69,9 +70,9 @@
 					html += '<td>' + aObj.startDate + '</td>';
 					html += '<td>' + aObj.endDate + '</td>';
 					html += '<td>' + aObj.owner + '</td>';
-					html += '<td><a href="javascript:void(0);" onclick="onbind(\'' + aObj.id + '\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>';
+					html += '<td><a href="javascript:void(0);" onclick="unBindCarByCarId(\'' + aObj.id + '\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>';
 					html += '</tr>';
-				})
+				});
 				//展示关联的市场活动信息
 				$("#showActivityTBody").html(html);
 			}
@@ -80,7 +81,27 @@
 	}
 
 	//carId：关联关系表(tbl_clue_activity_relation)中的id
-	function onbind(carId) {
+	function unBindCarByCarId(carId) {
+
+		$.ajax({
+			url : "workbench/clue/unBindCarByCarId",
+			data : {
+				"carId" : carId
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+				/*
+					{"success":true/false,"errorMsg":错误信息}
+				 */
+				if (data.success) {
+					//刷新与线索关联的市场活动列表
+					getActivityListByClueId();
+				} else {
+					alert(data.errorMsg);
+				}
+			}
+		});
 
 	}
 

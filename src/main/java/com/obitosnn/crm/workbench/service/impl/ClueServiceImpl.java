@@ -6,6 +6,7 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.vo.PageVo;
+import com.obitosnn.crm.workbench.dao.ClueActivityRelationDao;
 import com.obitosnn.crm.workbench.dao.ClueDao;
 import com.obitosnn.crm.workbench.domain.Clue;
 import com.obitosnn.crm.workbench.service.ClueService;
@@ -23,6 +24,8 @@ import java.util.Map;
 public class ClueServiceImpl implements ClueService {
     @Autowired
     private ClueDao clueDao;
+    @Autowired
+    private ClueActivityRelationDao clueActivityRelationDao;
 
     @Override
     public boolean saveClue(Clue clue) throws FailToSaveException {
@@ -78,6 +81,15 @@ public class ClueServiceImpl implements ClueService {
         Integer count = clueDao.updateClueById(clue);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("更新失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteCarByCarId(String carId) throws FailToUpdateException {
+        Integer count = clueActivityRelationDao.deleteClueActivityRelationById(carId);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("解除关联失败");
         }
         return true;
     }
