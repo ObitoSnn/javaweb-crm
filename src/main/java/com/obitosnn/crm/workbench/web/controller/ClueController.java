@@ -160,4 +160,10 @@ public class ClueController {
         map.put("success", success);
         return map;
     }
+
+    @RequestMapping(value = {"/getNotBindActivityListByClueId"})
+    @ResponseBody
+    public List<Activity> getNotBindActivityListByClueId(String clueId) {
+        return activityService.getNotBindActivityListByClueId(clueId);
+    }
 }

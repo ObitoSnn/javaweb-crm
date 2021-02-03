@@ -47,7 +47,49 @@
 		//页面加载完毕后展示关联的市场活动
 		getActivityListByClueId();
 
+		//给关联市场活动a标签绑定单击事件
+		$("#bindActivity").click(function () {
+			//打开关联市场活动模态窗口
+			$("#bundModal").modal("show");
+
+			//获取未关联的市场活动列表
+			getNotBindActivityListByClueId();
+
+		});
+
 	});
+
+	//获取未关联的市场活动列表
+	function getNotBindActivityListByClueId() {
+
+		$.ajax({
+			url : "workbench/clue/getNotBindActivityListByClueId",
+			data : {
+				"clueId" : "${requestScope.clue.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data
+						[{市场活动1},...]
+				 */
+				var html = "";
+				$.each(data, function (i, aObj) {
+					html += '<tr>';
+					html += '<td><input name="checkbox-single" value="' + aObj.id + '" type="checkbox"/></td>';
+					html += '<td>' + aObj.name + '</td>';
+					html += '<td>' + aObj.startDate + '</td>';
+					html += '<td>' + aObj.endDate + '</td>';
+					html += '<td>' + aObj.owner + '</td>';
+					html += '</tr>';
+				});
+				//给展现未关联市场活动列表的tbody填充数据
+				$("#showSearchActivityTBody").html(html);
+			}
+		});
+
+	}
 
 	//展示与线索关联的市场活动列表
 	function getActivityListByClueId() {
@@ -124,7 +166,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input id="activityNameInput" type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -140,21 +182,7 @@
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="showSearchActivityTBody">
 						</tbody>
 					</table>
 				</div>
@@ -487,7 +515,7 @@
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bindActivity" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>
