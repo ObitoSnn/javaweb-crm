@@ -49,6 +49,9 @@
 
 		//给关联市场活动a标签绑定单击事件
 		$("#bindActivity").click(function () {
+			//清空文本框内容
+			$("#activityNameInput").val("");
+
 			//打开关联市场活动模态窗口
 			$("#bundModal").modal("show");
 
