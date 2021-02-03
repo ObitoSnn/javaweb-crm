@@ -298,7 +298,8 @@
 						"source" : source,
 						"description" : description,
 						"contactSummary" : contactSummary,
-						"nextContactTime" : nextContactTime
+						"nextContactTime" : nextContactTime,
+						"address" : address
 					},
 					type : "post",
 					dataType : "json",
