@@ -398,11 +398,11 @@
                         <div class="form-group">
                             <label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control time" id="edit-startDate">
+                                <input type="text" class="form-control time" id="edit-startDate" readonly>
                             </div>
                             <label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control time" id="edit-endDate">
+                                <input type="text" class="form-control time" id="edit-endDate" readonly>
                             </div>
                         </div>
 
