@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.service;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Clue;
@@ -19,5 +20,7 @@ public interface ClueService {
     Clue getClueDetailById(String id);
 
     Clue getClueById(String id);
+
+    boolean deleteClueByIds(String[] ids) throws FailToDeleteException;
 
 }

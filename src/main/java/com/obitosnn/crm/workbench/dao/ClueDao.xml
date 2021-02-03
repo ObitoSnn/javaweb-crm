@@ -192,4 +192,11 @@
 
     </select>
 
+    <delete id="deleteClueByIds">
+        delete from tbl_clue where `id` in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

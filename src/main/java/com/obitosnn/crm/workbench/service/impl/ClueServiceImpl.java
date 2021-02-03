@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ClueDao;
@@ -51,6 +52,15 @@ public class ClueServiceImpl implements ClueService {
     @Override
     public Clue getClueById(String id) {
         return clueDao.selectClueById(id);
+    }
+
+    @Override
+    public boolean deleteClueByIds(String[] ids) throws FailToDeleteException {
+        Integer count = clueDao.deleteClueByIds(ids);
+        if (count.compareTo(ids.length) != 0) {
+            throw new FailToDeleteException("删除失败");
+        }
+        return true;
     }
 
 }

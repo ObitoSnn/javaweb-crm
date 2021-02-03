@@ -18,4 +18,6 @@ public interface ClueDao {
 
     Clue selectClueById(String id);
 
+    Integer deleteClueByIds(String[] ids);
+
 }

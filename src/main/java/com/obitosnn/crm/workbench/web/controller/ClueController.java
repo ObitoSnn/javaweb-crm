@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
@@ -95,6 +96,22 @@ public class ClueController {
         Clue clue = clueService.getClueById(id);
         map.put("uList", uList);
         map.put("clue", clue);
+        return map;
+    }
+
+    @RequestMapping(value = {"/deleteClueByIds"})
+    @ResponseBody
+    public Map<String, Object> deleteClueByIds(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        boolean success = false;
+        try {
+            success = clueService.deleteClueByIds(ids);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
         return map;
     }
 
