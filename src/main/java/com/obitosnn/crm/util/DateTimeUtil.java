@@ -17,5 +17,10 @@ public class DateTimeUtil {
 		return dateStr;
 		
 	}
+
+	public static String getDate() {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(new Date());
+	}
 	
 }
