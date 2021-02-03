@@ -24,6 +24,10 @@ public class ClueServiceImpl implements ClueService {
 
     @Override
     public boolean saveClue(Clue clue) throws FailToSaveException {
+        String nextContactTime = clue.getNextContactTime();
+        if (nextContactTime.compareTo(DateTimeUtil.getDate()) < 0) {
+            throw new FailToSaveException("填写的时间非法");
+        }
         Integer count = clueDao.insertClue(clue);
         if (count != 1) {
             throw new FailToSaveException("线索保存失败");
