@@ -199,4 +199,27 @@
         </foreach>
     </delete>
 
+    <update id="updateClueById">
+
+        update tbl_clue set
+        `fullname` = #{fullname},
+        `appellation` = #{appellation},
+        `owner` = #{owner},
+        `company` = #{company},
+        `job` = #{job},
+        `email` = #{email},
+        `phone` = #{phone},
+        `website` = #{website},
+        `mphone` = #{mphone},
+        `state` = #{state},
+        `source` = #{source},
+        `editBy` = #{editBy},
+        `editTime` = #{editTime},
+        `description` = #{description},
+        `contactSummary` = #{contactSummary},
+        `nextContactTime` = #{nextContactTime},
+        `address` = #{address}
+        where `id` = #{id}
+    </update>
+
 </mapper>

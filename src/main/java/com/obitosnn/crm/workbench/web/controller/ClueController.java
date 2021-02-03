@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -108,6 +109,26 @@ public class ClueController {
         try {
             success = clueService.deleteClueByIds(ids);
         } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateClueById"})
+    @ResponseBody
+    public Map<String, Object> updateClueById(HttpServletRequest request, Clue clue) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //editBy
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        clue.setEditBy(editBy);
+        //editTime
+        clue.setEditTime(DateTimeUtil.getSysTime());
+        boolean success = false;
+        try {
+            success = clueService.updateClueById(clue);
+        } catch (FailToUpdateException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

@@ -3,6 +3,8 @@ package com.obitosnn.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
+import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ClueDao;
 import com.obitosnn.crm.workbench.domain.Clue;
@@ -63,6 +65,19 @@ public class ClueServiceImpl implements ClueService {
         Integer count = clueDao.deleteClueByIds(ids);
         if (count.compareTo(ids.length) != 0) {
             throw new FailToDeleteException("删除失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateClueById(Clue clue) throws FailToUpdateException {
+        String nextContactTime = clue.getNextContactTime();
+        if (nextContactTime.compareTo(DateTimeUtil.getDate()) < 0) {
+            throw new FailToUpdateException("填写的时间非法");
+        }
+        Integer count = clueDao.updateClueById(clue);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("更新失败");
         }
         return true;
     }

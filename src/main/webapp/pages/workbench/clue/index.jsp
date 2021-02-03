@@ -251,6 +251,78 @@
 
 		});
 
+		//给更新线索按钮绑定单击事件
+		$("#updateClueBtn").click(function () {
+
+			var owner = $.trim($("#edit-owner").val());
+			var company = $.trim($("#edit-company").val());
+			var appellation = $.trim($("#edit-appellation").val());
+			var fullname = $.trim($("#edit-fullname").val());
+			var job = $.trim($("#edit-job").val());
+			var email = $.trim($("#edit-email").val());
+			var phone = $.trim($("#edit-phone").val());
+			var website = $.trim($.trim($("#edit-website").val()));
+			var mphone = $.trim($("#edit-mphone").val());
+			var state = $.trim($("#edit-state").val());
+			var source = $.trim($("#edit-source").val());
+			var description = $.trim($("#edit-description").val());
+			var contactSummary = $.trim($("#edit-contactSummary").val());
+			var nextContactTime = $.trim($("#edit-nextContactTime").val());
+			var address = $.trim($("#edit-address").val());
+
+
+			if (fullname == "" || appellation == "" || owner == ""
+					|| company == "" || job == "" || email == "" || phone == ""
+					|| website == "" || mphone == "" || state == "" || source == ""
+					|| description == "" ||contactSummary == ""
+					|| nextContactTime == "" || address == "") {
+				alert("请填写相关信息");
+			} else {
+				//选中的复选框
+				var $checkbox = $("input[name='checkbox-single']:checked");
+				var id = $checkbox.val();
+				$.ajax({
+					url : "workbench/clue/updateClueById",
+					data : {
+						"id" : id,
+						"fullname" : fullname,
+						"appellation" : appellation,
+						"owner" : owner,
+						"company" : company,
+						"job" : job,
+						"email" : email,
+						"phone" : phone,
+						"website" : website,
+						"mphone" : mphone,
+						"state" : state,
+						"source" : source,
+						"description" : description,
+						"contactSummary" : contactSummary,
+						"nextContactTime" : nextContactTime
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data
+                                {"success":true/false,"errorMsg":错误信息}
+                        */
+						if (data.success) {
+							//关闭修改线索的模态窗口
+							$("#editClueModal").modal("hide");
+
+							//修改数据后，刷新页面数据，留在当前页面，每页显示数据数不变
+							pageList($("#cluePage").bs_pagination('getOption', 'currentPage')
+									,$("#cluePage").bs_pagination('getOption', 'rowsPerPage'));
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
+
+		});
+
 	});
 
 	function pageList(pageNo, pageSize) {
@@ -611,7 +683,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button id="updateClueBtn" type="button" class="btn btn-primary">更新</button>
 				</div>
 			</div>
 		</div>
