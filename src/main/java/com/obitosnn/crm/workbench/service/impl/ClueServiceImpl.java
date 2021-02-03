@@ -45,7 +45,12 @@ public class ClueServiceImpl implements ClueService {
 
     @Override
     public Clue getClueDetailById(String id) {
-        return clueDao.getClueDetailById(id);
+        return clueDao.selectClueDetailById(id);
+    }
+
+    @Override
+    public Clue getClueById(String id) {
+        return clueDao.selectClueById(id);
     }
 
 }

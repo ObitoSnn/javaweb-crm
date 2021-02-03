@@ -18,4 +18,6 @@ public interface ClueService {
 
     Clue getClueDetailById(String id);
 
+    Clue getClueById(String id);
+
 }

@@ -87,4 +87,15 @@ public class ClueController {
         return mv;
     }
 
+    @RequestMapping(value = {"/getUserListAndClueById"})
+    @ResponseBody
+    public Map<String, Object> getUserListAndClueById(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> uList = userService.getUserList();
+        Clue clue = clueService.getClueById(id);
+        map.put("uList", uList);
+        map.put("clue", clue);
+        return map;
+    }
+
 }

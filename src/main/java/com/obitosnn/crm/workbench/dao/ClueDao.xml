@@ -139,7 +139,7 @@
 
     </select>
 
-    <select id="getClueDetailById" resultType="Clue">
+    <select id="selectClueDetailById" resultType="Clue">
 
         select
         c.`id`,
@@ -165,6 +165,29 @@
         inner join tbl_user u
         on c.`owner` = u.`id`
         where c.`id` = #{id}
+
+    </select>
+
+    <select id="selectClueById" resultType="Clue">
+
+        select
+        `id`,
+        `fullname`,
+        `appellation`,
+        `owner`,
+        `company`,
+        `job`,
+        `email`,
+        `phone`,
+        `website`,
+        `mphone`,
+        `state`,
+        `source`,
+        `description`,
+        `contactSummary`,
+        `nextContactTime`,
+        `address`
+        from tbl_clue where `id` = #{id}
 
     </select>
 
