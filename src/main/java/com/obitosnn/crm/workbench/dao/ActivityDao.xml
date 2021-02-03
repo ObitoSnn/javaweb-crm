@@ -166,4 +166,21 @@
 
     </select>
 
+    <select id="selectActivityListByClueId" resultType="Activity">
+
+        select
+        car.`id` as `id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id` = a.`owner`
+        inner join tbl_clue_activity_relation car
+        on car.`activityId` = a.`id`
+        where car.`clueId` = #{clueId}
+
+    </select>
+
 </mapper>

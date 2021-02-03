@@ -43,8 +43,47 @@
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//页面加载完毕后展示关联的市场活动
+		getActivityListByClueId();
+
 	});
-	
+
+	function getActivityListByClueId() {
+		$.ajax({
+			url : "workbench/clue/getActivityListByClueId",
+			data : {
+				"clueId" : "${requestScope.clue.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data
+						[{市场活动1},{市场活动2},...]
+				 */
+				var html = "";
+				$.each(data, function (i, aObj) {
+					html += '<tr>';
+					html += '<td>' + aObj.name + '</td>';
+					html += '<td>' + aObj.startDate + '</td>';
+					html += '<td>' + aObj.endDate + '</td>';
+					html += '<td>' + aObj.owner + '</td>';
+					html += '<td><a href="javascript:void(0);" onclick="onbind(\'' + aObj.id + '\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>';
+					html += '</tr>';
+				})
+				//展示关联的市场活动信息
+				$("#showActivityTBody").html(html);
+			}
+		});
+
+	}
+
+	//carId：关联关系表(tbl_clue_activity_relation)中的id
+	function onbind(carId) {
+
+	}
+
 </script>
 
 </head>
@@ -421,21 +460,7 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+					<tbody id="showActivityTBody">
 					</tbody>
 				</table>
 			</div>

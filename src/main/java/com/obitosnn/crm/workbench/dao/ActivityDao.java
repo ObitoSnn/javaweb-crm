@@ -25,5 +25,7 @@ public interface ActivityDao {
     Integer updateActivity(Activity activity);
 
     Activity selectActivityDetailById(String id);
-    
+
+    List<Activity> selectActivityListByClueId(String clueId);
+
 }

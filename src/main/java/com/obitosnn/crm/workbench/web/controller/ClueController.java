@@ -8,7 +8,9 @@ import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
+import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Clue;
+import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,8 @@ public class ClueController {
     private UserService userService;
     @Autowired
     private ClueService clueService;
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping(value = {"/getUserList"})
     @ResponseBody
@@ -134,6 +138,12 @@ public class ClueController {
         }
         map.put("success", success);
         return map;
+    }
+
+    @RequestMapping(value = {"/getActivityListByClueId"})
+    @ResponseBody
+    public List<Activity> getActivityListByClueId(String clueId) {
+        return activityService.getActivityListByClueId(clueId);
     }
 
 }

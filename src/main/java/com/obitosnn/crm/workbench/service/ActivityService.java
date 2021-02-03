@@ -38,4 +38,7 @@ public interface ActivityService {
     ActivityRemark getActivityRemarkById(String id);
 
     boolean updateActivityRemark(ActivityRemark activityRemark) throws FailToUpdateException;
+
+    List<Activity> getActivityListByClueId(String clueId);
+
 }

@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
-import com.obitosnn.crm.settings.dao.UserDao;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ActivityDao;
 import com.obitosnn.crm.workbench.dao.ActivityRemarkDao;
@@ -24,8 +23,6 @@ import java.util.Map;
  */
 @Service
 public class ActivityServiceImpl implements ActivityService {
-    @Autowired
-    private UserDao userDao;
     @Autowired
     private ActivityDao activityDao;
     @Autowired
@@ -139,5 +136,10 @@ public class ActivityServiceImpl implements ActivityService {
             throw new FailToUpdateException("备注修改失败");
         }
         return true;
+    }
+
+    @Override
+    public List<Activity> getActivityListByClueId(String clueId) {
+        return activityDao.selectActivityListByClueId(clueId);
     }
 }
