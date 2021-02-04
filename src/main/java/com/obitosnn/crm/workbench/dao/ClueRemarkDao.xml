@@ -4,8 +4,71 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ClueRemarkDao">
-	
-  	
+
+    <insert id="insertClueRemark">
+
+        insert into tbl_clue_remark(
+            `id`,
+            `noteContent`,
+            `createTime`,
+            `createBy`,
+            `editFlag`,
+            `clueId`
+        )
+        values(
+            #{id},
+            #{noteContent},
+            #{createTime},
+            #{createBy},
+            #{editFlag},
+            #{clueId}
+        )
+
+    </insert>
+
+    <select id="selectClueRemarkById" resultType="ClueRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`
+        from tbl_clue_remark where `id` = #{id}
+
+    </select>
+
+    <select id="selectClueRemarkListByClueId" resultType="ClueRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editTime`,
+        `editBy`,
+        `editFlag`,
+        `clueId`
+        from tbl_clue_remark where `clueId` = #{id} order by `createTime` desc
+
+    </select>
+
+    <update id="updateClueRemarkById">
+
+        update tbl_clue_remark set
+        `noteContent` = #{noteContent},
+        `editTime` = #{editTime},
+        `editBy` = #{editBy},
+        `editFlag` = #{editFlag}
+        where `id` = #{id}
+
+    </update>
+
+    <delete id="deleteClueRemarkById">
+
+        delete from tbl_clue_remark where `id` = #{id}
+
+    </delete>
+
 </mapper>
 
 

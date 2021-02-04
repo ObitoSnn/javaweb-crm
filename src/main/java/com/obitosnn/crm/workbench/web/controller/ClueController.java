@@ -10,6 +10,7 @@ import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Clue;
+import com.obitosnn.crm.workbench.domain.ClueRemark;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,5 +192,92 @@ public class ClueController {
         map.put("success", success);
         return map;
     }
+
+    @RequestMapping(value = {"/saveClueRemark"})
+    @ResponseBody
+    public Map<String, Object> saveClueRemark(HttpServletRequest request, ClueRemark clueRemark) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"activityRemark":{市场活动备注}}
+        //设置id
+        String id = UUIDUtil.getUUID();
+        clueRemark.setId(id);
+        //设置createTime
+        clueRemark.setCreateTime(DateTimeUtil.getSysTime());
+        //设置createBy
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        clueRemark.setCreateBy(createBy);
+        //设置editFlag
+        clueRemark.setEditFlag("0");
+        boolean success = false;
+        try {
+            success = clueService.saveClueRemark(clueRemark);
+            clueRemark = clueService.getClueRemarkById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("clueRemark", clueRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getClueRemarkList"})
+    @ResponseBody
+    public Map<String, Object> getClueRemarkList(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"activityRemarkList":[{"线索备注"},...]}
+        List<ClueRemark> clueRemarkList = clueService.getClueRemarkListByClueId(id);
+        map.put("clueRemarkList", clueRemarkList);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateClueRemark"})
+    @ResponseBody
+    public Map<String, Object> updateClueRemark(HttpServletRequest request, ClueRemark clueRemark, String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"activityRemark":{线索备注},"errorMsg":错误信息}
+        //设置editTime
+        String editTime = DateTimeUtil.getSysTime();
+        clueRemark.setEditTime(editTime);
+        //设置editBy
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        clueRemark.setEditBy(editBy);
+        //设置editFlag为1
+        clueRemark.setEditFlag("1");
+        //获取的请求参数即为备注信息的id
+        clueRemark.setId(id);
+        boolean success = false;
+        try {
+            success = clueService.updateClueRemark(clueRemark);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("clueRemark", clueRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/deleteClueRemark"})
+    @ResponseBody
+    public Map<String, Object> deleteClueRemarkById(String id) throws Exception {
+    Map<String, Object> map = new HashMap<String, Object>();
+    //{"success":true/false,"errorMsg":错误信息}
+    boolean success = false;
+    try {
+        success = clueService.deleteClueRemarkById(id);
+    } catch (Exception e) {
+        e.printStackTrace();
+        String errorMsg = e.getMessage();
+        //抛出异常，给WorkBenchGlobalExceptionHandler处理
+        throw new Exception(errorMsg);
+    }
+    map.put("success", success);
+    return map;
+}
 
 }

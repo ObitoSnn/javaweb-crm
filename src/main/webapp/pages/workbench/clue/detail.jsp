@@ -47,6 +47,16 @@
 		//页面加载完毕后展示关联的市场活动
 		getActivityListByClueId();
 
+		//页面加载完毕获取线索备注信息
+		getClueRemarkList();
+		//使用on操控动态生成的备注的修改和删除按钮
+		$("#remarkBody").on("mouseover",".remarkDiv",function(){
+			$(this).children("div").children("div").show();
+		})
+		$("#remarkBody").on("mouseout",".remarkDiv",function(){
+			$(this).children("div").children("div").hide();
+		})
+
 		//给关联市场活动a标签绑定单击事件
 		$("#bindActivity").click(function () {
 			//清空文本框内容
@@ -128,6 +138,86 @@
 
 		});
 
+		//给保存线索备注按钮绑定单击事件
+		$("#saveClueRemarkBtn").click(function () {
+
+			$.ajax({
+				url : "workbench/clue/saveClueRemark",
+				data : {
+					"noteContent" : $.trim($("#remark").val()),
+					"clueId" : "${requestScope.clue.id}"
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+
+					/*
+                        data
+                            {"success":true/false,"clueRemark":{线索备注}}
+                     */
+					if (data.success) {
+						var html = "";
+						html += '<div id="' + data.clueRemark.id + '" class="remarkDiv" style="height: 60px;">';
+						html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
+						html += '<div style="position: relative; top: -40px; left: 40px;" >';
+						html += '<h5 id="h' + data.clueRemark.id + '">' + data.clueRemark.noteContent +'</h5>';
+						html += '<font color="gray">线索</font> <font color="gray">-</font> <b>${requestScope.clue.fullname}-${requestScope.clue.company}</b> <small style="color: gray;" id="s' + data.clueRemark.id +'"> ' + data.clueRemark.createTime + '由' + data.clueRemark.createBy + '</small>';
+						html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+						html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+						html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+						html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+						html += '</div>';
+						html += '</div>';
+						html += '</div>';
+
+						//在显示文本域的上方追加备注信息
+						$("#remarkDiv").before(html);
+
+						//清空文本域内容
+						$("#remark").val("");
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		});
+
+		//给更新线索备注按钮绑定单击事件
+		$("#updateRemarkBtn").click(function () {
+
+			//从隐藏域中获取备注信息的id
+			var id = $("#remarkId").val();
+
+			$.ajax({
+				url : "workbench/clue/updateClueRemark",
+				data : {
+					"id" : id,
+					"noteContent" : $.trim($("#noteContent").val())
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					/*
+                        data
+                            {"success":true/false,"clueRemark":{线索备注},"errorMsg":错误信息}
+                     */
+					if (data.success) {
+						//修改成功
+						//修改h标签内容
+						$("#h" + id).html(data.clueRemark.noteContent);
+						//修改small标签内容
+						$("#s" + id).html(data.clueRemark.editTime + '由' + data.clueRemark.editBy);
+						//关闭模态窗口
+						$("#editRemarkModal").modal("hide");
+					} else {
+						//修改失败
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		});
 
 	});
 
@@ -252,10 +342,128 @@
 
 	}
 
+	//获取线索备注信息
+	function getClueRemarkList() {
+
+		$.ajax({
+			url : "workbench/clue/getClueRemarkList",
+			data : {
+				"id" : "${requestScope.clue.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data
+						{"clueRemarkList":[{"线索备注1"},...]}
+				 */
+				var html = "";
+				$.each(data.clueRemarkList, function (i, obj) {
+					/*
+                        javascript:void(0);
+                            将超链接禁用，只能以触发事件的形式来操作
+                     */
+					html += '<div id="' + obj.id + '" class="remarkDiv" style="height: 60px;">';
+					html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
+					html += '<div style="position: relative; top: -40px; left: 40px;" >';
+					html += '<h5 id="h' + obj.id + '">' + obj.noteContent +'</h5>';
+					html += '<font color="gray">线索</font> <font color="gray">-</font> <b>${requestScope.clue.fullname}-${requestScope.clue.company}</b> <small style="color: gray;" id="s' + obj.id +'"> ' + (obj.editFlag == 0 ? obj.createTime : obj.editTime) + '由' + (obj.editFlag == 0 ? obj.createBy : obj.editBy) + '</small>';
+					html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + obj.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+					html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + obj.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+					html += '</div>';
+					html += '</div>';
+					html += '</div>';
+				});
+				//在显示文本域的上方追加备注信息
+				$("#remarkDiv").before(html);
+
+			}
+		});
+	}
+
+	function editRemark(id) {
+
+		//从h标签中获取备注内容
+		var noteContent = $("#h" + id).html();
+
+		//将线索备注信息的id保存至隐藏域中
+		$("#remarkId").val(id);
+
+		//给修改备注信息的文本域填写原来的备注信息
+		$("#noteContent").val(noteContent);
+
+		//打开模态窗口
+		$("#editRemarkModal").modal("show");
+
+	}
+
+	//删除线索备注
+	function deleteRemark(id) {
+
+		if (confirm("你确定要删除该备注吗？")) {
+
+			$.ajax({
+				url : "workbench/clue/deleteClueRemark",
+				data : {
+					"id" : id
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					/*
+                        data
+                            {"success":true/false,"errorMsg":错误信息}
+                     */
+					if (data.success) {
+						//删除成功
+						//将删除的备注移除
+						$("#"+id).remove();
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		}
+
+	}
+
 </script>
 
 </head>
 <body>
+
+	<!-- 修改线索备注的模态窗口 -->
+	<div class="modal fade" id="editRemarkModal" role="dialog">
+	<%-- 备注的id --%>
+	<input type="hidden" id="remarkId">
+	<div class="modal-dialog" role="document" style="width: 40%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="ActivityRemarkModalLabel">修改备注</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="edit-description" class="col-sm-2 control-label">内容</label>
+						<div class="col-sm-10" style="width: 81%;">
+							<textarea class="form-control" rows="3" id="noteContent"></textarea>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="updateRemarkBtn">更新</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 	<!-- 关联市场活动的模态窗口 -->
 	<div class="modal fade" id="bundModal" role="dialog">
@@ -553,45 +761,17 @@
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 40px; left: 40px;">
+	<div id="remarkBody" style="position: relative; top: 40px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
-		
-		<!-- 备注1 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>哎呦！</h5>
-				<font color="gray">线索</font> <font color="gray">-</font> <b>李四先生-动力节点</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 备注2 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>呵呵！</h5>
-				<font color="gray">线索</font> <font color="gray">-</font> <b>李四先生-动力节点</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
-		
+
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button id="saveClueRemarkBtn" type="button" class="btn btn-primary">保存</button>
 				</p>
 			</form>
 		</div>

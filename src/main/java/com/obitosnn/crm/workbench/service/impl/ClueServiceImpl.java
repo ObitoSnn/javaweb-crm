@@ -9,7 +9,9 @@ import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ClueActivityRelationDao;
 import com.obitosnn.crm.workbench.dao.ClueDao;
+import com.obitosnn.crm.workbench.dao.ClueRemarkDao;
 import com.obitosnn.crm.workbench.domain.Clue;
+import com.obitosnn.crm.workbench.domain.ClueRemark;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class ClueServiceImpl implements ClueService {
     private ClueDao clueDao;
     @Autowired
     private ClueActivityRelationDao clueActivityRelationDao;
+    @Autowired
+    private ClueRemarkDao clueRemarkDao;
 
     @Override
     public boolean saveClue(Clue clue) throws FailToSaveException {
@@ -106,6 +110,43 @@ public class ClueServiceImpl implements ClueService {
 
         if (count.compareTo(aids.length) != 0) {
             throw new FailToSaveException("关联市场活动失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean saveClueRemark(ClueRemark clueRemark) throws FailToSaveException {
+        Integer count = clueRemarkDao.insertClueRemark(clueRemark);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存备注失败");
+        }
+        return true;
+    }
+
+    @Override
+    public ClueRemark getClueRemarkById(String id) {
+        return clueRemarkDao.selectClueRemarkById(id);
+    }
+
+    @Override
+    public List<ClueRemark> getClueRemarkListByClueId(String id) {
+        return clueRemarkDao.selectClueRemarkListByClueId(id);
+    }
+
+    @Override
+    public boolean updateClueRemark(ClueRemark clueRemark) throws FailToUpdateException {
+        Integer count = clueRemarkDao.updateClueRemarkById(clueRemark);
+        if (count != 1) {
+            throw new FailToUpdateException("备注修改失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteClueRemarkById(String id) throws FailToDeleteException {
+        Integer count = clueRemarkDao.deleteClueRemarkById(id);
+        if (count != 1) {
+            throw new FailToDeleteException("删除失败");
         }
         return true;
     }

@@ -5,7 +5,9 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Clue;
+import com.obitosnn.crm.workbench.domain.ClueRemark;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,5 +31,15 @@ public interface ClueService {
     boolean deleteCarByCarId(String carId) throws FailToUpdateException;
 
     boolean saveCarByClueIdAndActivityIds(String cid, String[] aids) throws FailToSaveException;
+
+    boolean saveClueRemark(ClueRemark clueRemark) throws FailToSaveException;
+
+    ClueRemark getClueRemarkById(String id);
+
+    List<ClueRemark> getClueRemarkListByClueId(String id);
+
+    boolean updateClueRemark(ClueRemark clueRemark) throws FailToUpdateException;
+
+    boolean deleteClueRemarkById(String id) throws FailToDeleteException;
 
 }
