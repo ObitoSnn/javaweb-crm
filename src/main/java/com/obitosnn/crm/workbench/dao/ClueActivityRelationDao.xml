@@ -11,4 +11,16 @@
 
     </delete>
 
+    <insert id="insertCarByClueIdAndActivityId">
+
+        insert into tbl_clue_activity_relation
+        values
+        (
+            #{carId},
+            #{cid},
+            #{aid}
+        )
+
+    </insert>
+
 </mapper>

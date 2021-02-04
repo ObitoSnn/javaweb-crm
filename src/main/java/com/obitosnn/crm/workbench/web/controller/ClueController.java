@@ -175,4 +175,21 @@ public class ClueController {
         map.put("clueId", clueId);
         return activityService.getNotBindActivityListByName(map);
     }
+
+    @RequestMapping(value = {"/bindActivityByClueIdAndActivityIds"})
+    @ResponseBody
+    public Map<String, Object> bindActivityByClueIdAndActivityIds(HttpServletRequest request, String cid) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] aids = request.getParameterValues("aid");
+        boolean success = false;
+        try {
+            success = clueService.saveCarByClueIdAndActivityIds(cid, aids);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
 }

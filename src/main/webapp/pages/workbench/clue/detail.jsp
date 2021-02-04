@@ -52,6 +52,9 @@
 			//清空文本框内容
 			$("#activityNameInput").val("");
 
+			//取消总复选框的选中状态
+			$("input[name='checkbox-manager']").prop("checked", false);
+
 			//打开关联市场活动模态窗口
 			$("#bundModal").modal("show");
 
@@ -70,6 +73,62 @@
 			}
 		});
 
+		//复选框绑定单击事件
+		$("input[name='checkbox-manager']").click(function () {
+
+			$("input[name='checkbox-single']").prop("checked", this.checked);
+
+		});
+
+		//给每条记录的复选框绑定单击事件
+		$("#showSearchActivityTBody").on("click", $("input[name='checkbox-single']"), function () {
+
+			$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']").length == $("input[name='checkbox-single']:checked").length);
+
+		});
+
+		//给关联市场活动按钮绑定单击事件，执行关联操作
+		$("#bindActivityBtn").click(function () {
+
+			var $activity = $("input[name='checkbox-single']:checked");
+
+			if ($activity.length == 0) {
+				alert("请选择要关联的市场活动");
+			} else {
+				//请求参数 cid=xxx&aid=xxx&aid=xxx
+				var param = "cid=${requestScope.clue.id}&";
+				for(var i = 0; i < $activity.length; i++) {
+					var aid = $($("input[name='checkbox-single']:checked")[i]).val();
+					param += "aid=" + aid;
+					if (i < $activity.length - 1) {
+						param += "&";
+					}
+				}
+				$.ajax({
+					url : "workbench/clue/bindActivityByClueIdAndActivityIds",
+					data : param,
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data
+                                {"success":true/false,"errorMsg":错误信息}
+                         */
+						if (data.success) {
+							//刷新关联的市场活动列表
+							getActivityListByClueId();
+							//展现上次搜索信息
+							getNotBindActivityListByName($("#activityNameInput").val());
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
+
+		});
+
+
 	});
 
 	//通过名字获取未关联的市场活动列表
@@ -79,7 +138,7 @@
 			url : "workbench/clue/getNotBindActivityListByName",
 			data : {
 				"clueId" : "${requestScope.clue.id}",
-				"name" : name
+				"name" : $.trim(name)
 			},
 			type : "get",
 			dataType : "json",
@@ -220,7 +279,7 @@
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input name="checkbox-manager" type="checkbox"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -234,7 +293,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button id="bindActivityBtn" type="button" class="btn btn-primary">关联</button>
 				</div>
 			</div>
 		</div>

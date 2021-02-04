@@ -5,6 +5,7 @@ import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ClueActivityRelationDao;
 import com.obitosnn.crm.workbench.dao.ClueDao;
@@ -90,6 +91,21 @@ public class ClueServiceImpl implements ClueService {
         Integer count = clueActivityRelationDao.deleteClueActivityRelationById(carId);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("解除关联失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean saveCarByClueIdAndActivityIds(String cid, String[] aids) throws FailToSaveException {
+        Integer count = 0;
+        for (String aid : aids) {
+            String carId = UUIDUtil.getUUID();
+            clueActivityRelationDao.insertCarByClueIdAndActivityId(carId, cid, aid);
+            count++;
+        }
+
+        if (count.compareTo(aids.length) != 0) {
+            throw new FailToSaveException("关联市场活动失败");
         }
         return true;
     }
