@@ -189,38 +189,54 @@
 
         //给更新市场活动按钮绑定单击事件
         $("#updateActivity").click(function () {
-            //获取市场活动id
-            var id = "${requestScope.activity.id}";
 
-            $.ajax({
-                url : "workbench/activity/updateActivity",
-                data : {
-                    "id" : id,
-                    "owner" : $.trim($("#edit-owner").val()),
-                    "name" : $.trim($("#edit-name").val()),
-                    "startDate" : $.trim($("#edit-startDate").val()),
-                    "endDate" : $.trim($("#edit-endDate").val()),
-                    "cost" : $.trim($("#edit-cost").val()),
-                    "description" : $.trim($("#edit-description").val())
-                },
-                type : "post",
-                dataType : "json",
-                success : function (data) {
-                    /*
-                        data : {"success":"true/false","errorMsg":错误信息}
-                    */
-                    if (data.success) {
-                        //更新成功
+            var inputOwnerText = $.trim($("#edit-owner").val());
+            var inputNameText = $.trim($("#edit-name").val());
+            var inputStartDateText = $.trim($("#edit-startDate").val());
+            var inputEndDateText = $.trim($("#edit-endDate").val());
+            var inputCostText = $.trim($("#edit-cost").val());
+            var inputDescriptionText = $.trim($("#edit-description").val());
 
-                        //向服务器发起请求，刷新市场活动详情页面
-                        location.href = "workbench/activity/getActivityDetail?id=${requestScope.activity.id}";
+            //检验文本框内容，不能为空
+            if (inputOwnerText == "" || inputNameText == "" ||
+                inputStartDateText == "" || inputStartDateText == "" ||
+                inputEndDateText == "" || inputCostText == "" ||
+                inputDescriptionText == "") {
+                alert("请填写相关信息");
+            } else {
+                //获取市场活动id
+                var id = "${requestScope.activity.id}";
+                $.ajax({
+                    url : "workbench/activity/updateActivity",
+                    data : {
+                        "id" : id,
+                        "owner" : $.trim($("#edit-owner").val()),
+                        "name" : $.trim($("#edit-name").val()),
+                        "startDate" : $.trim($("#edit-startDate").val()),
+                        "endDate" : $.trim($("#edit-endDate").val()),
+                        "cost" : $.trim($("#edit-cost").val()),
+                        "description" : $.trim($("#edit-description").val())
+                    },
+                    type : "post",
+                    dataType : "json",
+                    success : function (data) {
+                        /*
+                            data : {"success":"true/false","errorMsg":错误信息}
+                        */
+                        if (data.success) {
+                            //更新成功
 
-                    } else {
-                        //更新失败后相关的操作
-                        alert(data.errorMsg);
+                            //向服务器发起请求，刷新市场活动详情页面
+                            location.href = "workbench/activity/getActivityDetail?id=${requestScope.activity.id}";
+
+                        } else {
+                            //更新失败后相关的操作
+                            alert(data.errorMsg);
+                        }
                     }
-                }
-            });
+                });
+            }
+
         });
 
         //给删除市场活动按钮绑定单击事件
