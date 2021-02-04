@@ -265,19 +265,19 @@ public class ClueController {
     @RequestMapping(value = {"/deleteClueRemark"})
     @ResponseBody
     public Map<String, Object> deleteClueRemarkById(String id) throws Exception {
-    Map<String, Object> map = new HashMap<String, Object>();
-    //{"success":true/false,"errorMsg":错误信息}
-    boolean success = false;
-    try {
-        success = clueService.deleteClueRemarkById(id);
-    } catch (Exception e) {
-        e.printStackTrace();
-        String errorMsg = e.getMessage();
-        //抛出异常，给WorkBenchGlobalExceptionHandler处理
-        throw new Exception(errorMsg);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"errorMsg":错误信息}
+        boolean success = false;
+        try {
+            success = clueService.deleteClueRemarkById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        return map;
     }
-    map.put("success", success);
-    return map;
-}
 
 }
