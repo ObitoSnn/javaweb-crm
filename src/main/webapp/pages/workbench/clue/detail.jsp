@@ -1,8 +1,12 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<%@ include file="../../common/base_css_jquery.jsp"%>
+	<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <meta charset="UTF-8">
 <script type="text/javascript">
 
@@ -10,6 +14,17 @@
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+
+		//时间控件
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd', //显示格式
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "top-left"
+		});
+
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
 				//设置remarkDiv的高度为130px
@@ -216,6 +231,120 @@
 					}
 				}
 			});
+
+		});
+
+		//给编辑按钮绑定单击事件
+		$("#editClueBtn").click(function () {
+			//获取市场活动id
+			var id = "${requestScope.clue.id}";
+
+			$.ajax({
+				url : "workbench/clue/getUserListAndClueById",
+				data : {
+					"id" : id
+				},
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					/*
+                        data
+                            {"uList":[{用户1},{用户2},...],"clue":"{线索}"}
+                     */
+					var html = "";
+					$.each(data.uList, function (i, userObj) {
+						html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
+					});
+					$("#edit-owner").html(html);
+
+					$("#edit-owner").val(data.clue.owner);
+					$("#edit-company").val(data.clue.company);
+					$("#edit-appellation").val(data.clue.appellation);
+					$("#edit-fullname").val(data.clue.fullname);
+					$("#edit-job").val(data.clue.job);
+					$("#edit-email").val(data.clue.email);
+					$("#edit-phone").val(data.clue.phone);
+					$("#edit-website").val(data.clue.website);
+					$("#edit-mphone").val(data.clue.mphone);
+					$("#edit-state").val(data.clue.state);
+					$("#edit-source").val(data.clue.source);
+					$("#edit-description").val(data.clue.description);
+					$("#edit-contactSummary").val(data.clue.contactSummary);
+					$("#edit-nextContactTime").val(data.clue.nextContactTime);
+					$("#edit-address").val(data.clue.address);
+
+					//打开修改线索的模态窗口
+					$("#editClueModal").modal("show");
+				}
+			});
+
+		});
+
+		//给更新线索按钮绑定单击事件
+		$("#updateClueBtn").click(function () {
+
+			var owner = $.trim($("#edit-owner").val());
+			var company = $.trim($("#edit-company").val());
+			var appellation = $.trim($("#edit-appellation").val());
+			var fullname = $.trim($("#edit-fullname").val());
+			var job = $.trim($("#edit-job").val());
+			var email = $.trim($("#edit-email").val());
+			var phone = $.trim($("#edit-phone").val());
+			var website = $.trim($.trim($("#edit-website").val()));
+			var mphone = $.trim($("#edit-mphone").val());
+			var state = $.trim($("#edit-state").val());
+			var source = $.trim($("#edit-source").val());
+			var description = $.trim($("#edit-description").val());
+			var contactSummary = $.trim($("#edit-contactSummary").val());
+			var nextContactTime = $.trim($("#edit-nextContactTime").val());
+			var address = $.trim($("#edit-address").val());
+
+			if (fullname == "" || appellation == "" || owner == ""
+					|| company == "" || job == "" || email == "" || phone == ""
+					|| website == "" || mphone == "" || state == "" || source == ""
+					|| description == "" ||contactSummary == ""
+					|| nextContactTime == "" || address == "") {
+				alert("请填写相关信息");
+			} else {
+				//获取市场活动id
+				var id = "${requestScope.clue.id}";
+
+				$.ajax({
+					url : "workbench/clue/updateClueById",
+					data : {
+						"id" : id,
+						"fullname" : fullname,
+						"appellation" : appellation,
+						"owner" : owner,
+						"company" : company,
+						"job" : job,
+						"email" : email,
+						"phone" : phone,
+						"website" : website,
+						"mphone" : mphone,
+						"state" : state,
+						"source" : source,
+						"description" : description,
+						"contactSummary" : contactSummary,
+						"nextContactTime" : nextContactTime,
+						"address" : address
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data : {"success":"true/false","errorMsg":错误信息}
+                        */
+						if (data.success) {
+							//向服务器发起请求，刷新市场活动详情页面
+							location.href = "workbench/clue/getClueDetail?id=${requestScope.clue.id}";
+						} else {
+							//更新失败后相关的操作
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
 
 		});
 
@@ -521,76 +650,67 @@
                     <form class="form-horizontal" role="form">
 
                         <div class="form-group">
-                            <label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-clueOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+                                <select class="form-control" id="edit-owner">
                                 </select>
                             </div>
                             <label for="edit-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-company" value="动力节点">
+                                <input type="text" class="form-control" id="edit-company">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-call" class="col-sm-2 control-label">称呼</label>
+                            <label for="edit-appellation" class="col-sm-2 control-label">称呼</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-call">
+                                <select class="form-control" id="edit-appellation">
                                     <option></option>
-                                    <option selected>先生</option>
-                                    <option>夫人</option>
-                                    <option>女士</option>
-                                    <option>博士</option>
-                                    <option>教授</option>
+									<c:forEach items="${applicationScope.appellationList}" var="a">
+										<option value="${a.value}">${a.text}</option>
+									</c:forEach>
                                 </select>
                             </div>
-                            <label for="edit-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-fullname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-surname" value="李四">
+                                <input type="text" class="form-control" id="edit-fullname">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-job" class="col-sm-2 control-label">职位</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-job" value="CTO">
+                                <input type="text" class="form-control" id="edit-job">
                             </div>
                             <label for="edit-email" class="col-sm-2 control-label">邮箱</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-email" value="lisi@bjpowernode.com">
+                                <input type="text" class="form-control" id="edit-email">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-phone" class="col-sm-2 control-label">公司座机</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-phone" value="010-84846003">
+                                <input type="text" class="form-control" id="edit-phone">
                             </div>
                             <label for="edit-website" class="col-sm-2 control-label">公司网站</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-website" value="http://www.bjpowernode.com">
+                                <input type="text" class="form-control" id="edit-website">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-mphone" class="col-sm-2 control-label">手机</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-mphone" value="12345678901">
+                                <input type="text" class="form-control" id="edit-mphone">
                             </div>
-                            <label for="edit-status" class="col-sm-2 control-label">线索状态</label>
+                            <label for="edit-state" class="col-sm-2 control-label">线索状态</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-status">
+                                <select class="form-control" id="edit-state">
                                     <option></option>
-                                    <option>试图联系</option>
-                                    <option>将来联系</option>
-                                    <option selected>已联系</option>
-                                    <option>虚假线索</option>
-                                    <option>丢失线索</option>
-                                    <option>未联系</option>
-                                    <option>需要条件</option>
+									<c:forEach items="${applicationScope.clueStateList}" var="s">
+										<option value="${s.value}">${s.text}</option>
+									</c:forEach>
                                 </select>
                             </div>
                         </div>
@@ -600,28 +720,17 @@
                             <div class="col-sm-10" style="width: 300px;">
                                 <select class="form-control" id="edit-source">
                                     <option></option>
-                                    <option selected>广告</option>
-                                    <option>推销电话</option>
-                                    <option>员工介绍</option>
-                                    <option>外部介绍</option>
-                                    <option>在线商场</option>
-                                    <option>合作伙伴</option>
-                                    <option>公开媒介</option>
-                                    <option>销售邮件</option>
-                                    <option>合作伙伴研讨会</option>
-                                    <option>内部研讨会</option>
-                                    <option>交易会</option>
-                                    <option>web下载</option>
-                                    <option>web调研</option>
-                                    <option>聊天</option>
+									<c:forEach items="${applicationScope.sourceList}" var="s">
+										<option value="${s.value}">${s.text}</option>
+									</c:forEach>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-describe" class="col-sm-2 control-label">描述</label>
+                            <label for="edit-description" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-describe">这是一条线索的描述信息</textarea>
+                                <textarea class="form-control" rows="3" id="edit-description"></textarea>
                             </div>
                         </div>
 
@@ -631,13 +740,13 @@
                             <div class="form-group">
                                 <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="3" id="edit-contactSummary">这个线索即将被转换</textarea>
+                                    <textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="edit-nextContactTime" value="2017-05-01">
+                                    <input type="text" class="form-control time" id="edit-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -648,7 +757,7 @@
                             <div class="form-group">
                                 <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴区大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -657,7 +766,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                    <button type="button" class="btn btn-primary" id="updateClueBtn">更新</button>
                 </div>
             </div>
         </div>
@@ -675,7 +784,7 @@
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
 			<button type="button" class="btn btn-default" onclick="window.location.href='pages/workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button type="button" class="btn btn-default" id="editClueBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
