@@ -273,38 +273,53 @@
 		//给更新按钮绑定单击事件
 		$("#updateActivityBtn").click(function () {
 
-			$.ajax({
-				url : "workbench/activity/updateActivity",
-				data : {
-					"id" : $.trim($("#edit-id").val()),
-					"owner" : $.trim($("#edit-owner").val()),
-					"name" : $.trim($("#edit-name").val()),
-					"startDate" : $.trim($("#edit-startDate").val()),
-					"endDate" : $.trim($("#edit-endDate").val()),
-					"cost" : $.trim($("#edit-cost").val()),
-					"description" : $.trim($("#edit-description").val())
-				},
-				type : "post",
-				dataType : "json",
-				success : function (data) {
-					/*
-						data : {"success":"true/false","errorMsg":错误信息}
-					*/
-					if (data.success) {
-						//更新成功
+			var inputOwnerText = $.trim($("#edit-owner").val());
+			var inputNameText = $.trim($("#edit-name").val());
+			var inputStartDateText = $.trim($("#edit-startDate").val());
+			var inputEndDateText = $.trim($("#edit-endDate").val());
+			var inputCostText = $.trim($("#edit-cost").val());
+			var inputDescriptionText = $.trim($("#edit-description").val());
 
-						//关闭模态窗口
-						$("#editActivityModal").modal("hide");
+			//检验文本框内容，不能为空
+			if (inputOwnerText == "" || inputNameText == "" ||
+					inputStartDateText == "" || inputStartDateText == "" ||
+					inputEndDateText == "" || inputCostText == "" ||
+					inputDescriptionText == "") {
+				alert("请填写相关信息");
+			} else {
+				$.ajax({
+					url : "workbench/activity/updateActivity",
+					data : {
+						"id" : $.trim($("#edit-id").val()),
+						"owner" : $.trim($("#edit-owner").val()),
+						"name" : $.trim($("#edit-name").val()),
+						"startDate" : $.trim($("#edit-startDate").val()),
+						"endDate" : $.trim($("#edit-endDate").val()),
+						"cost" : $.trim($("#edit-cost").val()),
+						"description" : $.trim($("#edit-description").val())
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data : {"success":"true/false","errorMsg":错误信息}
+                        */
+						if (data.success) {
+							//更新成功
 
-						//修改数据后，刷新页面数据，留在当前页面，每页显示数据数不变
-						pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
-								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
-					} else {
-						//更新失败后相关的操作
-						alert(data.errorMsg);
+							//关闭模态窗口
+							$("#editActivityModal").modal("hide");
+
+							//修改数据后，刷新页面数据，留在当前页面，每页显示数据数不变
+							pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+									,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+						} else {
+							//更新失败后相关的操作
+							alert(data.errorMsg);
+						}
 					}
-				}
-			});
+				});
+			}
 
 		});
 
