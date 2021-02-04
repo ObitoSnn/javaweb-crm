@@ -169,7 +169,10 @@ public class ClueController {
 
     @RequestMapping(value = {"/getNotBindActivityListByName"})
     @ResponseBody
-    public List<Activity> getNotBindActivityListByName(String name) {
-        return activityService.getNotBindActivityListByName(name);
+    public List<Activity> getNotBindActivityListByName(String name, String clueId) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("name", name);
+        map.put("clueId", clueId);
+        return activityService.getNotBindActivityListByName(map);
     }
 }

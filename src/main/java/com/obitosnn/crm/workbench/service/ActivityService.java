@@ -43,6 +43,6 @@ public interface ActivityService {
 
     List<Activity> getNotBindActivityListByClueId(String clueId);
 
-    List<Activity> getNotBindActivityListByName(String name);
+    List<Activity> getNotBindActivityListByName(Map<String, String> map);
 
 }

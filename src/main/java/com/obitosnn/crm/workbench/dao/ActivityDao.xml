@@ -197,11 +197,9 @@
         where a.`id` not in
         (
         select
-        a.`id`
-        from tbl_activity a
-        inner join tbl_clue_activity_relation car
-        on car.`activityId`=a.`id`
-        where car.`clueId`=#{clueId}
+        `activityId`
+        from tbl_clue_activity_relation
+        where `clueId`=#{clueId}
         )
 
     </select>
@@ -220,11 +218,9 @@
         where a.`id` not in
         (
         select
-        a.`id`
-        from tbl_activity a
-        inner join tbl_clue_activity_relation car
-        on car.`activityId`=a.`id`
-        where car.`clueId`=#{clueId}
+        `activityId`
+        from tbl_clue_activity_relation
+        where `clueId`=#{clueId}
         ) and a.`name` like '%' #{name} '%'
 
     </select>

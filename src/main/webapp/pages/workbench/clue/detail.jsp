@@ -78,6 +78,7 @@
 		$.ajax({
 			url : "workbench/clue/getNotBindActivityListByName",
 			data : {
+				"clueId" : "${requestScope.clue.id}",
 				"name" : name
 			},
 			type : "get",
@@ -101,8 +102,6 @@
 				$("#showSearchActivityTBody").html(html);
 			}
 		});
-
-		$()
 
 	}
 
