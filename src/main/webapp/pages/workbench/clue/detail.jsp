@@ -348,6 +348,29 @@
 
 		});
 
+		//给删除线索按钮绑定单击事件
+		$("#deleteClueBtn").click(function () {
+
+			if (confirm("你确定要删除所选信息吗？")) {
+				$.ajax({
+					url : "workbench/clue/deleteClueByIds",
+					data : {
+						"id" : "${requestScope.clue.id}"
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						if (data.success) {
+							location.href = "pages/workbench/clue/index.jsp";
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
+
+		});
+
 	});
 
 	//通过名字获取未关联的市场活动列表
@@ -785,7 +808,7 @@
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
 			<button type="button" class="btn btn-default" onclick="window.location.href='pages/workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" id="editClueBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-danger" id="deleteClueBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
