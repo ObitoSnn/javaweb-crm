@@ -152,4 +152,9 @@ public class ActivityServiceImpl implements ActivityService {
     public List<Activity> getNotBindActivityListByName(Map<String, String> map) {
         return activityDao.selectNotBindActivityListByName(map);
     }
+
+    @Override
+    public List<Activity> getActivityByName(String activityName) {
+        return activityDao.getActivityByName(activityName);
+    }
 }

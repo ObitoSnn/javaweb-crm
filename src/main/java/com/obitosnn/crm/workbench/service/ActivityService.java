@@ -45,4 +45,5 @@ public interface ActivityService {
 
     List<Activity> getNotBindActivityListByName(Map<String, String> map);
 
+    List<Activity> getActivityByName(String activityName);
 }

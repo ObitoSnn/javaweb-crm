@@ -280,4 +280,10 @@ public class ClueController {
         return map;
     }
 
+    @RequestMapping(value = {"/getActivityByName"})
+    @ResponseBody
+    public List<Activity> getActivityByName(String activityName) {
+        return activityService.getActivityByName(activityName);
+    }
+
 }
