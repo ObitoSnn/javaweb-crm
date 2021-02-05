@@ -375,6 +375,8 @@
 
 	//通过名字获取未关联的市场活动列表
 	function getNotBindActivityListByName(name) {
+		//取消总复选框的选中状态
+		$("input[name='checkbox-manager']").prop("checked", false);
 
 		$.ajax({
 			url : "workbench/clue/getNotBindActivityListByName",
