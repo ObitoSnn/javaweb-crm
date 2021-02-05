@@ -36,7 +36,7 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <!--导入spring配置文件，目的：创建Controller的代理对象-->
-    <import resource="classpath:conf/applicationContext.xml"/>
+    <!--创建Controller的代理对象-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 </beans>
