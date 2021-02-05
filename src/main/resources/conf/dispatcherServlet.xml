@@ -35,7 +35,8 @@
             <bean class="com.obitosnn.crm.web.handler.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
-    <!--创建代理对象，使用CGLIB动态代理-->
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--导入spring配置文件，目的：创建Controller的代理对象-->
+    <import resource="classpath:conf/applicationContext.xml"/>
 
 </beans>

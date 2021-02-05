@@ -108,5 +108,7 @@
 
     <!--声明切面-->
     <bean class="com.obitosnn.crm.aspect.ControllerAspect" id="controllerAspect"/>
+    <!--创建代理对象，使用CGLIB动态代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 </beans>
