@@ -145,6 +145,7 @@
         select
         c.`id`,
         c.`fullname`,
+        c.`appellation`,
         u.`name` as `owner`,
         c.`company`,
         c.`job`,
