@@ -808,7 +808,7 @@
 			<h3>${requestScope.clue.fullname}${requestScope.clue.appellation} <small>${requestScope.clue.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='pages/workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='pages/workbench/clue/convert.jsp?id=${requestScope.clue.id}&fullname=${requestScope.clue.fullname}&appellation=${requestScope.clue.appellation}&company=${requestScope.clue.company}&owner=${requestScope.clue.owner}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" id="editClueBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger" id="deleteClueBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
