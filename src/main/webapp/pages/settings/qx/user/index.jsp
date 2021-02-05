@@ -190,7 +190,7 @@
 				<tr>
 					<td><input type="checkbox" /></td>
 					<td>2</td>
-					<td><a  href="detail.html">lisi</a></td>
+					<td><a  href="pages/settings/qx/user/detail.jsp">lisi</a></td>
 					<td>李四</td>
 					<td>市场部</td>
 					<td>lisi@bjpowernode.com</td>
