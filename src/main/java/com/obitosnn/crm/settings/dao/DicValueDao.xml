@@ -13,7 +13,7 @@
         `text`,
         `orderNo`,
         `typeCode`
-        from tbl_dic_value where `typeCode` = #{code}
+        from tbl_dic_value where `typeCode` = #{code} order by `orderNo` asc
 
     </select>
 
