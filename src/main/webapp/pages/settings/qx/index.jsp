@@ -1,10 +1,9 @@
+<%@ page contentType="text/html;charset=utf-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
+	<%@ include file="../../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
 	//页面加载完毕
@@ -31,8 +30,8 @@
 			$(this).children("a").css("color","white");
 		});
 		
-		//展示市场活动页面
-		window.open("user/index.html","workareaFrame");
+		//展示用户页面
+		window.open("pages/settings/qx/user/index.jsp","workareaFrame");
 		
 	});
 	
@@ -133,16 +132,17 @@
 	
 	<!-- 顶部 -->
 	<div id="top" style="height: 50px; background-color: #3C3C3C; width: 100%;">
-		<div style="position: absolute; top: 5px; left: 0px; font-size: 30px; font-weight: 400; color: white; font-family: 'times new roman'">CRM &nbsp;<span style="font-size: 12px;">&copy;2017&nbsp;动力节点</span></div>
+		<%@ include file="../../common/copyright.jsp"%>
 		<div style="position: absolute; top: 15px; right: 15px;">
 			<ul>
 				<li class="dropdown user-dropdown">
 					<a href="javascript:void(0)" style="text-decoration: none; color: white;" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="glyphicon glyphicon-user"></span> zhangsan <span class="caret"></span>
+						<span class="glyphicon glyphicon-user"></span> ${sessionScope.user.name} <span class="caret"></span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="../../workbench/index.html"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
-						<li><a href="../index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
+						<li><a href="pages/workbench/index.jsp"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
+						<li><a href="pages/settings/index.jsp"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
@@ -159,7 +159,7 @@
 		<div id="navigation" style="left: 0px; width: 18%; position: relative; height: 100%; overflow:auto;">
 		
 			<ul id="no1" class="nav nav-pills nav-stacked">
-				<li class="liClass"><a href="user/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 用户维护</a></li>
+				<li class="liClass"><a href="pages/settings/qx/user/index.jsp" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 用户维护</a></li>
 				<li class="liClass"><a href="role/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 角色维护</a></li>
 				<li class="liClass"><a href="permission/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 许可维护</a></li>
 				

@@ -1,11 +1,9 @@
+<%@ page contentType="text/html;charset=utf-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
+	<%@ include file="../../../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
-<link href="../../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-
-<script type="text/javascript" src="../../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -177,7 +175,7 @@
 				<tr class="active">
 					<td><input type="checkbox" /></td>
 					<td>1</td>
-					<td><a  href="detail.html">zhangsan</a></td>
+					<td><a  href="pages/settings/qx/user/detail.jsp">zhangsan</a></td>
 					<td>张三</td>
 					<td>市场部</td>
 					<td>zhangsan@bjpowernode.com</td>
