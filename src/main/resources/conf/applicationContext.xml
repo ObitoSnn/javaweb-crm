@@ -80,6 +80,7 @@
             <tx:method name="save*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
             <tx:method name="delete*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
             <tx:method name="update*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
+            <tx:method name="convert" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="java.lang.Throwable"/>
         </tx:attributes>
     </tx:advice>
 

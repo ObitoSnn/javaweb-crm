@@ -4,7 +4,57 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
-	
+
+    <insert id="insert">
+
+        insert into tbl_customer(
+            `id`,
+            `owner`,
+            `name`,
+            `website`,
+            `phone`,
+            `createBy`,
+            `createTime`,
+            `contactSummary`,
+            `nextContactTime`,
+            `description`,
+            `address`
+        )
+        values(
+            #{id},
+            #{owner},
+            #{name},
+            #{website},
+            #{phone},
+            #{createBy},
+            #{createTime},
+            #{contactSummary},
+            #{nextContactTime},
+            #{description},
+            #{address}
+        )
+
+    </insert>
+
+    <select id="selectByName" resultType="Customer">
+
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `website`,
+        `phone`,
+        `createBy`,
+        `createTime`,
+        `editBy`,
+        `editTime`,
+        `contactSummary`,
+        `nextContactTime`,
+        `description`,
+        `address`
+        from tbl_customer where `name`=#{company}
+
+    </select>
   	
 </mapper>
 

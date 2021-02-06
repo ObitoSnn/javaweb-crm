@@ -6,6 +6,7 @@ import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Clue;
 import com.obitosnn.crm.workbench.domain.ClueRemark;
+import com.obitosnn.crm.workbench.domain.Tran;
 
 import java.util.List;
 import java.util.Map;
@@ -42,4 +43,5 @@ public interface ClueService {
 
     boolean deleteClueRemarkById(String id) throws FailToDeleteException;
 
+    boolean convert(String clueId, Tran tran, String createBy) throws Exception;
 }

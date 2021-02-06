@@ -61,7 +61,7 @@
 							html += '<td>' + aObj.endDate + '</td>';
 							html += '<td>' + aObj.owner + '</td>';
 							html += '</tr>';
-						})
+						});
 						$("#showSearchActivityTBody").html(html);
 					}
 				});
@@ -91,11 +91,53 @@
 		$("#convertBtn").click(function () {
 			//判断是否为该客户创建交易
 			if ($("#isCreateTransaction").prop("checked")) {
-				//提交创建交易的表单
-				$("#tranForm").submit();
+				$.ajax({
+					url : "workbench/clue/convert",
+					data : {
+						"clueId" : "${param.id}",
+						"money" : $.trim($("#money").val()),
+						"name" : $.trim($("#name").val()),
+						"expectedDate" : $.trim($("#expectedDate").val()),
+						"stage" : $.trim($("#stage").val()),
+						"activityId" : $.trim($("#activityId").val()),
+						"isForm" : $.trim($("#isForm").val())
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+							data
+								{"success":true/false,"errorMsg":错误信息}
+						 */
+						if (data.success) {
+							alert("转换线索成功");
+							window.location.href = "pages/workbench/clue/index.jsp";
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
 			} else {
-				//传统请求 url:workbench/clue/convert?clueId=xxx&
-				window.location.href = "workbench/clue/convert?clueId=xxx&";
+				$.ajax({
+					url : "workbench/clue/convert",
+					data : {
+						"clueId" : "${param.id}"
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+							data
+								{"success":true/false,"errorMsg":错误信息}
+						 */
+						if (data.success) {
+							alert("转换线索成功");
+							window.location.href = "pages/workbench/clue/index.jsp";
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
 			}
 
 		});
@@ -163,20 +205,19 @@
 	</div>
 	<div id="create-transaction2" style="position: relative; left: 40px; top: 20px; width: 80%; background-color: #F7F7F7; display: none;" >
 
-		<form id="tranForm" action="" method="post">
-			<input type="hidden" name="isForm" value="isForm"/>
-			<input type="hidden" name="clueId" value="${param.id}"/>
+		<form id="tranForm" action="workbench/clue/convert" method="post">
+			<input type="hidden" id="isForm" name="isForm" value="isForm"/>
 		  <div class="form-group" style="width: 400px; position: relative; left: 20px;">
-		    <label for="amountOfMoney">金额</label>
-		    <input type="text" class="form-control" id="amountOfMoney" name="money">
+		    <label for="money">金额</label>
+		    <input type="text" class="form-control" id="money" name="money">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" name="name">
+		    <label for="name">交易名称</label>
+		    <input type="text" class="form-control" id="name" name="name">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="expectedClosingDate">预计成交日期</label>
-		    <input type="text" class="form-control time" id="expectedClosingDate" readonly name="expectedDate">
+		    <label for="expectedDate">预计成交日期</label>
+		    <input type="text" class="form-control time" id="expectedDate" readonly name="expectedDate">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="stage">阶段</label>
@@ -188,7 +229,7 @@
 		    </select>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openSearchActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
+		    <label for="activityName">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openSearchActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
 		    <input type="text" class="form-control" id="activityName" placeholder="点击上面搜索" readonly>
 		    <input type="hidden" id="activityId" name="activityId"/>
 		  </div>
@@ -203,7 +244,7 @@
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
 		<input id="convertBtn" class="btn btn-primary" type="button" value="转换">
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input class="btn btn-default" type="button" value="取消">
+		<input onclick="window.history.back();" class="btn btn-default" type="button" value="取消">
 	</div>
 </body>
 </html>

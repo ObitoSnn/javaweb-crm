@@ -4,7 +4,29 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranHistoryDao">
-	
+
+    <insert id="insert">
+
+        insert into tbl_tran_history(
+            `id`,
+            `stage`,
+            `money`,
+            `expectedDate`,
+            `createTime`,
+            `createBy`,
+            `tranId`
+        )
+        values(
+            #{id},
+            #{stage},
+            #{money},
+            #{expectedDate},
+            #{createTime},
+            #{createBy},
+            #{tranId}
+        )
+
+    </insert>
   	
 </mapper>
 

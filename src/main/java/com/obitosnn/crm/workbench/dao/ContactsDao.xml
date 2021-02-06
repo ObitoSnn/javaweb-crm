@@ -5,7 +5,47 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsDao">
 	
-  	
+    <insert id="insert">
+
+        insert into tbl_contacts(
+            `id`,
+            `owner`,
+            `source`,
+            `customerId`,
+            `fullname`,
+            `appellation`,
+            `email`,
+            `mphone`,
+            `job`,
+            `birth`,
+            `createBy`,
+            `createTime`,
+            `description`,
+            `contactSummary`,
+            `nextContactTime`,
+            `address`
+        )
+        values(
+            #{id},
+            #{owner},
+            #{source},
+            #{customerId},
+            #{fullname},
+            #{appellation},
+            #{email},
+            #{mphone},
+            #{job},
+            #{birth},
+            #{createBy},
+            #{createTime},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime},
+            #{address}
+        )
+
+    </insert>
+
 </mapper>
 
 

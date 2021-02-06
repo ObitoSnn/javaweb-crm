@@ -11,6 +11,7 @@ import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Clue;
 import com.obitosnn.crm.workbench.domain.ClueRemark;
+import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -284,6 +285,30 @@ public class ClueController {
     @ResponseBody
     public List<Activity> getActivityByName(String activityName) {
         return activityService.getActivityByName(activityName);
+    }
+
+    @RequestMapping(value = {"/convert"})
+    @ResponseBody
+    public Map<String, Object> convert(HttpServletRequest request, Tran tran) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String isForm = request.getParameter("isForm");
+        String clueId = request.getParameter("clueId");
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        if ("isForm".equals(isForm)) {
+            //需要创建交易
+            tran.setId(UUIDUtil.getUUID());
+            tran.setCreateBy(createBy);
+            tran.setCreateTime(DateTimeUtil.getSysTime());
+        }
+        boolean success = false;
+        try {
+            success = clueService.convert(clueId, tran, createBy);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
     }
 
 }
