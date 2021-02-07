@@ -7,6 +7,7 @@ import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -33,4 +34,11 @@ public class TranController {
         mv.setViewName("forward:/pages/workbench/transaction/save.jsp");
         return mv;
     }
+
+    @RequestMapping(value = {"/getCustomerName"})
+    @ResponseBody
+    public List<String> getCustomerName(String name) {
+        return customerService.getCustomerName(name);
+    }
+
 }

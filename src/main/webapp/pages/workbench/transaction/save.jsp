@@ -13,6 +13,7 @@
 <link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="static/jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<script type="text/javascript">
 
@@ -53,6 +54,25 @@
 				autoclose: true,
 				todayBtn: true,
 				pickerPosition: "bottom-left"
+			});
+
+			$("#create-customerName").typeahead({
+				source: function (query, process) {
+					$.get(
+						"workbench/transaction/getCustomerName",
+						{ "name" : query },
+						function (data) {
+							//alert(data);
+							/*
+								data
+									[{"客户名1",...}]
+							 */
+							process(data);
+						},
+						"json"
+					);
+				},
+				delay: 1500
 			});
 
 		});
@@ -199,7 +219,7 @@
 		<div class="form-group">
 			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
