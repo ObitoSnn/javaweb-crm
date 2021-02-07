@@ -75,6 +75,60 @@
 				delay: 1500
 			});
 
+			//给打开查找市场活动的模态窗口的"放大镜图标"绑定单击事件，打开模态窗口
+			$("#openActivitySourceBtn").click(function () {
+				$("#findMarketActivity").modal("show");
+			});
+
+			//给以市场活动名字作为查询条件的文本框绑定keydown事件
+			$("#searchActivityInput").keydown(function (event) {
+
+				if (event.keyCode == 13) {
+					//键入回车键
+					$.ajax({
+						url : "workbench/transaction/getActivityByName",
+						data : {
+							"activityName" : $.trim($("#searchActivityInput").val())
+						},
+						type : "get",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data
+                                    [{市场活动1},...]
+                             */
+							var html = "";
+							$.each(data, function (i, aObj) {
+								html += '<tr>';
+								html += '<td><input type="radio" value="' + aObj.id + '" name="radio-single"/></td>';
+								html += '<td id="activityName'+ aObj.id + '">'+ aObj.name + '</td>';
+								html += '<td>' + aObj.startDate + '</td>';
+								html += '<td>' + aObj.endDate + '</td>';
+								html += '<td>' + aObj.owner + '</td>';
+								html += '</tr>';
+							});
+							$("#showSearchActivityTBody").html(html);
+						}
+					});
+
+					return false;
+				}
+
+			});
+
+			//给查找市场活动的模态窗口中的添加按钮绑定单击事件，添加市场活动
+			$("#addActivitySourceBtn").click(function () {
+
+				var activityId = $("input[name='radio-single']:checked").val();
+				var activityName = $("#activityName" + activityId).html();
+				//给文本框填充内容
+				$("#create-activitySource").val(activityName);
+				//关闭模态窗口
+				$("#findMarketActivity").modal("hide");
+
+			});
+
+
 		});
 	</script>
 
@@ -95,7 +149,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" id="searchActivityInput" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -110,23 +164,13 @@
 								<td>所有者</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="showSearchActivityTBody">
 						</tbody>
 					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button id="addActivitySourceBtn" type="button" class="btn btn-primary">添加</button>
 				</div>
 			</div>
 		</div>
@@ -258,9 +302,10 @@
 					</c:forEach>
 				</select>
 			</div>
-			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activitySource" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc">
+				<input type="text" class="form-control" id="create-activitySource">
+				<input type="hidden" id="activityId"/>
 			</div>
 		</div>
 		
