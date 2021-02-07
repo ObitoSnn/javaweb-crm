@@ -123,10 +123,67 @@
 				var activityName = $("#activityName" + activityId).html();
 				//给文本框填充内容
 				$("#create-activitySource").val(activityName);
+				//隐藏域中保存市场活动id
+				$("#activityId").val(activityId);
 				//关闭模态窗口
 				$("#findMarketActivity").modal("hide");
 
 			});
+
+			//给打开查找联系人的"放大镜图标"绑定单击事件，打开模态窗口
+			$("#openContactBtn").click(function () {
+				$("#findContacts").modal("show");
+			});
+
+			//给以联系人名字作为查询条件的文本框绑定keydown事件
+			$("#searchContactInput").keydown(function (event) {
+
+				if (event.keyCode == 13) {
+					//键入回车键
+					$.ajax({
+						url : "workbench/transaction/getContactByName",
+						data : {
+							"contactName" : $.trim($("#searchContactInput").val())
+						},
+						type : "get",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data
+                                    [{联系人1},...]
+                             */
+							var html = "";
+							$.each(data, function (i, cObj) {
+								html += '<tr>';
+								html += '<td><input type="radio" value="' + cObj.id + '" name="radio-single"/></td>';
+								html += '<td id="contactName' + cObj.id + '">' + cObj.fullname + '</td>';
+								html += '<td>' + cObj.email + '</td>';
+								html += '<td>' + cObj.mphone + '</td>';
+								html += '</tr>';
+							});
+							$("#showSearchContactTBody").html(html);
+						}
+					});
+
+					return false;
+				}
+
+			});
+
+			//给查找联系人的模态窗口中的添加按钮绑定单击事件，添加联系人
+			$("#addContactBtn").click(function () {
+
+				var contactId = $("input[name='radio-single']:checked").val();
+				var contactName = $("#contactName" + contactId).html();
+				//给文本框填充内容
+				$("#create-contactsName").val(contactName);
+				//隐藏域中保存联系人id
+				$("#contactId").val(contactId);
+				//关闭模态窗口
+				$("#findContacts").modal("hide");
+
+			});
+
 
 
 		});
@@ -190,7 +247,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
+						    <input type="text" id="searchContactInput" class="form-control" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -204,21 +261,13 @@
 								<td>手机</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>李四</td>
-								<td>lisi@bjpowernode.com</td>
-								<td>12345678901</td>
-							</tr>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>李四</td>
-								<td>lisi@bjpowernode.com</td>
-								<td>12345678901</td>
-							</tr>
+						<tbody id="showSearchContactTBody">
 						</tbody>
 					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button id="addContactBtn" type="button" class="btn btn-primary">添加</button>
 				</div>
 			</div>
 		</div>
@@ -310,9 +359,10 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-contactsName">
+				<input type="hidden" id="contactId"/>
 			</div>
 		</div>
 		

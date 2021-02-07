@@ -3,7 +3,9 @@ package com.obitosnn.crm.workbench.web.controller;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.workbench.domain.Activity;
+import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.service.ActivityService;
+import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class TranController {
     private CustomerService customerService;
     @Autowired
     private ActivityService activityService;
+    @Autowired
+    private ContactsService contactsService;
 
     @RequestMapping(value = {"/add"})
     public ModelAndView add() {
@@ -49,6 +53,12 @@ public class TranController {
     @ResponseBody
     public List<Activity> getActivityByName(String activityName) {
         return activityService.getActivityByName(activityName);
+    }
+
+    @RequestMapping(value = {"/getContactByName"})
+    @ResponseBody
+    public List<Contacts> getContactByName(String contactName) {
+        return contactsService.getContactByName(contactName);
     }
 
 }
