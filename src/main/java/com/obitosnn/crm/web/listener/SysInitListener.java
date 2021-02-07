@@ -8,8 +8,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 将数据字典存入服务器内存中(全局作用域ServletContext)，解决数据字典存储问题
@@ -30,6 +29,18 @@ public class SysInitListener extends ContextLoaderListener {
         for (String key : map.keySet()) {
             servletContext.setAttribute(key, map.get(key));
         }
+
+        //处理阶段与可能性对应的属性文件 Stage2Possibility.properties
+        Map<String, String> pMap = new HashMap<String, String>();
+        ResourceBundle rb = ResourceBundle.getBundle("Stage2Possibility", Locale.CHINA);
+        Enumeration<String> e = rb.getKeys();
+        while (e.hasMoreElements()) {
+            String key = e.nextElement();
+            String value = rb.getString(key);
+            pMap.put(key, value);
+        }
+        servletContext.setAttribute("possibility", pMap);
+
     }
 
 }
