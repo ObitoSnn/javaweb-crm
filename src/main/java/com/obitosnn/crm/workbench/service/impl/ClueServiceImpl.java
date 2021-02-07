@@ -249,8 +249,6 @@ public class ClueServiceImpl implements ClueService {
             tran.setCustomerId(customer.getId());
             tran.setSource(clue.getSource());
             tran.setContactsId(contacts.getId());
-            tran.setCreateBy(createBy);
-            tran.setCreateTime(DateTimeUtil.getSysTime());
             tran.setDescription(clue.getDescription());
             tran.setContactSummary(clue.getContactSummary());
             tran.setNextContactTime(clue.getNextContactTime());
