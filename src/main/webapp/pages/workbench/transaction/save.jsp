@@ -37,6 +37,24 @@
 				$("#create-possibility").val(possibility);
 			});
 
+			$(".timeTop").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd', //显示格式
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "top-left"
+			});
+
+			$(".timeBottom").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd', //显示格式
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+
 		});
 	</script>
 
@@ -174,7 +192,7 @@
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" class="form-control timeBottom" id="create-expectedClosingDate" readonly>
 			</div>
 		</div>
 		
@@ -250,7 +268,7 @@
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control timeTop" id="create-nextContactTime" readonly>
 			</div>
 		</div>
 		
