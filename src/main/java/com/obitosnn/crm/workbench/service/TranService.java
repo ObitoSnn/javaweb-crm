@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.service;
 
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Tran;
 
@@ -16,5 +17,11 @@ public interface TranService {
     boolean saveTran(Tran tran, String customerName) throws FailToSaveException ;
 
     PageVo<Tran> getTranPageVo(Map<String, Object> map);
+
+    Tran getTranById(String id);
+
+    Tran getActivityIdAndContactsIdByTranId(String id);
+
+    boolean updateTran(Tran tran, String customerName, String editBy) throws FailToSaveException, FailToUpdateException;
 
 }

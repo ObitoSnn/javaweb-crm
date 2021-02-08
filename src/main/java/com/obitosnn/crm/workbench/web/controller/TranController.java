@@ -113,4 +113,37 @@ public class TranController {
         return tranService.getTranPageVo(map);
     }
 
+    @RequestMapping(value = {"/getUserListAndTranById"})
+    @ResponseBody
+    public Map<String, Object> getUserListAndTranById(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> uList = userService.getUserList();
+        map.put("uList", uList);
+        Tran tran = tranService.getTranById(id);
+        map.put("tran", tran);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getActivityIdAndContactsIdByTranId"})
+    @ResponseBody
+    public Tran getActivityIdAndContactsIdByTranId(String id) {
+        return tranService.getActivityIdAndContactsIdByTranId(id);
+    }
+
+    @RequestMapping(value = {"/updateTran"})
+    @ResponseBody
+    public Map<String, Object> updateTran(HttpServletRequest request, Tran tran, String customerName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        boolean success = false;
+        try {
+            success = tranService.updateTran(tran, customerName, editBy);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
 }

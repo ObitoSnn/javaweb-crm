@@ -90,7 +90,7 @@
 						type = "";
 					}
 					html += '<tr>';
-					html += '<td><input id="'+ obj.id + '" name="checkbox-single" type="checkbox" /></td>';
+					html += '<td><input value="'+ obj.id + '" name="checkbox-single" type="checkbox" /></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/transaction/detail.jsp\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.customerId + '</td>';
 					html += '<td>' + obj.stage + '</td>';
@@ -126,6 +126,22 @@
 				});
 			}
 		});
+
+	}
+
+	function edit() {
+
+		//选中的复选框
+		var $isChecked = $("input[name='checkbox-single']:checked");
+		if ($isChecked.length == 0) {
+			alert("请选择要修改的交易信息");
+		} else if ($isChecked.length > 1) {
+			alert("一次只能修改一条交易信息");
+		} else {
+			var id = $isChecked.val();
+			window.location.href="pages/workbench/transaction/edit.jsp?id=" + id + "";
+		}
+
 
 	}
 
@@ -229,7 +245,7 @@
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" onclick="window.location.href='workbench/transaction/add';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" onclick="window.location.href='pages/workbench/transaction/edit.jsp';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" onclick="edit()"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				

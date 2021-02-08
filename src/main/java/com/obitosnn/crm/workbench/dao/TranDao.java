@@ -13,4 +13,10 @@ public interface TranDao {
 
     Long selectTranTotalForPageVo(Map<String, Object> map);
 
+    Tran selectTranById(String id);
+
+    Tran selectTranForActivityIdAndContactsId(String id);
+
+    Integer updateById(Tran tran);
+
 }
