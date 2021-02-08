@@ -1,9 +1,13 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
+import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Contacts;
+import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
@@ -14,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -59,6 +66,25 @@ public class TranController {
     @ResponseBody
     public List<Contacts> getContactByName(String contactName) {
         return contactsService.getContactByName(contactName);
+    }
+
+    @RequestMapping(value = {"/saveTran"})
+    @ResponseBody
+    public Map<String, Object> saveTran(HttpServletRequest request, Tran tran, String customerName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        tran.setId(UUIDUtil.getUUID());
+        tran.setCreateBy(createBy);
+        tran.setCreateTime(DateTimeUtil.getSysTime());
+        boolean success = false;
+        try {
+            success = tranService.saveTran(tran, customerName);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
     }
 
 }
