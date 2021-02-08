@@ -138,7 +138,7 @@ public class TranController {
         boolean success = false;
         try {
             success = tranService.updateTran(tran, customerName, editBy);
-        } catch (FailToSaveException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
