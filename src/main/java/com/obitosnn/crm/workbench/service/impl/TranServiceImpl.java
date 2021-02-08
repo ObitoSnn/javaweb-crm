@@ -1,8 +1,10 @@
 package com.obitosnn.crm.workbench.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.dao.TranDao;
 import com.obitosnn.crm.workbench.dao.TranHistoryDao;
@@ -12,6 +14,9 @@ import com.obitosnn.crm.workbench.domain.TranHistory;
 import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -63,6 +68,19 @@ public class TranServiceImpl implements TranService {
             throw new FailToSaveException("保存交易历史失败");
         }
         return true;
+    }
+
+    @Override
+    public PageVo<Tran> getTranPageVo(Map<String, Object> map) {
+        int pageNo = Integer.parseInt((String) map.get("pageNo"));
+        int pageSize =  Integer.parseInt((String) map.get("pageSize"));
+        PageHelper.startPage(pageNo, pageSize);
+        List<Tran> aList = tranDao.selectTranListForPageVo(map);
+        PageVo<Tran> pageVo = new PageVo<>();
+        Long total = tranDao.selectTranTotalForPageVo(map);
+        pageVo.setTotal(total);
+        pageVo.setDataList(aList);
+        return pageVo;
     }
 
 }

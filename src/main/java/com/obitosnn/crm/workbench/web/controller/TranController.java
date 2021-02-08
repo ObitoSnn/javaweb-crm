@@ -5,6 +5,7 @@ import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.domain.Tran;
@@ -85,6 +86,31 @@ public class TranController {
         }
         map.put("success", success);
         return map;
+    }
+
+    @RequestMapping(value = "/pageList")
+    @ResponseBody
+    public PageVo<Tran> pageList(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String pageNo = request.getParameter("pageNo");
+        String pageSize = request.getParameter("pageSize");
+        String owner = request.getParameter("owner");
+        String name = request.getParameter("name");
+        String customerName = request.getParameter("customerName");
+        String stage = request.getParameter("stage");
+        String transactionType = request.getParameter("transactionType");
+        String source = request.getParameter("source");
+        String contactsFullName = request.getParameter("contactsFullName");
+        map.put("pageNo", pageNo);
+        map.put("pageSize", pageSize);
+        map.put("owner", owner);
+        map.put("name", name);
+        map.put("customerName", customerName);
+        map.put("stage", stage);
+        map.put("transactionType", transactionType);
+        map.put("source", source);
+        map.put("contactsFullName", contactsFullName);
+        return tranService.getTranPageVo(map);
     }
 
 }
