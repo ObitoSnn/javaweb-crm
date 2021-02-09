@@ -228,7 +228,7 @@ public class ClueController {
     @ResponseBody
     public Map<String, Object> getClueRemarkList(String id) {
         Map<String, Object> map = new HashMap<String, Object>();
-        //{"activityRemarkList":[{"线索备注"},...]}
+        //{"clueRemarkList":[{"线索备注"},...]}
         List<ClueRemark> clueRemarkList = clueService.getClueRemarkListByClueId(id);
         map.put("clueRemarkList", clueRemarkList);
         return map;
