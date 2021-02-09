@@ -141,15 +141,6 @@ public class TranServiceImpl implements TranService {
     }
 
     @Override
-    public boolean deleteTranById(String id) throws FailToDeleteException {
-        Integer count = tranDao.deleteById(id);
-        if (count.compareTo(1) != 0) {
-            throw new FailToDeleteException("删除交易失败");
-        }
-        return true;
-    }
-
-    @Override
     public Tran getTranDetailById(String id) {
         return tranDao.selectTranDetailById(id);
     }
@@ -192,6 +183,15 @@ public class TranServiceImpl implements TranService {
         Integer count = tranRemarkDao.updateTranRemarkById(tranRemark);
         if (count != 1) {
             throw new FailToUpdateException("修改备注失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteTranByIds(String[] ids) throws FailToDeleteException {
+        Integer count = tranDao.deleteTranByIds(ids);
+        if (count.compareTo(ids.length) != 0) {
+            throw new FailToDeleteException("删除失败");
         }
         return true;
     }

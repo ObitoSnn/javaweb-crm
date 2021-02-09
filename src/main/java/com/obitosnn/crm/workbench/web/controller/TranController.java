@@ -145,13 +145,14 @@ public class TranController {
         return map;
     }
 
-    @RequestMapping(value = {"/deleteTran"})
+    @RequestMapping(value = {"/deleteTranByIds"})
     @ResponseBody
-    public Map<String, Object> deleteTran(String id) throws Exception {
+    public Map<String, Object> deleteTranByIds(HttpServletRequest request) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
         boolean success = false;
         try {
-            success = tranService.deleteTranById(id);
+            success = tranService.deleteTranByIds(ids);
         } catch (FailToDeleteException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());

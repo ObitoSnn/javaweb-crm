@@ -46,22 +46,27 @@
 
 		});
 
-		//给删除按钮绑定单击事件
+
+		//给删除交易按钮绑定单击事件
 		$("#deleteBtn").click(function () {
 			//选中的复选框
-			var $isChecked = $("input[name='checkbox-single']:checked");
-			if ($isChecked.length == 0) {
+			var $checkbox = $("input[name='checkbox-single']:checked");
+
+			if ($checkbox.length == 0) {
 				alert("请选择要删除的交易信息");
-			} else if ($isChecked.length > 1) {
-				alert("一次只能删除一条交易信息");
 			} else {
-				if (confirm("你确定要删除所选交易信息吗？")) {
-					var id = $isChecked.val();
+				if (confirm("你确定要删除所选线索吗？")) {
+					var param = "";
+					for(var i = 0; i < $checkbox.length; i++) {
+						param += "id=" + $($checkbox[i]).val();
+						if (i < $checkbox.length - 1) {
+							param += "&";
+						}
+					}
+
 					$.ajax({
-						url : "workbench/transaction/deleteTran",
-						data : {
-							"id" : id
-						},
+						url : "workbench/transaction/deleteTranByIds",
+						data : param,
 						type : "post",
 						dataType : "json",
 						success : function (data) {
@@ -70,7 +75,8 @@
                                     {"success":true/false,"errorMsg":错误信息}
                             */
 							if (data.success) {
-								window.location.href = "pages/workbench/transaction/index.jsp";
+								//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+								pageList(1,$("#tranPage").bs_pagination('getOption', 'rowsPerPage'));
 							} else {
 								alert(data.errorMsg);
 							}
