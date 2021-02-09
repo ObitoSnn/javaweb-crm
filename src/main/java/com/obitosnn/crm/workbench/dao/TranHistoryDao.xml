@@ -5,6 +5,19 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranHistoryDao">
 
+    <select id="selectTranHistoryListByTranId" resultType="TranHistory">
+
+        select
+        `id`,
+        `stage`,
+        `money`,
+        `expectedDate`,
+        `createTime`,
+        `createBy`
+        from `tbl_tran_history` where `tranId`=#{tranId}
+
+    </select>
+
     <insert id="insert">
 
         insert into tbl_tran_history(

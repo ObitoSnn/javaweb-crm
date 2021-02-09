@@ -6,7 +6,9 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Tran;
+import com.obitosnn.crm.workbench.domain.TranHistory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,5 +30,7 @@ public interface TranService {
     boolean deleteTranById(String id) throws FailToDeleteException;
 
     Tran getTranDetailById(String id);
+
+    List<TranHistory> getTranHistoryListByTranId(String tranId);
 
 }

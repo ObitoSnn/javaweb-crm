@@ -150,4 +150,9 @@ public class TranServiceImpl implements TranService {
         return tranDao.selectTranDetailById(id);
     }
 
+    @Override
+    public List<TranHistory> getTranHistoryListByTranId(String tranId) {
+        return tranHistoryDao.selectTranHistoryListByTranId(tranId);
+    }
+
 }
