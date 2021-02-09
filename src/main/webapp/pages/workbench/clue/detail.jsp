@@ -155,46 +155,50 @@
 
 		//给保存线索备注按钮绑定单击事件
 		$("#saveClueRemarkBtn").click(function () {
+			var noteContent = $.trim($("#remark").val());
+			if (noteContent == "") {
+				alert("请填写备注信息");
+			} else {
+				$.ajax({
+					url : "workbench/clue/saveClueRemark",
+					data : {
+						"noteContent" : $.trim($("#remark").val()),
+						"clueId" : "${requestScope.clue.id}"
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
 
-			$.ajax({
-				url : "workbench/clue/saveClueRemark",
-				data : {
-					"noteContent" : $.trim($("#remark").val()),
-					"clueId" : "${requestScope.clue.id}"
-				},
-				type : "post",
-				dataType : "json",
-				success : function (data) {
+						/*
+                            data
+                                {"success":true/false,"clueRemark":{线索备注}}
+                         */
+						if (data.success) {
+							var html = "";
+							html += '<div id="' + data.clueRemark.id + '" class="remarkDiv" style="height: 60px;">';
+							html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
+							html += '<div style="position: relative; top: -40px; left: 40px;" >';
+							html += '<h5 id="h' + data.clueRemark.id + '">' + data.clueRemark.noteContent +'</h5>';
+							html += '<font color="gray">线索</font> <font color="gray">-</font> <b>${requestScope.clue.fullname}-${requestScope.clue.company}</b> <small style="color: gray;" id="s' + data.clueRemark.id +'"> ' + data.clueRemark.createTime + '由' + data.clueRemark.createBy + '</small>';
+							html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+							html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+							html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+							html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+							html += '</div>';
+							html += '</div>';
+							html += '</div>';
 
-					/*
-                        data
-                            {"success":true/false,"clueRemark":{线索备注}}
-                     */
-					if (data.success) {
-						var html = "";
-						html += '<div id="' + data.clueRemark.id + '" class="remarkDiv" style="height: 60px;">';
-						html += '<img title="zhangsan" src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
-						html += '<div style="position: relative; top: -40px; left: 40px;" >';
-						html += '<h5 id="h' + data.clueRemark.id + '">' + data.clueRemark.noteContent +'</h5>';
-						html += '<font color="gray">线索</font> <font color="gray">-</font> <b>${requestScope.clue.fullname}-${requestScope.clue.company}</b> <small style="color: gray;" id="s' + data.clueRemark.id +'"> ' + data.clueRemark.createTime + '由' + data.clueRemark.createBy + '</small>';
-						html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-						html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
-						html += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.clueRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
-						html += '</div>';
-						html += '</div>';
-						html += '</div>';
+							//在显示文本域的上方追加备注信息
+							$("#remarkDiv").before(html);
 
-						//在显示文本域的上方追加备注信息
-						$("#remarkDiv").before(html);
-
-						//清空文本域内容
-						$("#remark").val("");
-					} else {
-						alert(data.errorMsg);
+							//清空文本域内容
+							$("#remark").val("");
+						} else {
+							alert(data.errorMsg);
+						}
 					}
-				}
-			});
+				});
+			}
 
 		});
 

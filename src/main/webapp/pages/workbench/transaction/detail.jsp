@@ -120,47 +120,50 @@
 
 		//给保存交易备注按钮绑定单击事件，保存交易备注
 		$("#saveTranRemarkBtn").click(function () {
+			var noteContent = $.trim($("#remark").val());
+			if (noteContent == "") {
+				alert("请填写备注信息");
+			} else {
+				$.ajax({
+					url : "workbench/transaction/saveTranRemark",
+					data : {
+						"noteContent" : $.trim($("#remark").val()),
+						"tranId" : "${requestScope.tran.id}"
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data
+                                {"success":true/false,"tranRemark":{线索备注}}
+                         */
+						if (data.success) {
+							var html = "";
+							html += '<div id="' + data.tranRemark.id + '" class="remarkDiv" style="height: 60px;">';
+							html += '<img src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
+							html += '<div style="position: relative; top: -40px; left: 40px;" >';
+							html += '<h5 id="h' + data.tranRemark.id + '">' + data.tranRemark.noteContent +'</h5>';
+							html += '<font color="gray">交易</font> <font color="gray">-</font> <b>${requestScope.tran.customerId}-${requestScope.tran.name}</b> <small style="color: gray;" id="s' + data.tranRemark.id +'"> ' + data.tranRemark.createTime + '由' + data.tranRemark.createBy + '</small>';
+							html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+							html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + data.tranRemark.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+							html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+							html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.tranRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+							html += '</div>';
+							html += '</div>';
+							html += '</div>';
 
-			$.ajax({
-				url : "workbench/transaction/saveTranRemark",
-				data : {
-					"noteContent" : $.trim($("#remark").val()),
-					"tranId" : "${requestScope.tran.id}"
-				},
-				type : "post",
-				dataType : "json",
-				success : function (data) {
+							//在显示文本域的上方追加备注信息
+							$("#remarkDiv").before(html);
 
-					/*
-                        data
-                            {"success":true/false,"tranRemark":{线索备注}}
-                     */
-					if (data.success) {
-						var html = "";
-						html += '<div id="' + data.tranRemark.id + '" class="remarkDiv" style="height: 60px;">';
-						html += '<img src="static/image/user-thumbnail.png" style="width: 30px; height:30px;">';
-						html += '<div style="position: relative; top: -40px; left: 40px;" >';
-						html += '<h5 id="h' + data.tranRemark.id + '">' + data.tranRemark.noteContent +'</h5>';
-						html += '<font color="gray">交易</font> <font color="gray">-</font> <b>${requestScope.tran.customerId}-${requestScope.tran.name}</b> <small style="color: gray;" id="s' + data.tranRemark.id +'"> ' + data.tranRemark.createTime + '由' + data.tranRemark.createBy + '</small>';
-						html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-						html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\'' + data.tranRemark.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
-						html += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\'' + data.tranRemark.id + '\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
-						html += '</div>';
-						html += '</div>';
-						html += '</div>';
+							//清空文本域内容
+							$("#remark").val("");
+						} else {
+							alert(data.errorMsg);
+						}
 
-						//在显示文本域的上方追加备注信息
-						$("#remarkDiv").before(html);
-
-						//清空文本域内容
-						$("#remark").val("");
-					} else {
-						alert(data.errorMsg);
 					}
-
-				}
-			});
+				});
+			}
 
 		});
 
