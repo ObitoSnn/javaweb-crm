@@ -7,10 +7,7 @@ import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
-import com.obitosnn.crm.workbench.domain.Activity;
-import com.obitosnn.crm.workbench.domain.Contacts;
-import com.obitosnn.crm.workbench.domain.Tran;
-import com.obitosnn.crm.workbench.domain.TranHistory;
+import com.obitosnn.crm.workbench.domain.*;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
@@ -176,6 +173,90 @@ public class TranController {
     @ResponseBody
     public List<TranHistory> getTranHistoryListByTranId(String tranId) {
         return tranService.getTranHistoryListByTranId(tranId);
+    }
+
+    @RequestMapping(value = {"/saveTranRemark"})
+    @ResponseBody
+    public Map<String, Object> saveTranRemark(HttpServletRequest request, TranRemark tranRemark) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //设置id
+        String id = UUIDUtil.getUUID();
+        tranRemark.setId(id);
+        //设置createTime
+        tranRemark.setCreateTime(DateTimeUtil.getSysTime());
+        //设置createBy
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        tranRemark.setCreateBy(createBy);
+        //设置editFlag
+        tranRemark.setEditFlag("0");
+        boolean success = false;
+        try {
+            success = tranService.saveTranRemark(tranRemark);
+            tranRemark = tranService.getTranRemarkById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("tranRemark", tranRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getTranRemarkList"})
+    @ResponseBody
+    public Map<String, Object> getTranRemarkList(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<TranRemark> tranRemarkList = tranService.getTranRemarkListByTranId(id);
+        map.put("tranRemarkList", tranRemarkList);
+        return map;
+    }
+
+    @RequestMapping(value = {"/deleteTranRemark"})
+    @ResponseBody
+    public Map<String, Object> deleteTranRemark(String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"errorMsg":错误信息}
+        boolean success = false;
+        try {
+            success = tranService.deleteTranRemarkById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateTranRemark"})
+    @ResponseBody
+    public Map<String, Object> updateTranRemark(HttpServletRequest request, TranRemark tranRemark, String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //设置editTime
+        String editTime = DateTimeUtil.getSysTime();
+        tranRemark.setEditTime(editTime);
+        //设置editBy
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        tranRemark.setEditBy(editBy);
+        //设置editFlag为1
+        tranRemark.setEditFlag("1");
+        //获取的请求参数即为备注信息的id
+        tranRemark.setId(id);
+        boolean success = false;
+        try {
+            success = tranService.updateTranRemark(tranRemark);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("tranRemark", tranRemark);
+        return map;
     }
 
 }

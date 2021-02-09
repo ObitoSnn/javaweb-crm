@@ -10,9 +10,11 @@ import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.dao.TranDao;
 import com.obitosnn.crm.workbench.dao.TranHistoryDao;
+import com.obitosnn.crm.workbench.dao.TranRemarkDao;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.domain.TranHistory;
+import com.obitosnn.crm.workbench.domain.TranRemark;
 import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ public class TranServiceImpl implements TranService {
     private TranHistoryDao tranHistoryDao;
     @Autowired
     private CustomerDao customerDao;
+    @Autowired
+    private TranRemarkDao tranRemarkDao;
 
     @Override
     public boolean saveTran(Tran tran, String customerName) throws FailToSaveException {
@@ -153,6 +157,43 @@ public class TranServiceImpl implements TranService {
     @Override
     public List<TranHistory> getTranHistoryListByTranId(String tranId) {
         return tranHistoryDao.selectTranHistoryListByTranId(tranId);
+    }
+
+    @Override
+    public boolean saveTranRemark(TranRemark tranRemark) throws FailToSaveException {
+        Integer count = tranRemarkDao.insertTranRemark(tranRemark);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存备注失败");
+        }
+        return true;
+    }
+
+    @Override
+    public TranRemark getTranRemarkById(String id) {
+        return tranRemarkDao.selectTranRemarkById(id);
+    }
+
+    @Override
+    public List<TranRemark> getTranRemarkListByTranId(String id) {
+        return tranRemarkDao.selectTranRemarkListByTranId(id);
+    }
+
+    @Override
+    public boolean deleteTranRemarkById(String id) throws FailToDeleteException {
+        Integer count = tranRemarkDao.deleteTranRemarkById(id);
+        if (count != 1) {
+            throw new FailToDeleteException("删除失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateTranRemark(TranRemark tranRemark) throws FailToUpdateException {
+        Integer count = tranRemarkDao.updateTranRemarkById(tranRemark);
+        if (count != 1) {
+            throw new FailToUpdateException("修改备注失败");
+        }
+        return true;
     }
 
 }
