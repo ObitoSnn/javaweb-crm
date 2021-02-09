@@ -321,7 +321,7 @@
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
 			<button id="saveTranBtn" type="button" class="btn btn-primary">保存</button>
-			<button type="button" class="btn btn-default">取消</button>
+			<button type="button" class="btn btn-default" onclick="window.history.back();">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>

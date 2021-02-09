@@ -124,6 +124,10 @@
 					if (type == null) {
 						type = "";
 					}
+					var contactsId = obj.contactsId;
+					if (contactsId == null) {
+						contactsId = "";
+					}
 					html += '<tr>';
 					html += '<td><input value="'+ obj.id + '" name="checkbox-single" type="checkbox" /></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/transaction/detail?id=' + obj.id + '\';">' + obj.name + '</a></td>';
@@ -132,7 +136,7 @@
 					html += '<td>' + type + '</td>';
 					html += '<td>' + obj.owner + '</td>';
 					html += '<td>' + obj.source + '</td>';
-					html += '<td>' + obj.contactsId + '</td>';
+					html += '<td>' + contactsId + '</td>';
 					html += '</tr>';
 				});
 				$("#showTranTBody").html(html);
