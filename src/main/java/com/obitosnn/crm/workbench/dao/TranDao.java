@@ -21,4 +21,6 @@ public interface TranDao {
 
     Integer deleteById(String id);
 
+    Tran selectTranDetailById(String id);
+
 }

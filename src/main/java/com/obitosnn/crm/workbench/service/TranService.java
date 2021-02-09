@@ -27,4 +27,6 @@ public interface TranService {
 
     boolean deleteTranById(String id) throws FailToDeleteException;
 
+    Tran getTranDetailById(String id);
+
 }

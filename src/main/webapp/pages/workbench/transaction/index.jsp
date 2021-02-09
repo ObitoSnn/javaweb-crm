@@ -126,7 +126,7 @@
 					}
 					html += '<tr>';
 					html += '<td><input value="'+ obj.id + '" name="checkbox-single" type="checkbox" /></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/transaction/detail.jsp\';">' + obj.name + '</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/transaction/detail?id=' + obj.id + '\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.customerId + '</td>';
 					html += '<td>' + obj.stage + '</td>';
 					html += '<td>' + type + '</td>';
