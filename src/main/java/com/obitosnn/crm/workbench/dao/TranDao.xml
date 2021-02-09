@@ -5,9 +5,12 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
-    <delete id="deleteById">
+    <delete id="deleteTranByIds">
 
-        delete from tbl_tran where `id`=#{id}
+        delete from tbl_tran where `id` in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
 
     </delete>
 

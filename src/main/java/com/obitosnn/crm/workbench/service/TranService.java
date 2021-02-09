@@ -28,8 +28,6 @@ public interface TranService {
 
     boolean updateTran(Tran tran, String customerName, String editBy) throws FailToSaveException, FailToUpdateException;
 
-    boolean deleteTranById(String id) throws FailToDeleteException;
-
     Tran getTranDetailById(String id);
 
     List<TranHistory> getTranHistoryListByTranId(String tranId);
@@ -43,4 +41,6 @@ public interface TranService {
     boolean deleteTranRemarkById(String id) throws FailToDeleteException;
 
     boolean updateTranRemark(TranRemark tranRemark) throws FailToUpdateException;
+
+    boolean deleteTranByIds(String[] ids) throws FailToDeleteException;
 }

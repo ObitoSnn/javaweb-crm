@@ -200,6 +200,28 @@
 
 		});
 
+		//给删除交易按钮绑定单击事件
+		$("#deleteTranBtn").click(function () {
+
+			if (confirm("你确定要删除该交易信息吗？")) {
+				$.ajax({
+					url : "workbench/transaction/deleteTranByIds",
+					data : {
+						"id" : "${requestScope.tran.id}"
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						if (data.success) {
+							location.href = "pages/workbench/transaction/index.jsp";
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
+
+		});
 
 	});
 
@@ -375,7 +397,7 @@
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
 			<button type="button" class="btn btn-default" onclick="edit()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-danger" id="deleteTranBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 
