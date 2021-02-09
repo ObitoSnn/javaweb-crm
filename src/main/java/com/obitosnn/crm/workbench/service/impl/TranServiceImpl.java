@@ -145,4 +145,9 @@ public class TranServiceImpl implements TranService {
         return true;
     }
 
+    @Override
+    public Tran getTranDetailById(String id) {
+        return tranDao.selectTranDetailById(id);
+    }
+
 }

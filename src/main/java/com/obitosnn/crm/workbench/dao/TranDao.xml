@@ -42,6 +42,39 @@
 
     </select>
 
+    <select id="selectTranDetailById" resultType="Tran">
+
+        select
+        u.`name` as `owner`,
+        t.`money`,
+        t.`name`,
+        t.`expectedDate`,
+        cust.`name` as `customerId`,
+        t.`stage`,
+        t.`type`,
+        t.`source`,
+        a.`name` as `activityId`,
+        con.`fullname` as `contactsId`,
+        t.`createBy`,
+        t.`createTime`,
+        t.`editBy`,
+        t.`editTime`,
+        t.`description`,
+        t.`contactSummary`,
+        t.`nextContactTime`
+        from tbl_tran t
+        inner join tbl_customer cust
+        on t.`customerId`=cust.`id`
+        inner join tbl_activity a
+        on a.`id`=t.`activityId`
+        inner join tbl_contacts con
+        on con.`id`=t.`contactsId`
+        inner join tbl_user u
+        on u.`id`=t.`owner`
+        where t.`id`=#{id}
+
+    </select>
+
     <select id="selectTranById" resultType="Tran">
 
         select

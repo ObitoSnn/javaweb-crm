@@ -162,4 +162,13 @@ public class TranController {
         return map;
     }
 
+    @RequestMapping(value = {"/detail"})
+    public ModelAndView getTranDetail(String id) {
+        ModelAndView mv = new ModelAndView();
+        Tran tran = tranService.getTranDetailById(id);
+        mv.addObject("tran", tran);
+        mv.setViewName("forward:/pages/workbench/transaction/detail.jsp");
+        return mv;
+    }
+
 }
