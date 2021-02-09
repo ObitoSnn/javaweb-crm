@@ -217,38 +217,41 @@
 
 		//给删除线索按钮绑定单击事件
 		$("#deleteClueBtn").click(function () {
+			//选中的复选框
+			var $checkbox = $("input[name='checkbox-single']:checked");
 
-			if (confirm("你确定要删除所选线索吗？")) {
-				//选中的复选框
-				var $checkbox = $("input[name='checkbox-single']:checked");
-
-				var param = "";
-				for(var i = 0; i < $checkbox.length; i++) {
-					param += "id=" + $($checkbox[i]).val();
-					if (i < $checkbox.length - 1) {
-						param += "&";
-					}
-				}
-
-				$.ajax({
-
-					url : "workbench/clue/deleteClueByIds",
-					data : param,
-					type : "post",
-					dataType : "json",
-					success : function (data) {
-						/*
-                            data
-                                {"success":true/false,"errorMsg":错误信息}
-                        */
-						if (data.success) {
-							//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
-							pageList(1,$("#cluePage").bs_pagination('getOption', 'rowsPerPage'));
-						} else {
-							alert(data.errorMsg);
+			if ($checkbox.length == 0) {
+				alert("请选择要删除的交易信息");
+			} else {
+				if (confirm("你确定要删除所选线索吗？")) {
+					var param = "";
+					for(var i = 0; i < $checkbox.length; i++) {
+						param += "id=" + $($checkbox[i]).val();
+						if (i < $checkbox.length - 1) {
+							param += "&";
 						}
 					}
-				});
+
+					$.ajax({
+
+						url : "workbench/clue/deleteClueByIds",
+						data : param,
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data
+                                    {"success":true/false,"errorMsg":错误信息}
+                            */
+							if (data.success) {
+								//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+								pageList(1,$("#cluePage").bs_pagination('getOption', 'rowsPerPage'));
+							} else {
+								alert(data.errorMsg);
+							}
+						}
+					});
+				}
 			}
 
 		});
