@@ -45,6 +45,7 @@
     <select id="selectTranDetailById" resultType="Tran">
 
         select
+        t.`id`,
         u.`name` as `owner`,
         t.`money`,
         t.`name`,

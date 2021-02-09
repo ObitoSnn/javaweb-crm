@@ -10,6 +10,7 @@ import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Activity;
 import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.domain.Tran;
+import com.obitosnn.crm.workbench.domain.TranHistory;
 import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
@@ -169,6 +170,12 @@ public class TranController {
         mv.addObject("tran", tran);
         mv.setViewName("forward:/pages/workbench/transaction/detail.jsp");
         return mv;
+    }
+
+    @RequestMapping(value = {"/getTranHistoryListByTranId"})
+    @ResponseBody
+    public List<TranHistory> getTranHistoryListByTranId(String tranId) {
+        return tranService.getTranHistoryListByTranId(tranId);
     }
 
 }

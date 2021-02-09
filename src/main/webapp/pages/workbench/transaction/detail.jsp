@@ -104,9 +104,41 @@
                         }
                     }, 100);
                 });
+
+		//页面加载完毕显示交易理事列表
+		showTranHistoryList();
+
 	});
-	
-	
+
+	function showTranHistoryList() {
+		$.ajax({
+			url : "workbench/transaction/getTranHistoryListByTranId",
+			data : {
+				"tranId" : "${requestScope.tran.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data
+						[{交易历史},...]
+				 */
+				var html = "";
+				$.each(data, function (i, obj) {
+					html += '<tr>';
+					html += '<td>'+ obj.stage + '</td>';
+					html += '<td>'+ obj.money + '</td>';
+					html += '<td>' + json[obj.stage] + '</td>';
+					html += '<td>'+ obj.expectedDate + '</td>';
+					html += '<td>'+ obj.createTime + '</td>';
+					html += '<td>'+ obj.createBy + '</td>';
+					html += '</tr>';
+				});
+				$("#showTranHistoryTBody").html(html);
+			}
+		});
+
+	}
 	
 </script>
 
@@ -298,31 +330,7 @@
 							<td>创建人</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>资质审查</td>
-							<td>5,000</td>
-							<td>10</td>
-							<td>2017-02-07</td>
-							<td>2016-10-10 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
-						<tr>
-							<td>需求分析</td>
-							<td>5,000</td>
-							<td>20</td>
-							<td>2017-02-07</td>
-							<td>2016-10-20 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
-						<tr>
-							<td>谈判/复审</td>
-							<td>5,000</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>2017-02-09 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
+					<tbody id="showTranHistoryTBody">
 					</tbody>
 				</table>
 			</div>
