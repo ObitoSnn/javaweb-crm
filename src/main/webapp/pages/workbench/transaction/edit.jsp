@@ -467,7 +467,7 @@
 			</div>
 			<label for="edit-activityName" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-activityName">
+				<input type="text" class="form-control" id="edit-activityName" readonly>
 				<input type="hidden" id="activityId" name="activityId">
 			</div>
 		</div>
@@ -475,7 +475,7 @@
 		<div class="form-group">
 			<label for="edit-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-contactsName">
+				<input type="text" class="form-control" id="edit-contactsName" readonly>
 				<input type="hidden" id="contactsId" name="contactsId">
 			</div>
 		</div>
