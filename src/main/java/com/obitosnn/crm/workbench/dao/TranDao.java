@@ -19,4 +19,6 @@ public interface TranDao {
 
     Integer updateById(Tran tran);
 
+    Integer deleteById(String id);
+
 }

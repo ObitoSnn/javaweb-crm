@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -131,6 +132,15 @@ public class TranServiceImpl implements TranService {
         Integer insertTranHistoryCount = tranHistoryDao.insert(tranHistory);
         if (insertTranHistoryCount.compareTo(1) != 0) {
             throw new FailToSaveException("保存交易历史失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteTranById(String id) throws FailToDeleteException {
+        Integer count = tranDao.deleteById(id);
+        if (count.compareTo(1) != 0) {
+            throw new FailToDeleteException("删除交易失败");
         }
         return true;
     }

@@ -5,6 +5,12 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
+    <delete id="deleteById">
+
+        delete from tbl_tran where `id`=#{id}
+
+    </delete>
+
     <update id="updateById">
 
         update tbl_tran set
