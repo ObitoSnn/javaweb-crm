@@ -32,7 +32,7 @@ public class SysInitListener extends ContextLoaderListener {
 
         //处理阶段与可能性对应的属性文件 Stage2Possibility.properties
         Map<String, String> pMap = new HashMap<String, String>();
-        ResourceBundle rb = ResourceBundle.getBundle("Stage2Possibility", Locale.CHINA);
+        ResourceBundle rb = ResourceBundle.getBundle("properties/Stage2Possibility", Locale.CHINA);
         Enumeration<String> e = rb.getKeys();
         while (e.hasMoreElements()) {
             String key = e.nextElement();
