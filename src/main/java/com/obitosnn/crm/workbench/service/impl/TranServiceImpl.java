@@ -103,7 +103,7 @@ public class TranServiceImpl implements TranService {
             customer.setId(UUIDUtil.getUUID());
             customer.setOwner(tran.getOwner());
             customer.setName(customerName);
-            customer.setCreateBy(tran.getCreateBy());
+            customer.setCreateBy(editBy);
             customer.setCreateTime(DateTimeUtil.getSysTime());
             customer.setContactSummary(tran.getContactSummary());
             customer.setNextContactTime(tran.getNextContactTime());
@@ -125,7 +125,7 @@ public class TranServiceImpl implements TranService {
         tranHistory.setStage(tran.getStage());
         tranHistory.setMoney(tran.getMoney());
         tranHistory.setExpectedDate(tran.getExpectedDate());
-        tranHistory.setCreateBy(tran.getCreateBy());
+        tranHistory.setCreateBy(editBy);
         tranHistory.setCreateTime(DateTimeUtil.getSysTime());
         tranHistory.setTranId(tran.getId());
         Integer insertTranHistoryCount = tranHistoryDao.insert(tranHistory);
