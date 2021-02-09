@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service;
 
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
@@ -23,5 +24,7 @@ public interface TranService {
     Tran getActivityIdAndContactsIdByTranId(String id);
 
     boolean updateTran(Tran tran, String customerName, String editBy) throws FailToSaveException, FailToUpdateException;
+
+    boolean deleteTranById(String id) throws FailToDeleteException;
 
 }

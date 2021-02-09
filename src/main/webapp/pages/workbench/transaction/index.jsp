@@ -46,6 +46,41 @@
 
 		});
 
+		//给删除按钮绑定单击事件
+		$("#deleteBtn").click(function () {
+			//选中的复选框
+			var $isChecked = $("input[name='checkbox-single']:checked");
+			if ($isChecked.length == 0) {
+				alert("请选择要删除的交易信息");
+			} else if ($isChecked.length > 1) {
+				alert("一次只能删除一条交易信息");
+			} else {
+				if (confirm("你确定要删除所选交易信息吗？")) {
+					var id = $isChecked.val();
+					$.ajax({
+						url : "workbench/transaction/deleteTran",
+						data : {
+							"id" : id
+						},
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data
+                                    {"success":true/false,"errorMsg":错误信息}
+                            */
+							if (data.success) {
+								window.location.href = "pages/workbench/transaction/index.jsp";
+							} else {
+								alert(data.errorMsg);
+							}
+						}
+					});
+				}
+			}
+
+		});
+
 	});
 
 	function pageList(pageNo, pageSize) {
@@ -246,7 +281,7 @@
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" onclick="window.location.href='workbench/transaction/add';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="edit()"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button id="deleteBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
