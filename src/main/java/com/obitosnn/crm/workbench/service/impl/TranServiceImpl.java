@@ -196,4 +196,25 @@ public class TranServiceImpl implements TranService {
         return true;
     }
 
+    @Override
+    public boolean updateTranStage(Tran tran) throws FailToUpdateException, FailToSaveException {
+        Integer updateCount = tranDao.updateTranStageById(tran);
+        if (updateCount.compareTo(1) != 0) {
+            throw new FailToUpdateException("修改阶段失败");
+        }
+        TranHistory tranHistory = new TranHistory();
+        tranHistory.setId(UUIDUtil.getUUID());
+        tranHistory.setStage(tran.getStage());
+        tranHistory.setMoney(tran.getMoney());
+        tranHistory.setExpectedDate(tran.getExpectedDate());
+        tranHistory.setCreateTime(DateTimeUtil.getSysTime());
+        tranHistory.setCreateBy(tran.getEditBy());
+        tranHistory.setTranId(tran.getId());
+        Integer insertCount = tranHistoryDao.insert(tranHistory);
+        if (insertCount.compareTo(1) != 0) {
+            throw new FailToSaveException("交易历史保存失败");
+        }
+        return true;
+    }
+
 }

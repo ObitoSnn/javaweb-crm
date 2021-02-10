@@ -23,4 +23,6 @@ public interface TranDao {
 
     Integer deleteTranByIds(String[] ids);
 
+    Integer updateTranStageById(Tran tran);
+
 }

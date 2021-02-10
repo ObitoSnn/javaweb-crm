@@ -5,6 +5,16 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
+    <update id="updateTranStageById">
+
+        update tbl_tran set
+        `stage`=#{stage},
+        `editBy`=#{editBy},
+        `editTime`=#{editTime}
+        where `id`=#{id}
+
+    </update>
+
     <delete id="deleteTranByIds">
 
         delete from tbl_tran where `id` in

@@ -43,4 +43,7 @@ public interface TranService {
     boolean updateTranRemark(TranRemark tranRemark) throws FailToUpdateException;
 
     boolean deleteTranByIds(String[] ids) throws FailToDeleteException;
+
+    boolean updateTranStage(Tran tran) throws FailToUpdateException, FailToSaveException;
+
 }

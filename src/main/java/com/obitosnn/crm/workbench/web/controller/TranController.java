@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -257,6 +258,27 @@ public class TranController {
         }
         map.put("success", success);
         map.put("tranRemark", tranRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/changeTranStage"})
+    @ResponseBody
+    public Map<String, Object> changeTranStage(HttpServletRequest request, Tran tran) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        String editTime = DateTimeUtil.getSysTime();
+        tran.setEditBy(editBy);
+        tran.setEditTime(editTime);
+        System.out.println(tran);
+        boolean success = false;
+        try {
+            success = tranService.updateTranStage(tran);
+            map.put("tran", tran);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
         return map;
     }
 
