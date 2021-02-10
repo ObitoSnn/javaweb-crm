@@ -45,7 +45,7 @@
 <script type="text/javascript">
 
 	//阶段和可能性对应关系的json串
-	var json = {
+	var possibilityJson = {
 		<%
             for (String key : keySet) {
                 String value = pMap.get(key);
@@ -62,7 +62,7 @@
 	$(function(){
 
 		var stage = "${requestScope.tran.stage}";
-		var possibility = json[stage];
+		var possibility = possibilityJson[stage];
 		//给可能性文本框赋值
 		$("#possibility").html(possibility);
 
@@ -263,7 +263,7 @@
 					html += '<tr>';
 					html += '<td>'+ obj.stage + '</td>';
 					html += '<td>'+ obj.money + '</td>';
-					html += '<td>' + json[obj.stage] + '</td>';
+					html += '<td>' + possibilityJson[obj.stage] + '</td>';
 					html += '<td>'+ obj.expectedDate + '</td>';
 					html += '<td>'+ obj.createTime + '</td>';
 					html += '<td>'+ obj.createBy + '</td>';
@@ -375,6 +375,108 @@
 		index:当前状态对应的索引位置
 	 */
 	function changeStage(stage, index) {
+
+		if ($.trim(stage) == $.trim($("#stage").text())) {
+			alert("当前交易正处于该阶段");
+			return false;
+		}
+
+		$.ajax({
+			url : "workbench/transaction/changeTranStage",
+			data : {
+				"id" : "${requestScope.tran.id}",
+				"stage" : stage,
+				"money"	: ${requestScope.tran.money},
+				"expectedDate" : ${requestScope.tran.money}
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+
+                    //data
+                    //    {"success":true/false,"tran":{交易},"errorMsg":错误信息}
+
+				if (data.success) {
+					//局部刷新页面数据
+					$("#stage").html(stage);
+					$("#possibility").html(possibilityJson[stage]);
+					$("#editBy").html(data.tran.editBy);
+					$("#editTime").html(data.tran.editTime);
+
+					//正常阶段与丢失阶段的分界点下标
+					var point = <%=point%>;
+					if ("0" == possibilityJson[stage]) {
+						//丢失的状态，可能性为0，前面都是黑圈，后边可能是红叉，可能是黑叉
+
+						for (var i = 0; i < point; i++) {
+							//黑圈-----------------
+							//清除class属性
+							$("#" + i).removeClass();
+							//添加class属性
+							$("#" + i).addClass("glyphicon glyphicon-record mystage");
+							//添加样式
+							$("#" + i).css("color", "#000000");
+						}
+
+						for (var i = point; i < <%=dvList.size()%>; i++) {
+							//可能是红叉，可能是黑叉
+							if (i == index) {
+								//红叉-----------------
+								$("#" + i).removeClass();
+								$("#" + i).addClass("glyphicon glyphicon-remove mystage");
+								$("#" + i).css("color", "#FF0000");
+							} else {
+								//黑叉-----------------
+								$("#" + i).removeClass();
+								$("#" + i).addClass("glyphicon glyphicon-remove mystage");
+								$("#" + i).css("color", "#000000");
+							}
+
+						}
+
+					} else {
+						//交易中的状态，可能性不为0，前面可能为绿标，绿钩，黑圈，后面都是黑叉
+						for (var i = point; i < <%=dvList.size()%>; i++) {
+							//黑叉-----------------
+							$("#" + i).removeClass();
+							$("#" + i).addClass("glyphicon glyphicon-remove mystage");
+							$("#" + i).css("color", "#000000");
+						}
+
+						for (var i = 0; i < point; i++) {
+							//可能为绿标，绿钩，黑圈
+							if (i == index) {
+								//绿标-----------------
+								$("#" + i).removeClass();
+								$("#" + i).addClass("glyphicon glyphicon-map-marker mystage");
+								$("#" + i).css("color", "#90F790");
+							} else if (i < index) {
+								//绿钩-----------------
+								$("#" + i).removeClass();
+								$("#" + i).addClass("glyphicon glyphicon-ok-circle mystage");
+								$("#" + i).css("color", "#90F790");
+							} else {
+								//黑圈-----------------
+								$("#" + i).removeClass();
+								$("#" + i).addClass("glyphicon glyphicon-record mystage");
+								$("#" + i).css("color", "#000000");
+							}
+
+						}
+
+					}
+
+					//刷新交易历史列表
+					showTranHistoryList();
+
+				} else {
+					alert(data.errorMsg);
+				}
+
+			}
+		});
+
+
 
 	}
 
@@ -593,7 +695,7 @@
 			<div style="width: 300px; color: gray;">客户名称</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${requestScope.tran.customerId}&nbsp;</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">阶段</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${requestScope.tran.stage}&nbsp;</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="stage">${requestScope.tran.stage}&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -625,7 +727,7 @@
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 70px;">
 			<div style="width: 300px; color: gray;">修改者</div>
-			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b>${requestScope.tran.editBy}&nbsp;&nbsp;</b><small style="font-size: 10px; color: gray;">${requestScope.tran.editTime}</small></div>
+			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b id="editBy">${requestScope.tran.editBy}&nbsp;&nbsp;</b><small style="font-size: 10px; color: gray;" id="editTime">${requestScope.tran.editTime}</small></div>
 			<div style="height: 1px; width: 550px; background: #D5D5D5; position: relative; top: -20px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 80px;">
