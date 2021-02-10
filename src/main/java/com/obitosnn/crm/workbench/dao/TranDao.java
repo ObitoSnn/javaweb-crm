@@ -25,4 +25,6 @@ public interface TranDao {
 
     Integer updateTranStageById(Tran tran);
 
+    List<Map<String, Object>> selectForCharts();
+
 }

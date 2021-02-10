@@ -217,4 +217,9 @@ public class TranServiceImpl implements TranService {
         return true;
     }
 
+    @Override
+    public List<Map<String, Object>> getCharts() {
+        return tranDao.selectForCharts();
+    }
+
 }

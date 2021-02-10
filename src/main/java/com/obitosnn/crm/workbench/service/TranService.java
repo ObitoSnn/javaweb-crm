@@ -46,4 +46,6 @@ public interface TranService {
 
     boolean updateTranStage(Tran tran) throws FailToUpdateException, FailToSaveException;
 
+    List<Map<String, Object>> getCharts();
+
 }
