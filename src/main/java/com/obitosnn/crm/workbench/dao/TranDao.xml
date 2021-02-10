@@ -5,6 +5,16 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
+    <select id="selectForCharts" resultType="map">
+
+        select
+        count(*) as value,
+        stage as name
+        from tbl_tran
+        group by stage
+
+    </select>
+
     <update id="updateTranStageById">
 
         update tbl_tran set

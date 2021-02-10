@@ -282,4 +282,10 @@ public class TranController {
         return map;
     }
 
+    @RequestMapping(value = {"/getCharts"})
+    @ResponseBody
+    public List<Map<String, Object>> getCharts() {
+        return tranService.getCharts();
+    }
+
 }
