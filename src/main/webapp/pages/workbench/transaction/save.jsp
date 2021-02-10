@@ -187,24 +187,26 @@
 			$("#saveTranBtn").click(function () {
 
 				var owner = $.trim($("#owner").val());
-				var money = $.trim($("#create-money").val());
 				var name = $.trim($("#create-name").val());
 				var expectedDate = $.trim($("#create-expectedDate").val());
 				var customerName = $.trim($("#create-customerName").val());
 				var stage = $.trim($("#stage").val());
-				var type = $.trim($("#type").val());
-				var source = $.trim($("#source").val());
-				var activityId = $.trim($("#activityId").val());
-				var contactsId = $.trim($("#contactsId").val());
-				var description = $.trim($("#create-description").val());
-				var contactSummary = $.trim($("#create-contactSummary").val());
-				var nextContactTime = $.trim($("#create-nextContactTime").val());
 
-				if (owner == "" || money == "" || name == "" || expectedDate == ""
-				|| customerName == "" || stage == "" || type == "" || source == ""
-				|| activityId == "" || contactsId == "" || description == "" || contactSummary == ""
-				|| nextContactTime == "") {
-					alert("请填写相关信息");
+				//未填写市场活动源，默认不添加
+				if ($.trim($("#create-activityName").val()) == "") {
+					//隐藏域中保存市场活动id
+					$("#activityId").val("");
+				}
+
+				//未填写联系人名称，默认不添加
+				if ($.trim($("#create-contactsName").val()) == "") {
+					//隐藏域中保存联系人id
+					$("#contactsId").val("");
+				}
+
+				if (owner == "" || name == "" || expectedDate == ""
+				|| customerName == "" || stage == "") {
+					alert("请填写5项相关信息");
 				} else {
 
                     $.ajax({
@@ -396,7 +398,7 @@
 			</div>
 			<label for="create-activitySource" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySource" readonly>
+				<input type="text" class="form-control" id="create-activityName" placeholder="点击左侧图标添加，默认不添加">
 				<input type="hidden" id="activityId" name="activityId"/>
 			</div>
 		</div>
@@ -404,7 +406,7 @@
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName" readonly>
+				<input type="text" class="form-control" id="create-contactsName" placeholder="点击左侧图标添加，默认不添加">
 				<input type="hidden" id="contactsId" name="contactsId"/>
 			</div>
 		</div>

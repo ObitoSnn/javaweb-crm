@@ -174,8 +174,11 @@
 				var activityName = $("#activityName" + activityId).html();
 				//给文本框填充内容
 				$("#edit-activityName").val(activityName);
-				//隐藏域中保存市场活动id
-				$("#activityId").val(activityId);
+				//未填写市场活动源，默认不添加
+				if ($.trim($("#edit-activityName")).val() != "") {
+					//隐藏域中保存市场活动id
+					$("#activityId").val(activityId);
+				}
 				//关闭模态窗口
 				$("#findMarketActivity").modal("hide");
 
@@ -228,8 +231,11 @@
 				var contactName = $("#contactName" + contactId).html();
 				//给文本框填充内容
 				$("#edit-contactsName").val(contactName);
-				//隐藏域中保存联系人id
-				$("#contactsId").val(contactId);
+				//未填写联系人名称，默认不添加
+				if ($.trim($("#edit-contactsName").val()) != "") {
+					//隐藏域中保存联系人id
+					$("#contactsId").val(contactId);
+				}
 				//关闭模态窗口
 				$("#findContacts").modal("hide");
 
@@ -259,24 +265,26 @@
 			$("#updateTranBtn").click(function () {
 
 				var owner = $.trim($("#edit-owner").val());
-				var money = $.trim($("#edit-money").val());
 				var name = $.trim($("#edit-name").val());
 				var expectedDate = $.trim($("#edit-expectedDate").val());
 				var customerName = $.trim($("#edit-customerName").val());
 				var stage = $.trim($("#edit-stage").val());
-				var type = $.trim($("#edit-type").val());
-				var source = $.trim($("#edit-source").val());
-				var activityId = $.trim($("#activityId").val());
-				var contactsId = $.trim($("#contactsId").val());
-				var description = $.trim($("#edit-description").val());
-				var contactSummary = $.trim($("#edit-contactSummary").val());
-				var nextContactTime = $.trim($("#edit-nextContactTime").val());
 
-				if (owner == "" || money == "" || name == "" || expectedDate == ""
-						|| customerName == "" || stage == "" || type == "" || source == ""
-						|| activityId == "" || contactsId == "" || description == "" || contactSummary == ""
-						|| nextContactTime == "") {
-					alert("请填写相关信息");
+				//未填写市场活动源，默认不添加
+				if ($.trim($("#edit-activityName").val()) == "") {
+					//隐藏域中保存市场活动id
+					$("#activityId").val("");
+				}
+
+				//未填写联系人名称，默认不添加
+				if ($.trim($("#edit-contactsName").val()) == "") {
+					//隐藏域中保存联系人id
+					$("#contactsId").val("");
+				}
+
+				if (owner == "" || name == "" || expectedDate == ""
+						|| customerName == "" || stage == "") {
+					alert("请填写5项相关信息");
 				} else {
 
 					$.ajax({
@@ -467,7 +475,7 @@
 			</div>
 			<label for="edit-activityName" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-activityName" readonly>
+				<input type="text" class="form-control" id="edit-activityName" placeholder="点击左侧图标添加，默认不添加">
 				<input type="hidden" id="activityId" name="activityId">
 			</div>
 		</div>
@@ -475,7 +483,7 @@
 		<div class="form-group">
 			<label for="edit-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-contactsName" readonly>
+				<input type="text" class="form-control" id="edit-contactsName" placeholder="点击左侧图标添加，默认不添加">
 				<input type="hidden" id="contactsId" name="contactsId">
 			</div>
 		</div>
