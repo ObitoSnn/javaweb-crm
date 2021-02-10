@@ -1,8 +1,26 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="com.obitosnn.crm.workbench.domain.Tran" %>
+<%@ page import="com.obitosnn.crm.settings.domain.DicValue" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 	Map<String, String> pMap = (Map<String, String>) application.getAttribute("possibility");
+    Set<String> keySet = pMap.keySet();
+    //获取字典类型为stage的DicValue集合
+	List<DicValue> dvList = (List<DicValue>) application.getAttribute("stageList");
+
+    //正常阶段与丢失阶段的分界点下标
+    int point = -1;
+    for (int i = 0; i < dvList.size(); i++) {
+        String listStage = dvList.get(i).getValue();
+        String listPossibility = pMap.get(listStage);
+        if ("0".equals(listPossibility)) {
+            point = i;
+            break;
+        }
+    }
+
 %>
 <!DOCTYPE html>
 <html>
@@ -29,7 +47,6 @@
 	//阶段和可能性对应关系的json串
 	var json = {
 		<%
-            Set<String> keySet = pMap.keySet();
             for (String key : keySet) {
                 String value = pMap.get(key);
         %>
@@ -353,6 +370,14 @@
 
 	}
 
+	/*
+		stage:当前状态
+		index:当前状态对应的索引位置
+	 */
+	function changeStage(stage, index) {
+
+	}
+
 </script>
 
 </head>
@@ -407,24 +432,142 @@
 	<!-- 阶段状态 -->
 	<div style="position: relative; left: 40px; top: -50px;">
 		阶段&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="资质审查" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="需求分析" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="价值建议" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="确定决策者" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-map-marker mystage" data-toggle="popover" data-placement="bottom" data-content="提案/报价" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="谈判/复审"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="成交"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="丢失的线索"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="因竞争丢失关闭"></span>
-		-----------
+		<%
+
+			Tran tran = (Tran) request.getAttribute("tran");
+			//当前阶段
+			String currentStage = tran.getStage();
+			//当前阶段对应的可能性
+			String currentPossibility = "";
+			for (String key : keySet) {
+				if (key.equals(currentStage)) {
+					currentPossibility = pMap.get(key);
+					break;
+				}
+			}
+			if ("0".equals(currentPossibility)) {
+				//丢失的状态，可能性为0，前面都是黑圈，后边可能是红叉，可能是黑叉
+				for (int i = 0; i < dvList.size(); i++) {
+					DicValue dv = dvList.get(i);
+					String listStage = dv.getValue();
+					String listPossibility = pMap.get(listStage);
+
+					if ("0".equals(listPossibility)) {
+						//丢失阶段，一个是红叉，一个是黑叉
+
+						if (currentStage.equals(listStage)) {
+							//红叉----------------------------
+								%>
+								<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+									  class="glyphicon glyphicon-remove mystage"
+									  data-toggle="popover" data-placement="bottom"
+									  data-content="<%=listStage%>" style="color: #FF0000;"></span>
+										-----------
+								<%
+
+						} else {
+							//黑叉-------------------------
+
+								%>
+								<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+									  class="glyphicon glyphicon-remove mystage"
+									  data-toggle="popover" data-placement="bottom"
+									  data-content="<%=listStage%>" style="color: #000000;"></span>
+										-----------
+								<%
+
+						}
+
+					} else {
+						//全部是黑圈---------------------------------------
+
+						%>
+						<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+							  class="glyphicon glyphicon-record mystage"
+							  data-toggle="popover" data-placement="bottom"
+							  data-content="<%=listStage%>" style="color: #000000;"></span>
+								-----------
+						<%
+
+					}
+
+				}
+
+			} else {
+				//交易中的状态，可能性不为0，前面可能为绿标，绿钩，黑圈，后面都是黑叉
+
+				//当前下标
+				int index = -1;
+				for (int i = 0; i < dvList.size(); i++) {
+					DicValue dv = dvList.get(i);
+					String stage = dv.getValue();
+					if (currentStage.equals(stage)) {
+						//找到当前状态的小标
+						index = i;
+						break;
+					}
+				}
+
+				for (int i = 0; i < dvList.size(); i++) {
+					DicValue dv = dvList.get(i);
+					String listStage = dv.getValue();
+					String listPossibility = pMap.get(listStage);
+
+					if ("0".equals(listPossibility)) {
+						//黑叉-----------------------
+
+						%>
+						<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+							  class="glyphicon glyphicon-remove mystage"
+							  data-toggle="popover" data-placement="bottom"
+							  data-content="<%=listStage%>" style="color: #000000;"></span>
+								-----------
+						<%
+
+					} else {
+
+						if (i == index) {
+							//绿标------------------
+
+							%>
+							<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+								  class="glyphicon glyphicon-map-marker mystage"
+								  data-toggle="popover" data-placement="bottom"
+								  data-content="<%=listStage%>" style="color: #90F790;"></span>
+									-----------
+							<%
+
+						} else if (i < index) {
+							//绿钩------------------
+
+							%>
+							<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+								  class="glyphicon glyphicon-ok-circle mystage"
+								  data-toggle="popover" data-placement="bottom"
+								  data-content="<%=listStage%>" style="color: #90F790;"></span>
+									-----------
+							<%
+
+						} else {
+							//黑圈------------------
+
+							%>
+							<span id="<%=i%>" onclick="changeStage('<%=listStage%>', '<%=i%>')"
+								  class="glyphicon glyphicon-record mystage"
+								  data-toggle="popover" data-placement="bottom"
+								  data-content="<%=listStage%>" style="color: #000000;"></span>
+									-----------
+							<%
+
+						}
+
+					}
+
+				}
+
+			}
+
+		%>
 		<span class="closingDate">${requestScope.tran.expectedDate}</span>
 	</div>
 	
