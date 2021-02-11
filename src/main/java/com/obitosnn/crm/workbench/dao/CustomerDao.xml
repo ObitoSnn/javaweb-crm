@@ -5,6 +5,36 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
 
+    <insert id="insertCustomer">
+
+        insert into tbl_customer(
+            `id`,
+            `owner`,
+            `name`,
+            `website`,
+            `phone`,
+            `createBy`,
+            `createTime`,
+            `contactSummary`,
+            `nextContactTime`,
+            `description`,
+            `address`
+        ) values(
+            #{id},
+            #{owner},
+            #{name},
+            #{website},
+            #{phone},
+            #{createBy},
+            #{createTime},
+            #{contactSummary},
+            #{nextContactTime},
+            #{description},
+            #{address}
+        )
+
+    </insert>
+
     <select id="selectCustomerDetailById" resultType="Customer">
 
         select
