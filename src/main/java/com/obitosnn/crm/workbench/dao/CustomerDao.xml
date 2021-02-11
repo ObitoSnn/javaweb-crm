@@ -5,6 +5,71 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
 
+    <select id="selectCustomerTotalForPageVo" resultType="long">
+
+        select count(*) from (
+            select
+            cust.`id`
+            from tbl_customer cust
+            inner join tbl_user u
+            on cust.`owner`=u.`id`
+            <where>
+
+                <if test="name != null and name != ''">
+                    cust.`name` like '%' #{name} '%'
+                </if>
+
+                <if test="owner != null and owner != ''">
+                    and u.`name` like '%' #{owner} '%'
+                </if>
+
+                <if test="phone != null and phone != ''">
+                    and cust.`phone` like '%' #{phone} '%'
+                </if>
+
+                <if test="website != null and website != ''">
+                    and cust.`website` like '%' #{website} '%'
+                </if>
+
+            </where> order by cust.`createTime` desc
+
+        ) tbl_temp
+
+    </select>
+
+    <select id="selectCustomerListForPageVo" resultType="Customer">
+
+        select
+        cust.`id`,
+        u.`name` as `owner`,
+        cust.`name`,
+        cust.`website`,
+        cust.`phone`
+        from tbl_customer cust
+        inner join tbl_user u
+        on cust.`owner`=u.`id`
+        <where>
+
+            <if test="name != null and name != ''">
+                cust.`name` like '%' #{name} '%'
+            </if>
+
+            <if test="owner != null and owner != ''">
+                and u.`name` like '%' #{owner} '%'
+            </if>
+
+            <if test="phone != null and phone != ''">
+                and cust.`phone` like '%' #{phone} '%'
+            </if>
+
+            <if test="website != null and website != ''">
+                and cust.`website` like '%' #{website} '%'
+            </if>
+
+        </where> order by cust.`createTime` desc
+
+    </select>
+
     <select id="selectNameListByName" resultType="string">
 
         select `name` from tbl_customer where `name` like '%' #{name} '%'
