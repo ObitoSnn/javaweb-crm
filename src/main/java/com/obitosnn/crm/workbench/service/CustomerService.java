@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service;
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Customer;
 
@@ -20,5 +21,9 @@ public interface CustomerService {
     Customer getCustomerDetailById(String id);
 
     boolean saveCustomer(Customer customer) throws FailToSaveException;
+
+    Customer getCustomerById(String id);
+
+    boolean updateCustomerById(Customer customer) throws FailToUpdateException;
 
 }

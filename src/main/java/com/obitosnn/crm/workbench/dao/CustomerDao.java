@@ -21,4 +21,8 @@ public interface CustomerDao {
 
     Integer insertCustomer(Customer customer);
 
+    Customer selectCustomerById(String id);
+
+    Integer updateCustomerById(Customer customer);
+
 }
