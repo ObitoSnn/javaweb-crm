@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -77,6 +78,36 @@ public class CustomerController {
         try {
             success = customerService.saveCustomer(customer);
         } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getUserListAndCustomerById"})
+    @ResponseBody
+    public Map<String, Object> getUserListAndCustomerById(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> uList = userService.getUserList();
+        Customer customer = customerService.getCustomerById(id);
+        map.put("uList", uList);
+        map.put("customer", customer);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateCustomerById"})
+    @ResponseBody
+    public Map<String, Object> updateCustomerById(HttpServletRequest request, Customer customer) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        customer.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        customer.setEditTime(editTime);
+        boolean success = false;
+        try {
+            success = customerService.updateCustomerById(customer);
+        } catch (FailToUpdateException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

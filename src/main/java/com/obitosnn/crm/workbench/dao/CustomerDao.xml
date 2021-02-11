@@ -5,6 +5,38 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
 
+    <update id="updateCustomerById">
+
+        update `tbl_customer` set
+        `name`=#{name},
+        `website`=#{website},
+        `phone`=#{phone},
+        `editBy`=#{editBy},
+        `editTime`=#{editTime},
+        `contactSummary`=#{contactSummary},
+        `nextContactTime`=#{nextContactTime},
+        `description`=#{description},
+        `address`=#{address}
+        where id=#{id}
+
+    </update>
+
+    <select id="selectCustomerById" resultType="Customer">
+
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `website`,
+        `phone`,
+        `contactSummary`,
+        `nextContactTime`,
+        `description`,
+        `address`
+        from tbl_customer where `id`=#{id}
+
+    </select>
+
     <insert id="insertCustomer">
 
         insert into tbl_customer(
