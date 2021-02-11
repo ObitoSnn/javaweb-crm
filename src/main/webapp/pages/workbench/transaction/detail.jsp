@@ -386,8 +386,8 @@
 			data : {
 				"id" : "${requestScope.tran.id}",
 				"stage" : stage,
-				"money"	: ${requestScope.tran.money},
-				"expectedDate" : ${requestScope.tran.money}
+				"money"	: "${requestScope.tran.money}",
+				"expectedDate" : "${requestScope.tran.money}"
 			},
 			type : "post",
 			dataType : "json",
