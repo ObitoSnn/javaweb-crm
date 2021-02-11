@@ -1,5 +1,10 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.settings.service.UserService;
+import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.service.CustomerService;
@@ -11,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +28,8 @@ import java.util.Map;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -49,6 +57,31 @@ public class CustomerController {
         mv.addObject("customer", customer);
         mv.setViewName("forward:/pages/workbench/customer/detail.jsp");
         return mv;
+    }
+
+    @RequestMapping(value = {"/getUserList"})
+    @ResponseBody
+    public List<User> getUserList() {
+        return userService.getUserList();
+    }
+
+    @RequestMapping(value = {"/saveCustomer"})
+    @ResponseBody
+    public Map<String, Object> saveCustomer(HttpServletRequest request, Customer customer) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        customer.setId(UUIDUtil.getUUID());
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        customer.setCreateBy(createBy);
+        customer.setCreateTime(DateTimeUtil.getSysTime());
+        boolean success = false;
+        try {
+            success = customerService.saveCustomer(customer);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.domain.Customer;
@@ -41,6 +42,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerDetailById(String id) {
         return customerDao.selectCustomerDetailById(id);
+    }
+
+    @Override
+    public boolean saveCustomer(Customer customer) throws FailToSaveException {
+        Integer count = customerDao.insertCustomer(customer);
+        if (count != 1) {
+            throw new FailToSaveException("客户保存失败");
+        }
+        return true;
     }
 
 }

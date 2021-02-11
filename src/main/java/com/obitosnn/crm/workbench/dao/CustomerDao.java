@@ -19,4 +19,6 @@ public interface CustomerDao {
 
     Customer selectCustomerDetailById(String id);
 
+    Integer insertCustomer(Customer customer);
+
 }

@@ -13,7 +13,7 @@
 <script type="text/javascript">
 
 	$(function(){
-		
+
 		//定制字段
 		$("#definedColumns > li").click(function(e) {
 			//防止下拉菜单消失
@@ -52,7 +52,93 @@
 					,$("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
 
 		});
-		
+
+		//给创建客户的按钮绑定单击事件
+		$("#addCustomerBtn").click(function () {
+
+			$.ajax({
+				url : "workbench/customer/getUserList",
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					/*
+						data
+							[{用户},...]
+					 */
+
+					var html = "";
+					$.each(data, function (i, userObj) {
+						html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
+					})
+					//为所有者下拉框填数据
+					$("#create-owner").html(html);
+
+					//默认选中当前登录的用户
+					$("#create-owner").val("${sessionScope.user.id}");
+
+					//打开模态窗口
+					$("#createCustomerModal").modal("show");
+				}
+			});
+
+		});
+
+		//给保存客户的按钮绑定单击事件
+		$("#addCustomerSaveBtn").click(function () {
+
+
+			var owner = $.trim($("#create-owner").val());
+			var name = $.trim($("#create-name").val());
+			var website = $.trim($("#create-website").val());
+			var phone = $.trim($("#create-phone").val());
+			var description = $.trim($("#create-description").val());
+			var contactSummary = $.trim($("#create-contactSummary").val());
+			var nextContactTime = $.trim($("#create-nextContactTime").val());
+			var address = $.trim($("#create-address").val());
+
+			if (owner == "" || name == "") {
+				alert("请填写两项基本信息");
+			} else {
+				$.ajax({
+					url : "workbench/customer/saveCustomer",
+					data : {
+						"owner" : owner,
+						"name" : name,
+						"website" : website,
+						"phone" : phone,
+						"contactSummary" : contactSummary,
+						"nextContactTime" : nextContactTime,
+						"description" : description,
+						"address" : address
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						/*
+                            data
+                                {"success":true/false}
+                         */
+						if (data.success) {
+
+							//关闭模态窗口
+							$("#createCustomerModal").modal("hide");
+
+							//清空表单项内容
+							$("div form.form-horizontal")[0].reset();
+
+							//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+							pageList(1,$("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
+
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
+
+		});
+
+
 	});
 
 	function pageList(pageNo, pageSize) {
@@ -150,17 +236,14 @@
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-customerOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="create-owner">
 								</select>
 							</div>
-							<label for="create-customerName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-customerName">
+								<input type="text" class="form-control" id="create-name">
 							</div>
 						</div>
 						
@@ -175,9 +258,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
@@ -201,23 +284,23 @@
 
                         <div style="position: relative;top: 20px;">
                             <div class="form-group">
-                                <label for="create-address1" class="col-sm-2 control-label">详细地址</label>
+                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="create-address1"></textarea>
+                                    <textarea class="form-control" rows="1" id="create-address"></textarea>
                                 </div>
                             </div>
                         </div>
 					</form>
-					
 				</div>
-				<div class="modal-footer">
+				<div>
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button id="addCustomerSaveBtn" type="button" class="btn btn-primary">保存</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
+
 	<!-- 修改客户的模态窗口 -->
 	<div class="modal fade" id="editCustomerModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 85%;">
@@ -285,9 +368,9 @@
 
                         <div style="position: relative;top: 20px;">
                             <div class="form-group">
-                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
+                                <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="create-address">北京大兴大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴大族企业湾</textarea>
                                 </div>
                             </div>
                         </div>
@@ -354,7 +437,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCustomerModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button id="addCustomerBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
