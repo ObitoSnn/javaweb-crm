@@ -89,6 +89,13 @@
 
 		//给转换按钮绑定点击事件
 		$("#convertBtn").click(function () {
+
+			var name = $.trim($("#name").val());
+			if (name == "") {
+				alert("请填写交易名称");
+				return false;
+			}
+
 			//判断是否为该客户创建交易
 			if ($("#isCreateTransaction").prop("checked")) {
 				$.ajax({
@@ -96,7 +103,7 @@
 					data : {
 						"clueId" : "${param.id}",
 						"money" : $.trim($("#money").val()),
-						"name" : $.trim($("#name").val()),
+						"name" : name,
 						"expectedDate" : $.trim($("#expectedDate").val()),
 						"stage" : $.trim($("#stage").val()),
 						"activityId" : $.trim($("#activityId").val()),
@@ -197,7 +204,7 @@
 		新建客户：${param.company}
 	</div>
 	<div id="create-contact" style="position: relative; left: 40px; height: 35px;">
-		新建联系人：${param.fullname}${param.appellation}
+		新建联系人：${param.fullname}
 	</div>
 	<div id="create-transaction1" style="position: relative; left: 40px; height: 35px; top: 25px;">
 		<input type="checkbox" id="isCreateTransaction"/>
