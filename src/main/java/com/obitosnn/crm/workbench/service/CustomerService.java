@@ -1,6 +1,10 @@
 package com.obitosnn.crm.workbench.service;
 
+import com.obitosnn.crm.vo.PageVo;
+import com.obitosnn.crm.workbench.domain.Customer;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -9,5 +13,7 @@ import java.util.List;
 public interface CustomerService {
 
     List<String> getCustomerName(String name);
+
+    PageVo<Customer> getCustomerPageVo(Map<String, Object> map);
 
 }

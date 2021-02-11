@@ -3,6 +3,7 @@ package com.obitosnn.crm.workbench.dao;
 import com.obitosnn.crm.workbench.domain.Customer;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerDao {
 
@@ -11,5 +12,9 @@ public interface CustomerDao {
     Integer insert(Customer customer);
 
     List<String> selectNameListByName(String name);
+
+    List<Customer> selectCustomerListForPageVo(Map<String, Object> map);
+
+    Long selectCustomerTotalForPageVo(Map<String, Object> map);
 
 }

@@ -7,7 +7,9 @@
 <link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -17,12 +19,122 @@
 			//防止下拉菜单消失
 	        e.stopPropagation();
 	    });
+
+		//页面加载完毕后调用分页方法，默认打开第一页，展现2条记录
+		pageList(1, 2);
+
+		//给控制总的复选框绑定单击事件
+		$("input[name='checkbox-manager']").click(function () {
+			$("input[name='checkbox-single']").prop("checked", this.checked);
+		});
+
+		//给单个的复选框绑定单击事件
+		$("#showCustomerTBody").on("click", $("input[name='checkbox-single']"), function () {
+			$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']").length == $("input[name='checkbox-single']:checked").length);
+		})
+
+		//给查询按钮绑定单击事件
+		$("#searchBtn").click(function () {
+
+			//查询之前将文本框信息保存至隐藏域中
+			var name = $.trim($("#input-name").val());
+			var owner = $.trim($("#input-owner").val());
+			var phone = $.trim($("#input-phone").val());
+			var website = $.trim($("#input-website").val());
+
+			$("#hidden-name").val(name);
+			$("#hidden-owner").val(owner);
+			$("#hidden-phone").val(phone);
+			$("#hidden-website").val(website);
+
+			//查询操作后，刷新页面数据，回到第一页，每页显示数据数不变
+			pageList(1
+					,$("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
+
+		});
 		
 	});
-	
+
+	function pageList(pageNo, pageSize) {
+
+		//刷新后台数据之前取消总复选框的选中状态
+		$("input[name='checkbox-manager']").prop("checked", false);
+
+		//分页之前从隐藏域中取出文本框信息
+		var name = $.trim($("#hidden-name").val());
+		var owner = $.trim($("#hidden-owner").val());
+		var phone = $.trim($("#hidden-phone").val());
+		var website = $.trim($("#hidden-website").val());
+
+		$("#input-name").val(name);
+		$("#input-owner").val(owner);
+		$("#input-phone").val(phone);
+		$("#input-website").val(website);
+
+
+		$.ajax({
+			url : "workbench/customer/pageList",
+			data : {
+				"pageNo" : pageNo,
+				"pageSize" : pageSize,
+				"name" : name,
+				"owner" : owner,
+				"phone" : phone,
+				"website" : website
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+                    data
+                        {"total":总记录数,"dataList":[{客户},{}...]}
+                 */
+				var html = "";
+				$.each(data.dataList, function (i, obj) {
+					html += '<tr>';
+					html += '<td><input type="checkbox" name="checkbox-single" value="' + obj.id + '"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/customer/detail.jsp\';">' + obj.name + '</a></td>';
+					html += '<td>' + obj.owner + '</td>';
+					html += '<td>' + obj.phone + '</td>';
+					html += '<td>' + obj.website + '</td>';
+					html += '</tr>';
+				});
+				$("#showCustomerTBody").html(html);
+
+				var totalPages = data.total % pageSize == 0 ? data.total / pageSize : Math.ceil(data.total / pageSize);
+
+				//数据处理完毕后，结合分页插件展现每页数据
+				$("#customerPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//该回调函数是在点击分页组件的时候触发的
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		});
+
+	}
+
 </script>
 </head>
 <body>
+	<input type="hidden" id="hidden-name">
+	<input type="hidden" id="hidden-owner">
+	<input type="hidden" id="hidden-phone">
+	<input type="hidden" id="hidden-website">
 
 	<!-- 创建客户的模态窗口 -->
 	<div class="modal fade" id="createCustomerModal" role="dialog">
@@ -211,32 +323,32 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-owner">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司座机</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-phone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司网站</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-website">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button id="searchBtn" type="button" class="btn btn-default">查询</button>
 				  
 				</form>
 			</div>
@@ -252,65 +364,20 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" name="checkbox-manager"/></td>
 							<td>名称</td>
 							<td>所有者</td>
 							<td>公司座机</td>
 							<td>公司网站</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/customer/detail.jsp';">动力节点</a></td>
-							<td>zhangsan</td>
-							<td>010-84846003</td>
-							<td>http://www.bjpowernode.com</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/customer/detail.jsp';">动力节点</a></td>
-                            <td>zhangsan</td>
-                            <td>010-84846003</td>
-                            <td>http://www.bjpowernode.com</td>
-                        </tr>
+					<tbody id="showCustomerTBody">
 					</tbody>
 				</table>
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+				<div id="customerPage"></div>
 			</div>
 			
 		</div>
