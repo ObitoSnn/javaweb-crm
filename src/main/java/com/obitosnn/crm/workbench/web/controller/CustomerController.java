@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -39,6 +40,15 @@ public class CustomerController {
         map.put("phone", phone);
         map.put("website", website);
         return customerService.getCustomerPageVo(map);
+    }
+
+    @RequestMapping(value = {"/detail"})
+    public ModelAndView getCustomerDetail(String id) {
+        ModelAndView mv = new ModelAndView();
+        Customer customer = customerService.getCustomerDetailById(id);
+        mv.addObject("customer", customer);
+        mv.setViewName("forward:/pages/workbench/customer/detail.jsp");
+        return mv;
     }
 
 }

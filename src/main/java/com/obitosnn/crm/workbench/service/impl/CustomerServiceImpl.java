@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.domain.Customer;
-import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,11 @@ public class CustomerServiceImpl implements CustomerService {
         pageVo.setTotal(total);
         pageVo.setDataList(aList);
         return pageVo;
+    }
+
+    @Override
+    public Customer getCustomerDetailById(String id) {
+        return customerDao.selectCustomerDetailById(id);
     }
 
 }

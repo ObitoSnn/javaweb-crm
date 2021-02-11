@@ -5,6 +5,29 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
 
+    <select id="selectCustomerDetailById" resultType="Customer">
+
+        select
+        cust.`id`,
+        u.`name` as `owner`,
+        cust.`name`,
+        cust.`website`,
+        cust.`phone`,
+        cust.`createBy`,
+        cust.`createTime`,
+        cust.`editBy`,
+        cust.`editTime`,
+        cust.`contactSummary`,
+        cust.`nextContactTime`,
+        cust.`description`,
+        cust.`address`
+        from tbl_customer cust
+        inner join tbl_user u
+        on cust.`owner`=u.`id`
+        where cust.`id`=#{id}
+
+    </select>
+
     <select id="selectCustomerTotalForPageVo" resultType="long">
 
         select count(*) from (
