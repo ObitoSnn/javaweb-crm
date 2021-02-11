@@ -245,6 +245,46 @@
 
 		});
 
+		//给删除客户按钮绑定单击事件
+		$("#deleteCustomerBtn").click(function () {
+			//选中的复选框
+			var $checkbox = $("input[name='checkbox-single']:checked");
+
+			if ($checkbox.length == 0) {
+				alert("请选择要删除的客户信息");
+			} else {
+				if (confirm("你确定要删除所选客户吗？")) {
+					var param = "";
+					for(var i = 0; i < $checkbox.length; i++) {
+						param += "id=" + $($checkbox[i]).val();
+						if (i < $checkbox.length - 1) {
+							param += "&";
+						}
+					}
+
+					$.ajax({
+						url : "workbench/customer/deleteCustomerByIds",
+						data : param,
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+							/*
+                                data
+                                    {"success":true/false,"errorMsg":错误信息}
+                            */
+							if (data.success) {
+								//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+								pageList(1,$("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
+							} else {
+								alert(data.errorMsg);
+							}
+						}
+					});
+				}
+			}
+
+		});
+
 	});
 
 	function pageList(pageNo, pageSize) {
@@ -542,7 +582,7 @@
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button id="addCustomerBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button id="editCustomerBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button id="deleteCustomerBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>
