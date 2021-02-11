@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
@@ -64,6 +65,15 @@ public class CustomerServiceImpl implements CustomerService {
         Integer count = customerDao.updateCustomerById(customer);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("客户信息更新失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteCustomerByIds(String[] ids) throws FailToDeleteException {
+        Integer count = customerDao.deleteCustomerByIds(ids);
+        if (count.compareTo(ids.length) != 0) {
+            throw new FailToDeleteException("删除失败");
         }
         return true;
     }

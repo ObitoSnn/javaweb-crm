@@ -5,6 +5,15 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
 
+    <delete id="deleteCustomerByIds">
+
+        delete from `tbl_customer` where `id` in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+
     <update id="updateCustomerById">
 
         update `tbl_customer` set

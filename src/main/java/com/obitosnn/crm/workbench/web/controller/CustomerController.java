@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
@@ -108,6 +109,22 @@ public class CustomerController {
         try {
             success = customerService.updateCustomerById(customer);
         } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/deleteCustomerByIds"})
+    @ResponseBody
+    public Map<String, Object> deleteCustomerByIds(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        boolean success = false;
+        try {
+            success = customerService.deleteCustomerByIds(ids);
+        } catch (FailToDeleteException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

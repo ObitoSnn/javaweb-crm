@@ -25,4 +25,6 @@ public interface CustomerDao {
 
     Integer updateCustomerById(Customer customer);
 
+    Integer deleteCustomerByIds(String[] ids);
+
 }
