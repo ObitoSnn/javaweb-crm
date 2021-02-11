@@ -400,8 +400,8 @@
 					//局部刷新页面数据
 					$("#stage").html(stage);
 					$("#possibility").html(possibilityJson[stage]);
-					$("#editBy").html(data.tran.editBy);
-					$("#editTime").html(data.tran.editTime);
+					$("#editBy").html(data.tran.editBy + "&nbsp;&nbsp;");
+					$("#editTime").html(data.tran.editTime + "&nbsp;&nbsp;");
 
 					//正常阶段与丢失阶段的分界点下标
 					var point = <%=point%>;
