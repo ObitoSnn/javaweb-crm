@@ -93,7 +93,7 @@
 				$.each(data.dataList, function (i, obj) {
 					html += '<tr>';
 					html += '<td><input type="checkbox" name="checkbox-single" value="' + obj.id + '"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/customer/detail.jsp\';">' + obj.name + '</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/customer/detail?id=' + obj.id + '\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.owner + '</td>';
 					html += '<td>' + obj.phone + '</td>';
 					html += '<td>' + obj.website + '</td>';

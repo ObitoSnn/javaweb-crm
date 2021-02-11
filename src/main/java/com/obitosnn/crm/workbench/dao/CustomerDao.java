@@ -17,4 +17,6 @@ public interface CustomerDao {
 
     Long selectCustomerTotalForPageVo(Map<String, Object> map);
 
+    Customer selectCustomerDetailById(String id);
+
 }

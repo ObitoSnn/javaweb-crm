@@ -16,4 +16,6 @@ public interface CustomerService {
 
     PageVo<Customer> getCustomerPageVo(Map<String, Object> map);
 
+    Customer getCustomerDetailById(String id);
+
 }
