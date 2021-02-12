@@ -5,6 +5,7 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Customer;
+import com.obitosnn.crm.workbench.domain.CustomerRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +29,13 @@ public interface CustomerService {
     boolean updateCustomerById(Customer customer) throws FailToUpdateException;
 
     boolean deleteCustomerByIds(String[] ids) throws FailToDeleteException;
+
+    boolean saveCustomerRemark(CustomerRemark customerRemark) throws FailToSaveException;
+
+    List<CustomerRemark> getCustomerRemarkListByCustomerId(String id);
+
+    boolean deleteCustomerRemarkById(String id) throws FailToDeleteException;
+
+    boolean updateCustomerRemark(CustomerRemark customerRemark) throws FailToUpdateException;
+
 }
