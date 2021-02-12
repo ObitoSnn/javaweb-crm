@@ -10,4 +10,8 @@ public interface ContactsDao {
 
     List<Contacts> selectContactByName(String contactName);
 
+    List<Contacts> selectContactsList();
+
+    Integer deleteContactsByIds(String[] ids);
+
 }

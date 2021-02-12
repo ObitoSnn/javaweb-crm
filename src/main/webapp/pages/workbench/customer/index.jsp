@@ -323,12 +323,22 @@
                  */
 				var html = "";
 				$.each(data.dataList, function (i, obj) {
-					html += '<tr>';
+
+                    var phone = obj.phone;
+                    if (phone == "" || phone == null) {
+                        phone = "";
+                    }
+                    var website = obj.website;
+                    if (website == "" || website == null) {
+                        website = "";
+                    }
+
+                    html += '<tr>';
 					html += '<td><input type="checkbox" name="checkbox-single" value="' + obj.id + '"/></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/customer/detail?id=' + obj.id + '\';">' + obj.name + '</a></td>';
 					html += '<td>' + obj.owner + '</td>';
-					html += '<td>' + obj.phone + '</td>';
-					html += '<td>' + obj.website + '</td>';
+					html += '<td>' + phone + '</td>';
+					html += '<td>' + website + '</td>';
 					html += '</tr>';
 				});
 				$("#showCustomerTBody").html(html);
