@@ -5,6 +5,19 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
+    <select id="selectTranList" resultType="Tran">
+
+        select
+        `id`,
+        `money`,
+        `name`,
+        `expectedDate`,
+        `stage`,
+        `type`
+        from `tbl_tran` order by `createTime` desc
+
+    </select>
+
     <select id="selectForCharts" resultType="map">
 
         select

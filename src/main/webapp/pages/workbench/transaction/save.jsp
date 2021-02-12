@@ -220,7 +220,7 @@
                                     {"success":true/false,"errorMsg":错误信息}
                              */
                             if (data.success) {
-                                window.location.href = "pages/workbench/transaction/index.jsp";
+								window.history.back();
                             } else {
                                 alert(data.errorMsg);
                             }
