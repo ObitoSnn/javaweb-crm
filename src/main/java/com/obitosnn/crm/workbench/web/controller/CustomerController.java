@@ -8,9 +8,11 @@ import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
+import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.domain.CustomerRemark;
 import com.obitosnn.crm.workbench.domain.Tran;
+import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class CustomerController {
     private UserService userService;
     @Autowired
     private TranService tranService;
+    @Autowired
+    private ContactsService contactsService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -238,6 +242,54 @@ public class CustomerController {
         try {
             success = tranService.deleteTranByIds(ids);
         } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getContactsList"})
+    @ResponseBody
+    public List<Contacts> getContactsList() {
+        return contactsService.getContactsList();
+    }
+
+    @RequestMapping(value = {"/deleteContacts"})
+    @ResponseBody
+    public Map<String, Object> deleteContacts(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        boolean success = false;
+        try {
+            success = contactsService.deleteContactsByIds(ids);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getCustomerName"})
+    @ResponseBody
+    public List<String> getCustomerName(String name) {
+        return customerService.getCustomerName(name);
+    }
+
+    @RequestMapping(value = {"/saveContacts"})
+    @ResponseBody
+    public Map<String, Object> saveContacts(HttpServletRequest request, Contacts contacts, String customerName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        contacts.setId(UUIDUtil.getUUID());
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        contacts.setCreateBy(createBy);
+        String createTime = DateTimeUtil.getSysTime();
+        contacts.setCreateTime(createTime);
+        boolean success = false;
+        try {
+            success = contactsService.saveContacts(contacts, customerName);
+        } catch (FailToSaveException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

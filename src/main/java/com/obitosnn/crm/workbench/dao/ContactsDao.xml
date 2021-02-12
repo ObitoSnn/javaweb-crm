@@ -5,6 +5,26 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsDao">
 
+    <delete id="deleteContactsByIds">
+
+        delete from `tbl_contacts` where `id` in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <select id="selectContactsList" resultType="Contacts">
+
+        select
+        `id`,
+        `fullname`,
+        `email`,
+        `mphone`
+        from `tbl_contacts` order by `createTime` desc
+
+    </select>
+
     <select id="selectContactByName" resultType="Contacts">
 
         select
