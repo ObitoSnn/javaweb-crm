@@ -9,6 +9,7 @@ import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Customer;
+import com.obitosnn.crm.workbench.domain.CustomerRemark;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -129,6 +130,92 @@ public class CustomerController {
             throw new Exception(e.getMessage());
         }
         map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/saveCustomerRemark"})
+    @ResponseBody
+    public Map<String, Object> saveCustomerRemark(HttpServletRequest request, CustomerRemark customerRemark) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"customerRemark":{客户备注}}
+        //设置id
+        String id = UUIDUtil.getUUID();
+        customerRemark.setId(id);
+        //设置createTime
+        customerRemark.setCreateTime(DateTimeUtil.getSysTime());
+        //设置createBy
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        customerRemark.setCreateBy(createBy);
+        //设置editFlag
+        customerRemark.setEditFlag("0");
+        boolean success = false;
+        try {
+            success = customerService.saveCustomerRemark(customerRemark);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("customerRemark", customerRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getCustomerRemarkList"})
+    @ResponseBody
+    public Map<String, Object> getCustomerRemarkList(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"clueRemarkList":[{"客户备注"},...]}
+        List<CustomerRemark> customerRemarkList = customerService.getCustomerRemarkListByCustomerId(id);
+        map.put("customerRemarkList", customerRemarkList);
+        return map;
+    }
+
+    @RequestMapping(value = {"/deleteCustomerRemark"})
+    @ResponseBody
+    public Map<String, Object> deleteCustomerRemarkById(String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"errorMsg":错误信息}
+        boolean success = false;
+        try {
+            success = customerService.deleteCustomerRemarkById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateCustomerRemark"})
+    @ResponseBody
+    public Map<String, Object> updateCustomerRemark(HttpServletRequest request, CustomerRemark customerRemark, String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //{"success":true/false,"customerRemark":{客户备注},"errorMsg":错误信息}
+        //设置editTime
+        String editTime = DateTimeUtil.getSysTime();
+        customerRemark.setEditTime(editTime);
+        //设置editBy
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        customerRemark.setEditBy(editBy);
+        //设置editFlag为1
+        customerRemark.setEditFlag("1");
+        //获取的请求参数即为备注信息的id
+        customerRemark.setId(id);
+        boolean success = false;
+        try {
+            success = customerService.updateCustomerRemark(customerRemark);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            //抛出异常，给WorkBenchGlobalExceptionHandler处理
+            throw new Exception(errorMsg);
+        }
+        map.put("success", success);
+        map.put("customerRemark", customerRemark);
         return map;
     }
 

@@ -5,6 +5,38 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.CustomerRemarkDao">
 
+    <update id="updateCustomerRemarkById">
+
+        update `tbl_customer_remark` set
+       `noteContent` = #{noteContent},
+       `editTime` = #{editTime},
+       `editBy` = #{editBy},
+       `editFlag` = #{editFlag}
+        where `id`=#{id}
+
+    </update>
+
+    <delete id="deleteCustomerRemarkById">
+
+        delete from `tbl_customer_remark` where `id`=#{id}
+
+    </delete>
+
+    <select id="selectCustomerRemarkListByCustomerId" resultType="CustomerRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editTime`,
+        `editBy`,
+        `editFlag`,
+        `customerId`
+        from `tbl_customer_remark` where `customerId`=#{id} order by `createTime` desc
+
+    </select>
+
     <insert id="insert">
 
         insert into tbl_customer_remark(
