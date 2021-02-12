@@ -378,7 +378,7 @@
 	//跳转至添加交易页面
 	function addTran() {
 
-		var  json={"time" : new Date().getTime()};
+		var json = {"time" : new Date().getTime()};
 
 		window.history.replaceState(json,"");
 
@@ -470,7 +470,7 @@
 	//保存联系人
 	function saveContacts() {
 
-		var owner = $.trim($("#create-owner").val()) == "" ? null : $.trim($("#create-owner").val());
+		var owner = $.trim($("#create-owner").val());
 		var source = $.trim($("#create-source").val());
 		var fullname = $.trim($("#create-fullname").val());
 		var appellation = $.trim($("#create-appellation").val());
@@ -525,6 +525,105 @@
 			});
 
 		}
+
+	}
+
+	function deleteCustomer(id) {
+
+		if (confirm("你确定要删除该客户吗？")) {
+
+			$.ajax({
+				url : "workbench/customer/deleteCustomerByIds",
+				data : {
+					"id" : id
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					// {"success":true/false,"errorMsg",错误信息}
+					if (data.success) {
+						window.location.href = "pages/workbench/customer/index.jsp";
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		}
+
+	}
+
+	//打开编辑客户的模态窗口
+	function openEditCustomerModal(customerId) {
+
+		$.ajax({
+			url : "workbench/customer/getUserListAndCustomerById",
+			data : {
+				"id" : customerId
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				// {"uList":[{用户1}...],"customer":{客户}}
+				var html = "";
+				$.each(data.uList, function (i, obj) {
+					html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
+				});
+				$("#edit-owner").html(html);
+
+				$("#edit-owner").val(data.customer.owner);
+				$("#edit-name").val(data.customer.name);
+				$("#edit-website").val(data.customer.website);
+				$("#edit-phone").val(data.customer.phone);
+				$("#edit-contactSummary").val(data.customer.contactSummary);
+				$("#edit-nextContactTime").val(data.customer.nextContactTime);
+				$("#edit-description").val(data.customer.description);
+				$("#edit-address").val(data.customer.address);
+			}
+		});
+
+		$("#editCustomerModal").modal("show");
+
+	}
+
+	function updateCustomer(id) {
+
+		var owner = $.trim($("#edit-owner").val());
+		var name = $.trim($("#edit-name").val());
+		var website = $.trim($("#edit-website").val());
+		var phone = $.trim($("#edit-phone").val());
+		var contactSummary = $.trim($("#edit-contactSummary").val());
+		var nextContactTime = $.trim($("#edit-nextContactTime").val());
+		var description = $.trim($("#edit-description").val());
+		var address = $.trim($("#edit-address").val());
+
+		$.ajax({
+			url : "workbench/customer/updateCustomer",
+			data : {
+				"id" : id,
+				"owner" : owner,
+				"name" : name,
+				"website" : website,
+				"phone" : phone,
+				"contactSummary" : contactSummary,
+				"nextContactTime" : nextContactTime,
+				"description" : description,
+				"address" : address
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+				// {"success":true/false,"errorMsg":错误信息}
+				if (data.success) {
+					window.location.href = "workbench/customer/detail?id=" + id + "";
+				} else {
+					alert(data.errorMsg);
+				}
+
+			}
+		});
+
+
 
 	}
 
@@ -742,35 +841,32 @@
                     <form class="form-horizontal" role="form">
 
                         <div class="form-group">
-                            <label for="edit-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-customerOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+                                <select class="form-control" id="edit-owner">
                                 </select>
                             </div>
-                            <label for="edit-customerName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-customerName" value="动力节点">
+                                <input type="text" class="form-control" id="edit-name">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-website" class="col-sm-2 control-label">公司网站</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-website" value="http://www.bjpowernode.com">
+                                <input type="text" class="form-control" id="edit-website">
                             </div>
                             <label for="edit-phone" class="col-sm-2 control-label">公司座机</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-phone" value="010-84846003">
+                                <input type="text" class="form-control" id="edit-phone">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-describe" class="col-sm-2 control-label">描述</label>
+                            <label for="edit-description" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-describe"></textarea>
+                                <textarea class="form-control" rows="3" id="edit-description"></textarea>
                             </div>
                         </div>
 
@@ -778,15 +874,15 @@
 
                         <div style="position: relative;top: 15px;">
                             <div class="form-group">
-                                <label for="create-contactSummary1" class="col-sm-2 control-label">联系纪要</label>
+                                <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="3" id="create-contactSummary1"></textarea>
+                                    <textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
+                                <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime2">
+                                    <input type="text" class="form-control time" id="edit-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -797,7 +893,7 @@
                             <div class="form-group">
                                 <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -806,7 +902,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                    <button onclick="updateCustomer('${requestScope.customer.id}')" type="button" class="btn btn-primary">更新</button>
                 </div>
             </div>
         </div>
@@ -823,8 +919,8 @@
 			<h3>${requestScope.customer.name} <small><a href="http://www.bjpowernode.com" target="_blank">${requestScope.customer.website}</a></small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button onclick="openEditCustomerModal('${requestScope.customer.id}')" type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button onclick="deleteCustomer('${requestScope.customer.id}')" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
