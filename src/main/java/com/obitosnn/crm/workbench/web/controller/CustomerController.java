@@ -297,4 +297,23 @@ public class CustomerController {
         return map;
     }
 
+    @RequestMapping(value = {"/updateCustomer"})
+    @ResponseBody
+    public Map<String, Object> updateCustomer(HttpServletRequest request, Customer customer) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        customer.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        customer.setEditTime(editTime);
+        boolean success = false;
+        try {
+            success = customerService.updateCustomerById(customer);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
 }
