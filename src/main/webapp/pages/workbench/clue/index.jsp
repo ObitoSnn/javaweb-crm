@@ -739,9 +739,9 @@
 				      <div class="input-group-addon">线索来源</div>
 					  <select id="sourceSelect" class="form-control">
 					  	  <option></option>
-					  	  <C:forEach items="${applicationScope.sourceList}" var="s">
+					  	  <c:forEach items="${applicationScope.sourceList}" var="s">
 							  <option value="${s.value}">${s.text}</option>
-						  </C:forEach>
+						  </c:forEach>
 					  </select>
 				    </div>
 				  </div>
@@ -769,9 +769,9 @@
 				      <div class="input-group-addon">线索状态</div>
 					  <select id="clueStateSelect" class="form-control">
 						  <option></option>
-						  <C:forEach items="${applicationScope.clueStateList}" var="c">
+						  <c:forEach items="${applicationScope.clueStateList}" var="c">
 							  <option value="${c.value}">${c.text}</option>
-						  </C:forEach>
+						  </c:forEach>
 					  </select>
 				    </div>
 				  </div>
