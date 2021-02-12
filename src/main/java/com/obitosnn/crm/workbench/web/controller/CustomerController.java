@@ -10,7 +10,9 @@ import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.domain.CustomerRemark;
+import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.service.CustomerService;
+import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TranService tranService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -216,6 +220,28 @@ public class CustomerController {
         }
         map.put("success", success);
         map.put("customerRemark", customerRemark);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getTranList"})
+    @ResponseBody
+    public List<Tran> getTranList() {
+        return tranService.getTranList();
+    }
+
+    @RequestMapping(value = {"/deleteTran"})
+    @ResponseBody
+    public Map<String, Object> deleteTranByIds(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        boolean success = false;
+        try {
+            success = tranService.deleteTranByIds(ids);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
         return map;
     }
 

@@ -222,4 +222,9 @@ public class TranServiceImpl implements TranService {
         return tranDao.selectForCharts();
     }
 
+    @Override
+    public List<Tran> getTranList() {
+        return tranDao.selectTranList();
+    }
+
 }

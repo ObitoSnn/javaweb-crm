@@ -27,4 +27,6 @@ public interface TranDao {
 
     List<Map<String, Object>> selectForCharts();
 
+    List<Tran> selectTranList();
+
 }
