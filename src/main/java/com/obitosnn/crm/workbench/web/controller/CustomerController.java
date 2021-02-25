@@ -227,10 +227,10 @@ public class CustomerController {
         return map;
     }
 
-    @RequestMapping(value = {"/getTranList"})
+    @RequestMapping(value = {"/getTranListByCustomerId"})
     @ResponseBody
-    public List<Tran> getTranList() {
-        return tranService.getTranList();
+    public List<Tran> getTranListByCustomerId(String customerId) {
+        return tranService.getTranListByCustomerId(customerId);
     }
 
     @RequestMapping(value = {"/deleteTran"})
@@ -249,10 +249,10 @@ public class CustomerController {
         return map;
     }
 
-    @RequestMapping(value = {"/getContactsList"})
+    @RequestMapping(value = {"/getContactsListByCustomerId"})
     @ResponseBody
-    public List<Contacts> getContactsList() {
-        return contactsService.getContactsList();
+    public List<Contacts> getContactsListByCustomerId(String customerId) {
+        return contactsService.getContactsListByCustomerId(customerId);
     }
 
     @RequestMapping(value = {"/deleteContacts"})

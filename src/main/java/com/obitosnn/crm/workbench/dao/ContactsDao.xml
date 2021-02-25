@@ -14,14 +14,14 @@
 
     </delete>
 
-    <select id="selectContactsList" resultType="Contacts">
+    <select id="selectContactsListByCustomerId" resultType="Contacts">
 
         select
         `id`,
         `fullname`,
         `email`,
         `mphone`
-        from `tbl_contacts` order by `createTime` desc
+        from `tbl_contacts` where `customerId`=#{customerId} order by `createTime` desc
 
     </select>
 

@@ -223,8 +223,8 @@ public class TranServiceImpl implements TranService {
     }
 
     @Override
-    public List<Tran> getTranList() {
-        return tranDao.selectTranList();
+    public List<Tran> getTranListByCustomerId(String customerId) {
+        return tranDao.selectTranListByCustomerId(customerId);
     }
 
 }

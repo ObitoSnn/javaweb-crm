@@ -14,10 +14,10 @@ public interface ContactsService {
 
     List<Contacts> getContactByName(String contactName);
 
-    List<Contacts> getContactsList();
-
     boolean deleteContactsByIds(String[] ids) throws FailToDeleteException;
 
     boolean saveContacts(Contacts contacts, String customerName) throws FailToSaveException;
+
+    List<Contacts> getContactsListByCustomerId(String customerId);
 
 }

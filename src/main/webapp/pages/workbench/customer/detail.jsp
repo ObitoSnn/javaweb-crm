@@ -303,7 +303,10 @@
 		$("#showTranTBody").html("");
 
 		$.ajax({
-			url : "workbench/customer/getTranList",
+			url : "workbench/customer/getTranListByCustomerId",
+			data : {
+				customerId: "${requestScope.customer.id}"
+			},
 			type : "get",
 			dataType : "json",
 			success : function (data) {
@@ -386,7 +389,10 @@
 	function getContactsList() {
 
 		$.ajax({
-			url : "workbench/customer/getContactsList",
+			url : "workbench/customer/getContactsListByCustomerId",
+			data : {
+				"customerId" : "${requestScope.customer.id}"
+			},
 			type : "get",
 			dataType : "json",
 			success : function (data) {
