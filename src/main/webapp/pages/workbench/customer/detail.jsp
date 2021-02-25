@@ -780,7 +780,7 @@
 						<div class="form-group" style="position: relative;">
 							<label for="create-customerName" class="col-sm-2 control-label">客户名称</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
+								<input type="text" class="form-control" id="create-customerName" value="${requestScope.customer.name}" placeholder="支持自动补全，输入客户不存在则新建">
 							</div>
 						</div>
 						
@@ -918,7 +918,7 @@
 	<!-- 大标题 -->
 	<div style="position: relative; left: 40px; top: -30px;">
 		<div class="page-header">
-			<h3>${requestScope.customer.name} <small><a href="http://www.bjpowernode.com" target="_blank">${requestScope.customer.website}</a></small></h3>
+			<h3>${requestScope.customer.name} <small><a href="${requestScope.customer.website}" target="_blank">${requestScope.customer.website}</a></small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
 			<button onclick="openEditCustomerModal('${requestScope.customer.id}')" type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
