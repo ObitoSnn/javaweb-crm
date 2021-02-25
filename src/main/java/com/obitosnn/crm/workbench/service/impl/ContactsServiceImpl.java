@@ -54,6 +54,8 @@ public class ContactsServiceImpl implements ContactsService {
                 throw new FailToSaveException("客户保存失败");
             }
         }
+        //客户存在
+        contacts.setCustomerId(customer.getId());
         Integer count = contactsDao.insert(contacts);
         if (count.compareTo(1) != 0) {
             throw new FailToSaveException("联系人保存失败");
