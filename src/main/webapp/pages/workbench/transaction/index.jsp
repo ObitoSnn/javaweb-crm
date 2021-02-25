@@ -15,6 +15,14 @@
 
 	$(function(){
 
+		//创建交易后刷新页面数据
+		window.onpageshow = function (event) {
+			if (event.persisted || window.performance &&
+			window.performance.navigation.type == 2) {
+				window.location.reload();
+			}
+		}
+
 		//页面加载完毕后调用分页方法，默认打开第一页，展现2条记录
 		pageList(1, 2);
 
