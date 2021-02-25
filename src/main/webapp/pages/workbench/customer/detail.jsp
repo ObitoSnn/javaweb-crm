@@ -378,7 +378,7 @@
 	//跳转至添加交易页面
 	function addTran() {
 
-		window.location.href= "workbench/transaction/add";
+		window.location.href= "workbench/transaction/add?intent=getCustomerName&customerId=${requestScope.customer.id}";
 
 	}
 

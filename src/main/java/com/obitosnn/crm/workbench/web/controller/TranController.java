@@ -43,8 +43,13 @@ public class TranController {
     private ContactsService contactsService;
 
     @RequestMapping(value = {"/add"})
-    public ModelAndView add() {
+    public ModelAndView add(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
+        String intent = request.getParameter("intent");
+        if ("getCustomerName".equals(intent)) {
+            Customer cust = customerService.getCustomerById(request.getParameter("customerId"));
+            mv.addObject("customerName", cust.getName());
+        }
         List<User> uList = userService.getUserList();
         mv.addObject("uList", uList);
         mv.setViewName("forward:/pages/workbench/transaction/save.jsp");
