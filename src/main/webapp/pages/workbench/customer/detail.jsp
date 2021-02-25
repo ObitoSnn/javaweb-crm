@@ -175,13 +175,13 @@
 		//页面加载完毕，展示交易列表
 		getTranList();
 
-		window.onpopstate=function(){
-			// 获得存储在该历史记录点的json对象
-			var  json = window.history.state;// 获得的json为null时则无需刷新
-			if(json){
+		//新建交易后，刷新交易列表
+		window.onpageshow = function (event) {
+			if (event.persisted || window.performance &&
+					window.performance.navigation.type == 2) {
 				window.location.reload();
 			}
-		};
+		}
 
 		//页面加载完毕，展示联系人列表
 		getContactsList();
@@ -377,10 +377,6 @@
 
 	//跳转至添加交易页面
 	function addTran() {
-
-		var json = {"time" : new Date().getTime()};
-
-		window.history.replaceState(json,"");
 
 		window.location.href= "workbench/transaction/add";
 
