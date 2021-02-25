@@ -31,11 +31,6 @@ public class ContactsServiceImpl implements ContactsService {
     }
 
     @Override
-    public List<Contacts> getContactsList() {
-        return contactsDao.selectContactsList();
-    }
-
-    @Override
     public boolean deleteContactsByIds(String[] ids) throws FailToDeleteException {
         Integer count = contactsDao.deleteContactsByIds(ids);
         if (count.compareTo(ids.length) != 0) {
@@ -64,6 +59,11 @@ public class ContactsServiceImpl implements ContactsService {
             throw new FailToSaveException("联系人保存失败");
         }
         return true;
+    }
+
+    @Override
+    public List<Contacts> getContactsListByCustomerId(String customerId) {
+        return contactsDao.selectContactsListByCustomerId(customerId);
     }
 
 }

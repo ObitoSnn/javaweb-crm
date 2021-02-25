@@ -48,6 +48,6 @@ public interface TranService {
 
     List<Map<String, Object>> getCharts();
 
-    List<Tran> getTranList();
+    List<Tran> getTranListByCustomerId(String customerId);
 
 }

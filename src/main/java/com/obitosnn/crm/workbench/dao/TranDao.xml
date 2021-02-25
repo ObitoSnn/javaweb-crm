@@ -5,7 +5,7 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranDao">
 
-    <select id="selectTranList" resultType="Tran">
+    <select id="selectTranListByCustomerId" resultType="Tran">
 
         select
         `id`,
@@ -14,7 +14,7 @@
         `expectedDate`,
         `stage`,
         `type`
-        from `tbl_tran` order by `createTime` desc
+        from `tbl_tran` where `customerId`=#{customerId} order by `createTime` desc
 
     </select>
 
