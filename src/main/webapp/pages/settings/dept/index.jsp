@@ -3,7 +3,86 @@
 <html>
 <head>
 	<%@ include file="../../common/base_css_jquery.jsp"%>
+	<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
 <meta charset="UTF-8">
+	<script type="text/javascript">
+
+		$(function () {
+
+			//给控制总的复选框绑定单击事件
+			$("input[name='checkbox-manager']").click(function () {
+
+				$("input[name='checkbox-single']").prop("checked", this.checked);
+
+			});
+
+			//给单个的复选框绑定单击事件
+			$("#showDeptTBody").on("click", $("input[name='checkbox-single']"), function () {
+				$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']:checked").length == $("input[name='checkbox-single']").length);
+			})
+
+			//页面加载完毕后调用分页方法
+			pageList(1, 2);
+
+
+		});
+
+		function pageList(pageNo, pageSize) {
+
+			$.ajax({
+				url : "settings/dept/pageList",
+				data : {
+					"pageNo" : pageNo,
+					"pageSize" : pageSize,
+				},
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					// [{部门},...]
+					var html = "";
+					$.each(data.dataList, function (i, obj) {
+						html += '<tr>';
+						html += '<td><input name="checkbox-single" type="checkbox" value="' + obj.id + '"/></td>';
+						html += '<td>' + obj.deptno + '</td>';
+						html += '<td>' + obj.name + '</td>';
+						html += '<td>' + obj.supervisor + '</td>';
+						html += '<td>' + obj.phone + '</td>';
+						html += '<td>' + obj.description + '</td>';
+						html += '</tr>';
+					});
+					$("#showDeptTBody").html(html);
+
+					var totalPages = data.total % pageSize == 0 ? data.total / pageSize : Math.ceil(data.total / pageSize);
+
+
+					//数据处理完毕后，结合分页插件展现每页数据
+					$("#deptPage").bs_pagination({
+						currentPage: pageNo, // 页码
+						rowsPerPage: pageSize, // 每页显示的记录条数
+						maxRowsPerPage: 20, // 每页最多显示的记录条数
+						totalPages: totalPages, // 总页数
+						totalRows: data.total, // 总记录条数
+
+						visiblePageLinks: 3, // 显示几个卡片
+
+						showGoToPage: true,
+						showRowsPerPage: true,
+						showRowsInfo: true,
+						showRowsDefaultInfo: true,
+
+						//该回调函数是在点击分页组件的时候触发的
+						onChangePage : function(event, data){
+							pageList(data.currentPage , data.rowsPerPage);
+						}
+					});
+				}
+			});
+
+		}
+
+	</script>
 </head>
 <body>
 
@@ -254,7 +333,7 @@
 			<table class="table table-hover">
 				<thead>
 					<tr style="color: #B3B3B3;">
-						<td><input type="checkbox" /></td>
+						<td><input name="checkbox-manager" type="checkbox"/></td>
 						<td>编号</td>
 						<td>名称</td>
 						<td>负责人</td>
@@ -262,55 +341,13 @@
 						<td>描述</td>
 					</tr>
 				</thead>
-				<tbody>
-					<tr class="active">
-						<td><input type="checkbox" /></td>
-						<td>1110</td>
-						<td>财务部</td>
-						<td>张飞</td>
-						<td>010-84846005</td>
-						<td>description info</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox" /></td>
-						<td>1120</td>
-						<td>销售部</td>
-						<td>关羽</td>
-						<td>010-84846006</td>
-						<td>description info</td>
-					</tr>
+				<tbody id="showDeptTBody">
 				</tbody>
 			</table>
 		</div>
 		
 		<div style="height: 50px; position: relative;top: 0px; left:30px;">
-			<div>
-				<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-			</div>
-			<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-				<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-				<div class="btn-group">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						10
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">20</a></li>
-						<li><a href="#">30</a></li>
-					</ul>
-				</div>
-				<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-			</div>
-			<div style="position: relative;top: -88px; left: 285px;">
-				<nav>
-					<ul class="pagination">
-						<li class="disabled"><a href="#">首页</a></li>
-						<li class="disabled"><a href="#">上一页</a></li>
-						<li><a href="#">下一页</a></li>
-						<li class="disabled"><a href="#">末页</a></li>
-					</ul>
-				</nav>
-			</div>
+			<div id="deptPage"></div>
 		</div>
 			
 	</div>
