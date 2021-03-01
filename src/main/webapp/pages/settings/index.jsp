@@ -140,9 +140,9 @@
 			<div style="position: relative; width: 33%; height: 50%;">
 				安全控制
 				<br><br>
-				<a href="manager/deptManagement">部门管理</a>
+				<a href="settings/dept/deptManagement">部门管理</a>
 				<br>
-				<a href="manager/permissionManagement">权限管理</a>
+				<a href="settings/permission/permissionManagement">权限管理</a>
 			</div>
 			<div style="position: relative; width: 33%; height: 50%;">
 
@@ -151,7 +151,7 @@
 			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
 				数据管理
 				<br><br>
-				<a href="manager/dicManagement">数据字典表</a>
+				<a href="settings/dictionary/dicManagement">数据字典表</a>
 			</div>
 			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
 
