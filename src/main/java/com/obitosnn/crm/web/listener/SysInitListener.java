@@ -20,7 +20,7 @@ public class SysInitListener extends ContextLoaderListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        //spring容器创建成功之后调用给方法
+        //ServletContext初始化成功之后调用该方法
         ServletContext servletContext = event.getServletContext();
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         DicService dicService = (DicService) ctx.getBean("dicServiceImpl");
