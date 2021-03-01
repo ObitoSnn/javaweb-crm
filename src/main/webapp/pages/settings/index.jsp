@@ -4,6 +4,18 @@
 <head>
 	<%@ include file="../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
+	<script type="text/javascript">
+
+		$(function () {
+
+			//如果当前用户不是管理员，报错误信息
+			if ("${requestScope.errorMsg}") {
+				alert("${requestScope.errorMsg}");
+			}
+
+		});
+
+	</script>
 </head>
 <body>
 	<!-- 我的资料 -->
@@ -128,9 +140,9 @@
 			<div style="position: relative; width: 33%; height: 50%;">
 				安全控制
 				<br><br>
-				<a href="pages/settings/dept/index.jsp">部门管理</a>
+				<a href="manager/deptManagement">部门管理</a>
 				<br>
-				<a href="pages/settings/qx/index.jsp">权限管理</a>
+				<a href="manager/permissionManagement">权限管理</a>
 			</div>
 			<div style="position: relative; width: 33%; height: 50%;">
 
@@ -139,7 +151,7 @@
 			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
 				数据管理
 				<br><br>
-				<a href="pages/settings/dictionary/index.jsp">数据字典表</a>
+				<a href="manager/dicManagement">数据字典表</a>
 			</div>
 			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
 
