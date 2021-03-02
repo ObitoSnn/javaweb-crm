@@ -29,7 +29,7 @@ public class UserController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public Map<String, Object> login(HttpServletRequest request, User user) throws LoginException {
+    public Map<String, Object> login(HttpServletRequest request, User user) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         //客户端ip
         String allowIps = request.getRemoteAddr();
@@ -43,10 +43,10 @@ public class UserController {
             map.put("success", true);
             System.out.println("==========用户名为[" + loginUser.getLoginAct() + "]的用户登录成功==========\n");
             return map;
-        } catch (Exception e) {
+        } catch (LoginException e) {
             e.printStackTrace();
             String errorMag = e.getMessage();
-            throw new LoginException(errorMag);
+            throw new Exception(errorMag);
         }
     }
 
