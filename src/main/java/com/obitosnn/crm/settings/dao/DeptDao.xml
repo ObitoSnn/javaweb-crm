@@ -5,16 +5,54 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DeptDao">
 
-    <select id="selectDeptListForPageVo" resultType="Dept">
+    <select id="selectDeptnoList" resultType="string">
 
         select
+        `deptno`
+        from `tbl_dept`
+
+    </select>
+
+    <insert id="insertDept">
+
+        insert into `tbl_dept`
+        (
         `id`,
         `deptno`,
         `name`,
-        `supervisor`,
+        `userId`,
         `phone`,
-        `description`
-        from `tbl_dept` order by `createTime` asc
+        `description`,
+        `createBy`,
+        `createTime`
+        )
+        values
+        (
+        #{id},
+        #{deptno},
+        #{name},
+        #{userId},
+        #{phone},
+        #{description},
+        #{createBy},
+        #{createTime}
+        )
+
+    </insert>
+
+    <select id="selectDeptListForPageVo" resultType="Dept">
+
+        select
+        d.`id`,
+        d.`deptno`,
+        d.`name`,
+        u.`name` as `userId`,
+        d.`phone`,
+        d.`description`
+        from `tbl_dept` d
+        left outer join `tbl_user` u
+        on d.`userId`=u.`id`
+        order by d.`createTime` asc
 
     </select>
 
@@ -23,8 +61,11 @@
         select count(*) from
         (
         select
-        `id`
-        from `tbl_dept` order by `createTime` asc
+        d.`id`
+        from `tbl_dept` d
+        left outer join `tbl_user` u
+        on d.`userId`=u.`id`
+        order by d.`createTime` asc
         ) tbl_tmp
 
     </select>

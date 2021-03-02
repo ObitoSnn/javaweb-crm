@@ -8,7 +8,7 @@ public class Dept {
     private String id;
     private String deptno;
     private String name;
-    private String supervisor;
+    private String userId;
     private String phone;
     private String description;
     private String createBy;
@@ -40,12 +40,12 @@ public class Dept {
         this.name = name;
     }
 
-    public String getSupervisor() {
-        return supervisor;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {

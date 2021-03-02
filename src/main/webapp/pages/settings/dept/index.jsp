@@ -43,13 +43,29 @@
 					// [{部门},...]
 					var html = "";
 					$.each(data.dataList, function (i, obj) {
+						var name = obj.name;
+						if ("" == name || name == null) {
+							name = "";
+						}
+						var userId = obj.userId;
+						if ("" == userId || userId == null) {
+							userId = "";
+						}
+						var phone = obj.phone;
+						if ("" == phone || phone == null) {
+							phone = "";
+						}
+						var description = obj.description;
+						if ("" == description || description == null) {
+							description = "";
+						}
 						html += '<tr>';
 						html += '<td><input name="checkbox-single" type="checkbox" value="' + obj.id + '"/></td>';
 						html += '<td>' + obj.deptno + '</td>';
-						html += '<td>' + obj.name + '</td>';
-						html += '<td>' + obj.supervisor + '</td>';
-						html += '<td>' + obj.phone + '</td>';
-						html += '<td>' + obj.description + '</td>';
+						html += '<td>' + name + '</td>';
+						html += '<td>' + userId + '</td>';
+						html += '<td>' + phone + '</td>';
+						html += '<td>' + description + '</td>';
 						html += '</tr>';
 					});
 					$("#showDeptTBody").html(html);
@@ -79,6 +95,70 @@
 					});
 				}
 			});
+
+		}
+
+		function openCreateDeptModal() {
+
+			$.ajax({
+				url : "settings/dept/getUserList",
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					var html = "<option></option>";
+					$.each(data, function (i, obj) {
+						if ("root" == obj.loginAct) {
+							return true;
+						}
+						html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
+					});
+					$("#create-userId").html(html);
+				}
+			});
+
+			//打开模态窗口
+			$("#createDeptModal").modal("show");
+
+		}
+
+		function saveDept() {
+
+			var userId = $.trim($("#create-userId").val());
+			var deptno = $.trim($("#create-deptno").val());
+			var name = $.trim($("#create-name").val());
+			var phone = $.trim($("#create-phone").val());
+			var description = $.trim($("#create-description").val());
+			if (deptno == "") {
+				alert("请填写编号");
+			} else if (deptno.length != 4) {
+				alert("填写的编号必须为4位数");
+			} else {
+				$.ajax({
+					url : "settings/dept/saveDept",
+					data : {
+						"userId" : userId,
+						"deptno" : deptno,
+						"name" : name,
+						"phone" : phone,
+						"description" : description
+					},
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+						//{"success":true/false,"errorMsg":错误信息}
+						if (data.success) {
+							//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+							pageList($("#deptPage").bs_pagination('getOption', 'totalPages'),$("#deptPage").bs_pagination('getOption', 'rowsPerPage'));
+							//清空表单项内容
+							$("#createDeptForm")[0].reset();
+							//关闭模态窗口
+							$("#createDeptModal").modal("hide");
+						} else {
+							alert(data.errorMsg);
+						}
+					}
+				});
+			}
 
 		}
 
@@ -206,16 +286,16 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">×</span>
 					</button>
-					<h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-plus"></span> 新增部门</h4>
+					<h4 class="modal-title" id="myModalLabel1"><span class="glyphicon glyphicon-plus"></span> 新增部门</h4>
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form id="createDeptForm" class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-code" class="col-sm-2 control-label">编号<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-deptno" class="col-sm-2 control-label">编号<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-code" style="width: 200%;" placeholder="编号不能为空，具有唯一性">
+								<input type="text" class="form-control" id="create-deptno" style="width: 200%;" placeholder="编号不能为空，具有唯一性">
 							</div>
 						</div>
 						
@@ -227,9 +307,11 @@
 						</div>
 						
 						<div class="form-group">
-							<label for="create-manager" class="col-sm-2 control-label">负责人</label>
+							<label for="create-userId" class="col-sm-2 control-label">负责人</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-manager" style="width: 200%;">
+								<select class="form-control" id="create-userId" style="width: 200%;">
+
+								</select>
 							</div>
 						</div>
 						
@@ -241,16 +323,16 @@
 						</div>
 						
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 55%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" onclick="saveDept()">保存</button>
 				</div>
 			</div>
 		</div>
@@ -324,7 +406,7 @@
 		</div>
 		<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;left: 30px; top:-30px;">
 			<div class="btn-group" style="position: relative; top: 18%;">
-			  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDeptModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+			  <button type="button" class="btn btn-primary" onclick="openCreateDeptModal()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editDeptModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 			</div>
