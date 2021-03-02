@@ -5,6 +5,15 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DeptDao">
 
+    <select id="selectDeptByDeptno" resultType="Dept">
+
+        select
+        `deptno`,
+        `name`
+        from `tbl_dept` where `deptno`=#{deptno}
+
+    </select>
+
     <delete id="deleteDeptByIds">
 
         delete from `tbl_dept` where `id` in

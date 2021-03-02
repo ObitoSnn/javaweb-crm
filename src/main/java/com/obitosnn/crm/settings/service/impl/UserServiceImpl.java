@@ -1,7 +1,9 @@
 package com.obitosnn.crm.settings.service.impl;
 
 import com.obitosnn.crm.exception.LoginException;
+import com.obitosnn.crm.settings.dao.DeptDao;
 import com.obitosnn.crm.settings.dao.UserDao;
+import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -19,6 +21,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private DeptDao deptDao;
 
     @Override
     public User login(String loginAct, String loginPwd, String allowIps) throws LoginException {
@@ -43,6 +47,9 @@ public class UserServiceImpl implements UserService {
             //不允许该用户ip访问系统
             throw new LoginException("ip地址受限");
         }
+        String deptno = loginUser.getDeptno();
+        Dept dept = deptDao.selectDeptByDeptno(deptno);
+        loginUser.setDeptno(dept.getDeptno() + "，" + dept.getName());
         return loginUser;
     }
 
