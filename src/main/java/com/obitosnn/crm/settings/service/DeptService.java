@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.service;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.Dept;
@@ -20,5 +21,7 @@ public interface DeptService {
     Dept getDeptById(String id);
 
     boolean updateDept(Dept dept) throws FailToUpdateException;
+
+    boolean deleteDeptByIds(String[] id) throws FailToDeleteException;
 
 }
