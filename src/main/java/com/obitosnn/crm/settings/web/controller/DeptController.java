@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.web.controller;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.Dept;
@@ -107,5 +108,19 @@ public class DeptController {
         return map;
     }
 
+    @RequestMapping(value = {"/deleteDeptByIds"})
+    @ResponseBody
+    public Map<String, Object> deleteDeptByIds(String[] id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = deptService.deleteDeptByIds(id);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
 
 }

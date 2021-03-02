@@ -31,6 +31,9 @@
 
 		function pageList(pageNo, pageSize) {
 
+			//刷新后台数据之前取消总复选框的选中状态
+			$("input[name='checkbox-manager']").prop("checked", false);
+
 			$.ajax({
 				url : "settings/dept/pageList",
 				data : {
@@ -235,6 +238,40 @@
 					}
 				}
 			});
+
+		}
+
+		function deleteDept() {
+
+			var $checkbox = $("input[name='checkbox-single']:checked");
+			if ($checkbox.length == 0) {
+				alert("请选择要删除的部门信息");
+			} else {
+				if (confirm("你确定要删除所选部门吗？")) {
+					var param = "";
+					for (var i = 0; i < $checkbox.length; i++) {
+						param += "id=" + $($checkbox[i]).val();
+						if (i < $checkbox.length - 1) {
+							param += "&";
+						}
+					}
+					$.ajax({
+						url : "settings/dept/deleteDeptByIds",
+						data : param,
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+							// {"success":true/false,"errorMsg":错误信息}
+							if (data.success) {
+								//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+								pageList(1,$("#deptPage").bs_pagination('getOption', 'rowsPerPage'));
+							} else {
+								alert(data.errorMsg);
+							}
+						}
+					});
+				}
+			}
 
 		}
 
@@ -486,7 +523,7 @@
 			<div class="btn-group" style="position: relative; top: 18%;">
 			  <button type="button" class="btn btn-primary" onclick="openCreateDeptModal()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 			  <button type="button" class="btn btn-default" onclick="openEditDeptModal()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			  <button type="button" class="btn btn-danger" onclick="deleteDept()"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 			</div>
 		</div>
 		<div style="position: relative; left: 30px; top: -10px;">

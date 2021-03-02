@@ -23,4 +23,6 @@ public interface DeptDao {
 
     Integer updateDept(Dept dept);
 
+    Integer deleteDeptByIds(String[] id);
+
 }

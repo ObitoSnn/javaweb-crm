@@ -5,6 +5,15 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DeptDao">
 
+    <delete id="deleteDeptByIds">
+
+        delete from `tbl_dept` where `id` in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
     <update id="updateDept">
 
         update `tbl_dept` set

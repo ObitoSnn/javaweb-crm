@@ -1,6 +1,7 @@
 package com.obitosnn.crm.settings.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.dao.DeptDao;
@@ -65,6 +66,15 @@ public class DeptServiceImpl implements DeptService {
         Integer count = deptDao.updateDept(dept);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("修改失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteDeptByIds(String[] id) throws FailToDeleteException {
+        Integer count = deptDao.deleteDeptByIds(id);
+        if (count.compareTo(id.length) != 0) {
+            throw new FailToDeleteException("删除失败");
         }
         return true;
     }
