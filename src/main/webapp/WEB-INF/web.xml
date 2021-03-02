@@ -32,8 +32,8 @@
     </filter>
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
-        <!--工程下所有请求-->
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/workbench/*</url-pattern>
+        <url-pattern>/settings/*</url-pattern>
     </filter-mapping>
 
     <filter>
