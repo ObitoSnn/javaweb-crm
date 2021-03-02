@@ -1,6 +1,7 @@
 package com.obitosnn.crm.settings.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.settings.dao.DeptDao;
 import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.settings.service.DeptService;
@@ -36,6 +37,21 @@ public class DeptServiceImpl implements DeptService {
             e.printStackTrace();
         }
         return pageVo;
+    }
+
+    @Override
+    public boolean saveDept(Dept dept) throws FailToSaveException {
+        List<String> list = deptDao.selectDeptnoList();
+        for (String s : list) {
+            if (s.equals(dept.getDeptno())) {
+                throw new FailToSaveException("编号已存在，保存失败");
+            }
+        }
+        Integer count = deptDao.insertDept(dept);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存失败");
+        }
+        return true;
     }
 
 }

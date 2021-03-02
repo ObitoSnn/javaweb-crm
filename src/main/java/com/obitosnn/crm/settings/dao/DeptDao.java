@@ -15,4 +15,8 @@ public interface DeptDao {
 
     Long selectDeptTotalForPageVo(Map<String, Object> map);
 
+    Integer insertDept(Dept dept);
+
+    List<String> selectDeptnoList();
+
 }
