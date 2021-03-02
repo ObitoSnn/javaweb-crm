@@ -18,12 +18,10 @@
 
     <!--声明系统设置模块控制器对象-->
     <context:component-scan base-package="com.obitosnn.crm.settings.web.controller"/>
-    <!--声明系统设置模块全局处理异常的对象-->
-    <context:component-scan base-package="com.obitosnn.crm.settings.web.handler"/>
     <!--声明工作台模块控制器对象-->
     <context:component-scan base-package="com.obitosnn.crm.workbench.web.controller"/>
-    <!--声明工作台模块全局处理异常的对象-->
-    <context:component-scan base-package="com.obitosnn.crm.workbench.web.handler"/>
+    <!--声明整个项目全局处理异常的对象-->
+    <context:component-scan base-package="com.obitosnn.crm.web.handler"/>
 
     <mvc:interceptors>
         <!--检验用户是否登录-->
