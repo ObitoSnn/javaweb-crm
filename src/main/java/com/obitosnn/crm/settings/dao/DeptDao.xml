@@ -5,6 +5,35 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DeptDao">
 
+    <update id="updateDept">
+
+        update `tbl_dept` set
+        `deptno`=#{deptno},
+        `name`=#{name},
+        `userId`=#{userId},
+        `phone`=#{phone},
+        `description`=#{description},
+        `editBy`=#{editBy},
+        `editTime`=#{editTime}
+        where id=#{id}
+
+    </update>
+
+    <select id="selectDeptById" resultType="Dept">
+
+        select
+        d.`deptno`,
+        d.`name`,
+        d.`userId`,
+        d.`phone`,
+        d.`description`
+        from `tbl_dept` d
+        left outer join `tbl_user` u
+        on d.`userId`=u.`id`
+        where d.`id`=#{id}
+
+    </select>
+
     <select id="selectDeptnoList" resultType="string">
 
         select
