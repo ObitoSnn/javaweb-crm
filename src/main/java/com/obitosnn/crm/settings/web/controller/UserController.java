@@ -21,7 +21,7 @@ import java.util.Map;
  * @Description:
  * @Date 2021/1/18 16:51
  */
-@RequestMapping(value = {"/user"})
+@RequestMapping(value = {"/settings/user"})
 @Controller
 public class UserController {
     @Autowired
