@@ -30,12 +30,12 @@
 				</div>
 				<div class="modal-body">
 					<div style="position: relative; left: 40px;">
-						姓名：<b>张三</b><br><br>
-						登录帐号：<b>zhangsan</b><br><br>
-						组织机构：<b>1005，市场部，二级部门</b><br><br>
-						邮箱：<b>zhangsan@bjpowernode.com</b><br><br>
-						失效时间：<b>2017-02-14 10:10:10</b><br><br>
-						允许访问IP：<b>127.0.0.1,192.168.100.2</b>
+						姓名：<b>${sessionScope.user.name}</b><br><br>
+						登录帐号：<b>${sessionScope.user.loginAct}</b><br><br>
+						组织机构：<b>${sessionScope.user.deptno}</b><br><br>
+						邮箱：<b>${sessionScope.user.email}</b><br><br>
+						失效时间：<b>${sessionScope.user.expireTime}</b><br><br>
+						允许访问IP：<b>${sessionScope.user.allowIps}</b>
 					</div>
 				</div>
 				<div class="modal-footer">

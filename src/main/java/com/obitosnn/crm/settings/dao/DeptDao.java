@@ -25,4 +25,6 @@ public interface DeptDao {
 
     Integer deleteDeptByIds(String[] id);
 
+    Dept selectDeptByDeptno(String deptno);
+
 }
