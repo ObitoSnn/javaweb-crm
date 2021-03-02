@@ -162,6 +162,82 @@
 
 		}
 
+		function openEditDeptModal() {
+			//选中的复选框
+			var $checkbox = $("input[name='checkbox-single']:checked");
+			if ($checkbox.length == 0) {
+				alert("请选择要修改的部门信息");
+			} else if ($checkbox.length > 1) {
+				alert("一次只能修改一个部门信息");
+			} else {
+				var id = $checkbox.val();
+				$.ajax({
+					url : "settings/dept/getDeptByIdAndUserList",
+					data : {
+						"id" : id
+					},
+					type : "get",
+					dataType : "json",
+					success : function (data) {
+						// {{部门},[{用户},...]}
+						var html = "<option></option>";
+						$.each(data.userList, function (i, obj) {
+							if ("root" == obj.loginAct) {
+								return true;
+							}
+							html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
+						});
+						$("#edit-userId").html(html);
+
+						$("#edit-deptno").val($.trim(data.dept.deptno));
+						$("#edit-name").val($.trim(data.dept.name));
+						$("#edit-userId").val($.trim(data.dept.userId));
+						$("#edit-phone").val($.trim(data.dept.phone));
+						$("#edit-description").val($.trim(data.dept.description));
+						//打开模态窗口
+						$("#editDeptModal").modal("show");
+					}
+				});
+			}
+		}
+
+		function updateDept() {
+
+			var $checkbox = $("input[name='checkbox-single']:checked");
+			var id = $checkbox.val();
+			var deptno = $.trim($("#edit-deptno").val());
+			var name = $.trim($("#edit-name").val());
+			var userId = $.trim($("#edit-userId").val());
+			var phone = $.trim($("#edit-phone").val());
+			var description = $.trim($("#edit-description").val());
+			$.ajax({
+				url : "settings/dept/updateDept",
+				data : {
+					"id" : id,
+					"deptno" : deptno,
+					"name" : name,
+					"userId" : userId,
+					"phone" : phone,
+					"description" : description
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					// {"success":true/false,"errorMsg":错误信息}
+					if (data.success) {
+						//修改数据后，刷新页面数据，留在当前页面，每页显示数据数不变
+						pageList($("#deptPage").bs_pagination('getOption', 'currentPage')
+								,$("#deptPage").bs_pagination('getOption', 'rowsPerPage'));
+						//关闭模态窗口
+						$("#editDeptModal").modal("hide");
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		}
+
 	</script>
 </head>
 <body>
@@ -353,44 +429,46 @@
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-code" class="col-sm-2 control-label">编号<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-deptno" class="col-sm-2 control-label">编号<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-code" style="width: 200%;" placeholder="不能为空，具有唯一性" value="1110">
+								<input type="text" class="form-control" id="edit-deptno" style="width: 200%;" placeholder="不能为空，具有唯一性">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="create-name" class="col-sm-2 control-label">名称</label>
+							<label for="edit-name" class="col-sm-2 control-label">名称</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-name" style="width: 200%;" value="财务部">
+								<input type="text" class="form-control" id="edit-name" style="width: 200%;">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="create-manager" class="col-sm-2 control-label">负责人</label>
+							<label for="edit-userId" class="col-sm-2 control-label">负责人</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-manager" style="width: 200%;" value="张飞">
+								<select class="form-control" id="edit-userId" style="width: 200%;">
+
+								</select>
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="create-phone" class="col-sm-2 control-label">电话</label>
+							<label for="edit-phone" class="col-sm-2 control-label">电话</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-phone" style="width: 200%;" value="010-84846004">
+								<input type="text" class="form-control" id="edit-phone" style="width: 200%;">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 55%;">
-								<textarea class="form-control" rows="3" id="create-describe">description info</textarea>
+								<textarea class="form-control" rows="3" id="edit-description"></textarea>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" onclick="updateDept()">更新</button>
 				</div>
 			</div>
 		</div>
@@ -407,7 +485,7 @@
 		<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;left: 30px; top:-30px;">
 			<div class="btn-group" style="position: relative; top: 18%;">
 			  <button type="button" class="btn btn-primary" onclick="openCreateDeptModal()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editDeptModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			  <button type="button" class="btn btn-default" onclick="openEditDeptModal()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 			</div>
 		</div>

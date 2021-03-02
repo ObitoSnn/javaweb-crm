@@ -1,6 +1,7 @@
 package com.obitosnn.crm.settings.web.controller;
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.DeptService;
@@ -69,6 +70,36 @@ public class DeptController {
         try {
             success = deptService.saveDept(dept);
         } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getDeptByIdAndUserList"})
+    @ResponseBody
+    public Map<String, Object> getDeptByIdAndUserList(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Dept dept = deptService.getDeptById(id);
+        List<User> userList = userService.getUserList();
+        map.put("dept", dept);
+        map.put("userList", userList);
+        return map;
+    }
+
+    @RequestMapping(value = {"/updateDept"})
+    @ResponseBody
+    public Map<String, Object> updateDept(HttpServletRequest request, Dept dept) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        dept.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        dept.setEditTime(editTime);
+        boolean success = false;
+        try {
+            success = deptService.updateDept(dept);
+        } catch (FailToUpdateException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

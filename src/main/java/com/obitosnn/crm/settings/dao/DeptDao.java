@@ -19,4 +19,8 @@ public interface DeptDao {
 
     List<String> selectDeptnoList();
 
+    Dept selectDeptById(String id);
+
+    Integer updateDept(Dept dept);
+
 }

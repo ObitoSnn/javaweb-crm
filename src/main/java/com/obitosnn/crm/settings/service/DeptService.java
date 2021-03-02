@@ -1,6 +1,7 @@
 package com.obitosnn.crm.settings.service;
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.vo.PageVo;
 
@@ -15,5 +16,9 @@ public interface DeptService {
     PageVo<Dept> getDeptPageVo(Map<String, Object> map);
 
     boolean saveDept(Dept dept) throws FailToSaveException;
+
+    Dept getDeptById(String id);
+
+    boolean updateDept(Dept dept) throws FailToUpdateException;
 
 }
