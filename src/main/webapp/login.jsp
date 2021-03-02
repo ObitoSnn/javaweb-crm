@@ -17,7 +17,7 @@
 
 			// alert("执行登录的操作");
 			$.ajax({
-				url : "user/login",
+				url : "settings/user/login",
 				data : {
 					"loginAct" : loginAct,
 					"loginPwd" : loginPwd
