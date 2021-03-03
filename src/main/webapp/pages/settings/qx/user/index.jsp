@@ -3,9 +3,149 @@
 <html>
 <head>
 	<%@ include file="../../../common/base_css_jquery.jsp"%>
+	<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
+	<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <meta charset="UTF-8">
+	<script type="text/javascript">
+
+		$(function () {
+
+			//日历控件
+			$(".time").datetimepicker({
+				language:  "zh-CN",
+				format: "yyyy-mm-dd hh:ii:ss",//显示格式
+				autoclose: true,//选中自动关闭
+				todayBtn: true, //显示今日按钮
+				clearBtn : true,
+				pickerPosition: "bottom-left"
+			});
+
+			//页面加载完毕后调用分页方法，默认打开第一页，展现2条记录
+			pageList(1, 2);
+
+			//给控制总的复选框绑定单击事件
+			$("input[name='checkbox-manager']").click(function () {
+				$("input[name='checkbox-single']").prop("checked", this.checked);
+			});
+
+			//给单个的复选框绑定单击事件
+			$("#showUserTBody").on("click", $("input[name='checkbox-single']"), function () {
+				$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']").length == $("input[name='checkbox-single']:checked").length);
+			})
+
+		});
+
+		function pageList(pageNo, pageSize) {
+
+			//刷新后台数据之前取消总复选框的选中状态
+			$("input[name='checkbox-manager']").prop("checked", false);
+
+			//分页之前从隐藏域中取出文本框信息
+			$("#input-name").val($.trim($("#hidden-name").val()));
+			$("#input-deptno").val($.trim($("#hidden-deptno").val()));
+			$("#lockState").val($.trim($("#hidden-lockState").val()));
+			$("#input-startDate").val($.trim($("#hidden-startDate").val()));
+			$("#input-endDate").val($.trim($("#hidden-endDate").val()));
+
+			var name = $("#input-name").val();
+			var deptno = $("#input-deptno").val();
+			var lockState = $("#lockState").val();
+			var startDate = $("#input-startDate").val();
+			var endDate = $("#input-endDate").val();
+
+			$.ajax({
+				url : "settings/permission/user/pageList",
+				data : {
+					"pageNo" : pageNo,
+					"pageSize" : pageSize,
+					"name" : name,
+					"deptno" : deptno,
+					"lockState" : lockState,
+					"startDate" : startDate,
+					"endDate" : endDate
+				},
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					/*
+                        data
+                            {"total":总记录数,"dataList":[{线索},{}...]}
+                     */
+					var html = "";
+					$.each(data.dataList, function (i, obj) {
+						html += '<tr>';
+						html += '<td><input type="checkbox" name="checkbox-single" value="' + obj.id + '"/></td>';
+						html += '<td>' + (i + 1) + '</td>';
+						html += '<td><a  href="settings/permission/user/detail?id=' + obj.id + '">' + obj.loginAct + '</a></td>';
+						html += '<td>' + obj.name + '</td>';
+						html += '<td>' + obj.deptno + '</td>';
+						html += '<td>' + obj.email + '</td>';
+						html += '<td>' + obj.expireTime + '</td>';
+						html += '<td>' + obj.allowIps + '</td>';
+						html += '<td>' + obj.lockState + '</td>';
+						html += '<td>' + obj.createBy + '</td>';
+						html += '<td>' + obj.createTime + '</td>';
+						html += '<td>' + obj.editBy + '</td>';
+						html += '<td>' + obj.editTime + '</td>';
+						html += '</tr>';
+					});
+					$("#showUserTBody").html(html);
+
+					var totalPages = data.total % pageSize == 0 ? data.total / pageSize : Math.ceil(data.total / pageSize);
+
+					//数据处理完毕后，结合分页插件展现每页数据
+					$("#userPage").bs_pagination({
+						currentPage: pageNo, // 页码
+						rowsPerPage: pageSize, // 每页显示的记录条数
+						maxRowsPerPage: 20, // 每页最多显示的记录条数
+						totalPages: totalPages, // 总页数
+						totalRows: data.total, // 总记录条数
+
+						visiblePageLinks: 3, // 显示几个卡片
+
+						showGoToPage: true,
+						showRowsPerPage: true,
+						showRowsInfo: true,
+						showRowsDefaultInfo: true,
+
+						//该回调函数是在点击分页组件的时候触发的
+						onChangePage : function(event, data){
+							pageList(data.currentPage , data.rowsPerPage);
+						}
+					});
+
+				}
+			});
+
+		}
+
+		function search() {
+
+			//查询之前将文本框信息保存至隐藏域中
+			$("#hidden-name").val($.trim($("#input-name").val()));
+			$("#hidden-deptno").val($.trim($("#input-deptno").val()));
+			$("#hidden-lockState").val($.trim($("#lockState").val()));
+			$("#hidden-startDate").val($.trim($("#input-startDate").val()));
+			$("#hidden-endDate").val($.trim($("#input-endDate").val()));
+
+			//查询操作后，刷新页面数据，回到第一页，每页显示数据数不变
+			pageList(1
+					,$("#userPage").bs_pagination('getOption', 'rowsPerPage'));
+
+		}
+
+	</script>
 </head>
 <body>
+	<input type="hidden" id="hidden-name">
+	<input type="hidden" id="hidden-deptno">
+	<input type="hidden" id="hidden-lockState">
+	<input type="hidden" id="hidden-startDate">
+	<input type="hidden" id="hidden-endDate">
 
 	<!-- 创建用户的模态窗口 -->
 	<div class="modal fade" id="createUserModal" role="dialog">
@@ -100,24 +240,24 @@
 		  <div class="form-group">
 		    <div class="input-group">
 		      <div class="input-group-addon">用户姓名</div>
-		      <input class="form-control" type="text">
+		      <input class="form-control" type="text" id="input-name">
 		    </div>
 		  </div>
 		  &nbsp;&nbsp;&nbsp;&nbsp;
 		  <div class="form-group">
 		    <div class="input-group">
 		      <div class="input-group-addon">部门名称</div>
-		      <input class="form-control" type="text">
+		      <input class="form-control" type="text" id="input-deptno">
 		    </div>
 		  </div>
 		  &nbsp;&nbsp;&nbsp;&nbsp;
 		  <div class="form-group">
 		    <div class="input-group">
 		      <div class="input-group-addon">锁定状态</div>
-			  <select class="form-control">
+			  <select id="lockState" class="form-control">
 			  	  <option></option>
-			      <option>锁定</option>
-				  <option>启用</option>
+			      <option value="0">锁定</option>
+				  <option value="1">启用</option>
 			  </select>
 		    </div>
 		  </div>
@@ -126,7 +266,7 @@
 		  <div class="form-group">
 		    <div class="input-group">
 		      <div class="input-group-addon">失效时间</div>
-			  <input class="form-control" type="text" id="startTime" />
+			  <input class="form-control time" type="text" id="input-startDate"/>
 		    </div>
 		  </div>
 		  
@@ -134,11 +274,11 @@
 		  
 		  <div class="form-group">
 		    <div class="input-group">
-			  <input class="form-control" type="text" id="endTime" />
+			  <input class="form-control time" type="text" id="input-endDate"/>
 		    </div>
 		  </div>
 		  
-		  <button type="submit" class="btn btn-default">查询</button>
+		  <button type="button" onclick="search()" class="btn btn-default">查询</button>
 		  
 		</form>
 	</div>
@@ -156,7 +296,7 @@
 		<table class="table table-hover">
 			<thead>
 				<tr style="color: #B3B3B3;">
-					<td><input type="checkbox" /></td>
+					<td><input type="checkbox" name="checkbox-manager"/></td>
 					<td>序号</td>
 					<td>登录帐号</td>
 					<td>用户姓名</td>
@@ -171,74 +311,13 @@
 					<td>修改时间</td>
 				</tr>
 			</thead>
-			<tbody>
-				<tr class="active">
-					<td><input type="checkbox" /></td>
-					<td>1</td>
-					<td><a  href="pages/settings/qx/user/detail.jsp">zhangsan</a></td>
-					<td>张三</td>
-					<td>市场部</td>
-					<td>zhangsan@bjpowernode.com</td>
-					<td>2017-02-14 10:10:10</td>
-					<td>127.0.0.1,192.168.100.2</td>
-					<td>启用</td>
-					<td>admin</td>
-					<td>2017-02-10 10:10:10</td>
-					<td>admin</td>
-					<td>2017-02-10 20:10:10</td>
-				</tr>
-				<tr>
-					<td><input type="checkbox" /></td>
-					<td>2</td>
-					<td><a  href="pages/settings/qx/user/detail.jsp">lisi</a></td>
-					<td>李四</td>
-					<td>市场部</td>
-					<td>lisi@bjpowernode.com</td>
-					<td>2017-02-14 10:10:10</td>
-					<td>127.0.0.1,192.168.100.2</td>
-					<td>锁定</td>
-					<td>admin</td>
-					<td>2017-02-10 10:10:10</td>
-					<td>admin</td>
-					<td>2017-02-10 20:10:10</td>
-				</tr>
+			<tbody id="showUserTBody">
 			</tbody>
 		</table>
 	</div>
 	
 	<div style="height: 50px; position: relative;top: 30px; left: 30px;">
-		<div>
-			<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-		</div>
-		<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-			<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-			<div class="btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					10
-					<span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" role="menu">
-					<li><a href="#">20</a></li>
-					<li><a href="#">30</a></li>
-				</ul>
-			</div>
-			<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-		</div>
-		<div style="position: relative;top: -88px; left: 285px;">
-			<nav>
-				<ul class="pagination">
-					<li class="disabled"><a href="#">首页</a></li>
-					<li class="disabled"><a href="#">上一页</a></li>
-					<li class="active"><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">5</a></li>
-					<li><a href="#">下一页</a></li>
-					<li class="disabled"><a href="#">末页</a></li>
-				</ul>
-			</nav>
-		</div>
+		<div id="userPage"></div>
 	</div>
 			
 </body>

@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.dao.DeptDao;
@@ -9,10 +10,12 @@ import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.MD5Util;
+import com.obitosnn.crm.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -82,6 +85,27 @@ public class UserServiceImpl implements UserService {
             throw new FailToUpdateException("修改失败");
         }
         return true;
+    }
+
+    @Override
+    public PageVo<User> getUserPageVo(Map<String, Object> map) {
+        PageVo<User> pageVo = new PageVo<User>();
+        int pageNo = Integer.parseInt((String) map.get("pageNo"));
+        int pageSize = Integer.parseInt((String) map.get("pageSize"));
+        PageHelper.startPage(pageNo, pageSize);
+        List<User> dataList = userDao.selectUserListForPageVo(map);
+        for (User user : dataList) {
+            if ("0".equals(user.getLockState())) {
+                user.setLockState("锁定");
+            }
+            if ("1".equals(user.getLockState())) {
+                user.setLockState("启用");
+            }
+        }
+        pageVo.setDataList(dataList);
+        Long total = userDao.selectUserTotalForPageVo(map);
+        pageVo.setTotal(total);
+        return pageVo;
     }
 
 }

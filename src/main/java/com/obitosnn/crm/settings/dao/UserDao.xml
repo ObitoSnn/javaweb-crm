@@ -5,6 +5,78 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
 
+    <select id="selectUserTotalForPageVo" resultType="long">
+
+        select count(*) from
+        (
+        select
+        u.`id`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        <where>
+
+            <if test="name != null and name != ''">
+                u.`name` like '%' #{name} '%'
+            </if>
+            <if test="deptno != null and deptno != ''">
+                and d.`name` like '%' #{deptno} '%'
+            </if>
+            <if test="lockState != null and lockState != ''">
+                and u.`lockState`=#{lockState}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and #{startDate} &lt;= u.`expireTime`
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and #{endDate} &gt;= u.`expireTime`
+            </if>
+
+        </where>
+        ) `tbl_temp`
+
+    </select>
+
+    <select id="selectUserListForPageVo" resultType="User">
+
+        select
+        u.`id`,
+        u.`loginAct`,
+        u.`name`,
+        u.`email`,
+        u.`expireTime`,
+        u.`lockState`,
+        d.`name` as `deptno`,
+        u.`allowIps`,
+        u.`createTime`,
+        u.`createBy`,
+        u.`editTime`,
+        u.`editBy`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        <where>
+
+            <if test="name != null and name != ''">
+                u.`name` like '%' #{name} '%'
+            </if>
+            <if test="deptno != null and deptno != ''">
+                and d.`name` like '%' #{deptno} '%'
+            </if>
+            <if test="lockState != null and lockState != ''">
+                and u.`lockState`=#{lockState}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and #{startDate} &lt;= u.`expireTime`
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and #{endDate} &gt;= u.`expireTime`
+            </if>
+
+        </where>
+
+    </select>
+
     <update id="updatePwd">
 
         update `tbl_user` set
