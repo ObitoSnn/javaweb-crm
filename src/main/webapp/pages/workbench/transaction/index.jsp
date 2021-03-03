@@ -5,9 +5,6 @@
 <head>
 <meta charset="UTF-8">
 	<%@ include file="../../common/base_css_jquery.jsp"%>
-<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
 <script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
