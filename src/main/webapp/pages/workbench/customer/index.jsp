@@ -78,6 +78,9 @@
 
 					var html = "";
 					$.each(data, function (i, userObj) {
+						if ("root" == userObj.loginAct) {
+							return true;
+						}
 						html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
 					})
 					//为所有者下拉框填数据
@@ -171,6 +174,9 @@
                             //     {"uList":[{用户1}...],"customer":{客户}}
 						var html = "";
 						$.each(data.uList, function (i, userObj) {
+							if ("root" == userObj.loginAct) {
+								return true;
+							}
 							html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
 						});
 						$("#edit-owner").html(html);

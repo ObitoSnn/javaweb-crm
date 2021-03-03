@@ -47,6 +47,9 @@
 					 */
 					var optionHtml = "";
 					$.each(data, function (i, obj) {
+						if ("root" == obj.loginAct) {
+							return true;
+						}
                         optionHtml += "<option value='" + obj.id + "'>" + obj.name + "</option>";
 					});
                     $("#create-owner").html(optionHtml);
@@ -252,6 +255,9 @@
                         */
 						var html = "";
 						$.each(data.uList, function (i, obj) {
+							if ("root" == obj.loginAct) {
+								return true;
+							}
 							html += "<option value='" + obj.id +"'>" + obj.name + "</option>";
 						});
 						//下拉框填写信息
