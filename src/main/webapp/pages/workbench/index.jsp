@@ -30,7 +30,167 @@
 			$(this).children("a").css("color","white");
 		});
 		window.open("pages/workbench/activity/index.jsp","workareaFrame");
+
+		//给输入原密码的文本框绑定失去焦点事件，校验密码是否正确
+		$("#oldPwd").blur(function () {
+
+			var oldPwd = $.trim($("#oldPwd").val());
+			if (oldPwd == "") {
+				$("#oldPwdMsg").text("请输入原密码");
+				return false;
+			}
+			$.ajax({
+				url: "settings/user/checkPwd",
+				data: {
+					"id": "${sessionScope.user.id}",
+					"oldPwd": oldPwd
+				},
+				type: "get",
+				dataType: "text",
+				success: function (data) {
+					// {信息}
+					$("#oldPwdMsg").text($.trim(data));
+					if (data != "") {
+						$("#pwdMsg").text("");
+					}
+				}
+			});
+
+		});
+
+		//校验新密码
+		$("#newPwd").blur(function () {
+
+			var oldPwd = $.trim($("#oldPwd").val());
+			var newPwd = $.trim($("#newPwd").val());
+			var confirmPwd = $.trim($("#confirmPwd").val());
+			var oldPwdMsg = $.trim($("#oldPwdMsg").text());
+			if (oldPwd == "") {
+				$("#oldPwdMsg").text("请输入原密码");
+				return false;
+			}
+			if (oldPwdMsg != "") {
+				return false;
+			}
+			if (newPwd == "") {
+				$("#pwdMsg").text("请输入新密码");
+				return false;
+			}
+			if (newPwd == oldPwd) {
+				$("#pwdMsg").text("新密码与原密码一致");
+				return false;
+			}
+			if (confirmPwd == "") {
+				$("#pwdMsg").text("请输入确认密码");
+				return false;
+			}
+			if (newPwd != confirmPwd) {
+				$("#pwdMsg").text("新密码与确认密码不一致");
+				return false;
+			}
+			$("#pwdMsg").text("");
+
+		});
+
+		//校验确认密码
+		$("#confirmPwd").blur(function () {
+
+			var oldPwd = $.trim($("#oldPwd").val());
+			var newPwd = $.trim($("#newPwd").val());
+			var confirmPwd = $.trim($("#confirmPwd").val());
+			var oldPwdMsg = $.trim($("#oldPwdMsg").text());
+			if (oldPwd == "") {
+				$("#oldPwdMsg").text("请输入原密码");
+				return false;
+			}
+			if (oldPwdMsg != "") {
+				return false;
+			}
+			if (newPwd == "") {
+				$("#pwdMsg").text("请输入新密码");
+				return false;
+			}
+			if (newPwd == oldPwd) {
+				$("#pwdMsg").text("新密码与原密码一致");
+				return false;
+			}
+			if (confirmPwd == "") {
+				$("#pwdMsg").text("请输入确认密码");
+				return false;
+			}
+			if (newPwd != confirmPwd) {
+				$("#pwdMsg").text("新密码与确认密码不一致");
+				return false;
+			}
+			$("#pwdMsg").text("");
+
+		});
+
 	});
+
+	//打开修改密码的模态窗口
+	function openEditPwdModal() {
+
+		//重置表单项
+		$("#editPwdForm")[0].reset();
+		//重置span标签文本内容
+		$("#oldPwdMsg").text("");
+		$("#pwdMsg").text("");
+		//打开模态窗口
+		$("#editPwdModal").modal("show");
+
+	}
+
+	//修改密码
+	function updatePwd() {
+
+		var oldPwd = $.trim($("#oldPwd").val());
+		var newPwd = $.trim($("#newPwd").val());
+		var confirmPwd = $.trim($("#confirmPwd").val());
+		var oldPwdMsg = $.trim($("#oldPwdMsg").text());
+		if (oldPwd == "") {
+			$("#oldPwdMsg").text("请输入原密码");
+			return false;
+		}
+		if (oldPwdMsg != "") {
+			return false;
+		}
+		if (newPwd == "") {
+			$("#pwdMsg").text("请输入新密码");
+			return false;
+		}
+		if (newPwd == oldPwd) {
+			$("#pwdMsg").text("新密码与原密码一致");
+			return false;
+		}
+		if (confirmPwd == "") {
+			$("#pwdMsg").text("请输入确认密码");
+			return false;
+		}
+		if (newPwd != confirmPwd) {
+			$("#pwdMsg").text("新密码与确认密码不一致");
+			return false;
+		}
+		$("#pwdMsg").text("");
+		$.ajax({
+			url : "settings/user/updatePwd",
+			data : {
+				"id": "${sessionScope.user.id}",
+				"loginPwd": newPwd
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+				// {"success":true/false,"errorMsg":错误信息}
+				if (data.success) {
+					location.href = "login.jsp";
+				} else {
+					alert(data.errorMsg);
+				}
+			}
+		});
+
+	}
 	
 </script>
 
@@ -75,32 +235,38 @@
 					<h4 class="modal-title">修改密码</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form id="editPwdForm" class="form-horizontal" role="form">
 						<div class="form-group">
 							<label for="oldPwd" class="col-sm-2 control-label">原密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="oldPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="oldPwd" style="width: 200%;">
+                                <div>
+                                    <span id="oldPwdMsg" style="color: red;"></span>
+                                </div>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="newPwd" class="col-sm-2 control-label">新密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="newPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="newPwd" style="width: 200%;">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="confirmPwd" class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="confirmPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="confirmPwd" style="width: 200%;">
+                                <div>
+                                    <span id="pwdMsg" style="color: red;"></span>
+                                </div>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='login.jsp';">更新</button>
+					<button type="button" class="btn btn-primary" onclick="updatePwd()">更新</button>
 				</div>
 			</div>
 		</div>
@@ -140,7 +306,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="pages/settings/index.jsp"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
-						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
+						<li><a href="javascript:void(0)" onclick="openEditPwdModal()"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
 					</ul>
 				</li>

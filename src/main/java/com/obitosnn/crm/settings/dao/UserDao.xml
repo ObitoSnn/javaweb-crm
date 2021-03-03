@@ -5,6 +5,22 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
 
+    <update id="updatePwd">
+
+        update `tbl_user` set
+        `loginPwd`=#{loginPwd}
+        where `id`=#{id}
+
+    </update>
+
+    <select id="selectUserLoginPwdById" resultType="string">
+
+        select
+        `loginPwd`
+        from `tbl_user` where `id`=#{id}
+
+    </select>
+
     <select id="selectAll" resultType="User">
         select `id`, `loginAct`,`name`, `loginPwd`, `email`,
         `expireTime`, `lockState`, `deptno`, `allowIps`, `createTime`,

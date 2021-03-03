@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.service;
 
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.domain.User;
 
@@ -15,5 +16,9 @@ public interface UserService {
     User login(String loginAct, String loginPwd, String allowIps) throws LoginException;
 
     List<User> getUserList();
+
+    String checkPwd(String id, String oldPwd);
+
+    boolean updatePwd(User user) throws FailToUpdateException;
 
 }

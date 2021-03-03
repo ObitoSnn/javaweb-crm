@@ -15,4 +15,8 @@ public interface UserDao {
 
     User selectUserByUsernameAndPassword(User user);
 
+    String selectUserLoginPwdById(String id);
+
+    Integer updatePwd(User user);
+
 }
