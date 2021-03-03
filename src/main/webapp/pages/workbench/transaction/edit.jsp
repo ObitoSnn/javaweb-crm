@@ -75,6 +75,9 @@
 					 */
 					var html = "";
 					$.each(data.uList, function (i, uObj) {
+						if ("root" == uObj.loginAct) {
+							return true;
+						}
 						html += "<option value='" + uObj.id + "'>" + uObj.name + "</option>";
 					});
 					$("#edit-owner").html(html);

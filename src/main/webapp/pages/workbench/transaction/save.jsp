@@ -333,7 +333,9 @@
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="owner" name="owner">
 				  <c:forEach items="${requestScope.uList}" var="u">
-					  <option value="${u.id}" ${sessionScope.user.id eq u.id ? "selected" : ""}>${u.name}</option>
+					  <c:if test="${u.loginAct ne 'root'}">
+						  <option value="${u.id}" ${sessionScope.user.id eq u.id ? "selected" : ""}>${u.name}</option>
+					  </c:if>
 				  </c:forEach>
 				</select>
 			</div>
