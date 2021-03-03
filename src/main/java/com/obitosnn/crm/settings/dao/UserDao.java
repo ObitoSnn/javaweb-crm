@@ -3,6 +3,7 @@ package com.obitosnn.crm.settings.dao;
 import com.obitosnn.crm.settings.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -18,5 +19,9 @@ public interface UserDao {
     String selectUserLoginPwdById(String id);
 
     Integer updatePwd(User user);
+
+    List<User> selectUserListForPageVo(Map<String, Object> map);
+
+    Long selectUserTotalForPageVo(Map<String, Object> map);
 
 }

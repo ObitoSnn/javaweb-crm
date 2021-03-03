@@ -3,8 +3,10 @@ package com.obitosnn.crm.settings.service;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.vo.PageVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -20,5 +22,7 @@ public interface UserService {
     String checkPwd(String id, String oldPwd);
 
     boolean updatePwd(User user) throws FailToUpdateException;
+
+    PageVo<User> getUserPageVo(Map<String, Object> map);
 
 }
