@@ -20,6 +20,7 @@
 			format: 'yyyy-mm-dd', //显示格式
 			autoclose: true,
 			todayBtn: true,
+			clearBtn : true,
 			pickerPosition: "bottom-left"
 		});
 
@@ -578,13 +579,13 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input id="input-startDate" class="form-control" type="text" id="startTime" placeholder="请输入日期"/>
+					  <input id="input-startDate" class="form-control time" type="text" id="startTime" placeholder="请输入日期"/>
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input id="input-endDate" class="form-control" type="text" id="endTime" placeholder="请输入日期"/>
+					  <input id="input-endDate" class="form-control time" type="text" id="endTime" placeholder="请输入日期"/>
 				    </div>
 				  </div>
 				  
