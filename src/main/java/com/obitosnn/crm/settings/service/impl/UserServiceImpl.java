@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService {
             //不允许该用户ip访问系统
             throw new LoginException("ip地址受限");
         }
+        if ("root".equals(loginUser.getLoginAct())) {
+            return loginUser;
+        }
         String deptno = loginUser.getDeptno();
         Dept dept = deptDao.selectDeptByDeptno(deptno);
         loginUser.setDeptno(dept.getDeptno() + "，" + dept.getName());
