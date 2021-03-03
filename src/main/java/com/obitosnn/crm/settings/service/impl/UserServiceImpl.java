@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.service.impl;
 
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.dao.DeptDao;
 import com.obitosnn.crm.settings.dao.UserDao;
@@ -7,6 +8,7 @@ import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUserList() {
         return userDao.selectAll();
+    }
+
+    @Override
+    public String checkPwd(String id, String oldPwd) {
+        String loginPwd = userDao.selectUserLoginPwdById(id);
+        oldPwd = MD5Util.getMD5(oldPwd);
+        if (!loginPwd.equals(oldPwd)) {
+            return "原密码错误";
+        }
+        return "";
+    }
+
+    @Override
+    public boolean updatePwd(User user) throws FailToUpdateException {
+        String newLoginPwd = MD5Util.getMD5(user.getLoginPwd());
+        user.setLoginPwd(newLoginPwd);
+        Integer count = userDao.updatePwd(user);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("修改失败");
+        }
+        return true;
     }
 
 }

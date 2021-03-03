@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.web.controller;
 
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
@@ -57,6 +58,28 @@ public class UserController {
         session.invalidate();
         mv.setViewName("redirect:/login.jsp");
         return mv;
+    }
+
+    @RequestMapping(value = {"/checkPwd"}, produces = {"text/plain;charset=UTF-8"})
+    @ResponseBody
+    public String checkPwd(String id, String oldPwd) {
+        return userService.checkPwd(id, oldPwd);
+    }
+
+    @RequestMapping(value = {"/updatePwd"})
+    @ResponseBody
+    public Map<String, Object> updatePwd(HttpServletRequest request, User user) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = userService.updatePwd(user);
+            request.getSession().invalidate();
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
     }
 
 }
