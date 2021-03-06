@@ -28,4 +28,8 @@ public interface UserDao {
 
     Integer updateUserById(User user);
 
+    Integer selectUserLoginActCount(String loginAct);
+
+    Integer insertUser(User user);
+
 }

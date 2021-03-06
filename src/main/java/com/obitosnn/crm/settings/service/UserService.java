@@ -1,5 +1,6 @@
 package com.obitosnn.crm.settings.service;
 
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.domain.User;
@@ -28,5 +29,9 @@ public interface UserService {
     User getUserDetail(String id);
 
     boolean updateUserById(User user) throws FailToUpdateException;
+
+    String checkAct(String loginAct);
+
+    boolean saveUser(User user) throws FailToSaveException;
 
 }

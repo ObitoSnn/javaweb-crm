@@ -27,4 +27,6 @@ public interface DeptService {
 
     List<String> getDeptNameList();
 
+    List<Dept> getDeptList();
+
 }

@@ -84,4 +84,9 @@ public class DeptServiceImpl implements DeptService {
         return deptDao.selectDeptNameList();
     }
 
+    @Override
+    public List<Dept> getDeptList() {
+        return deptDao.selectDeptList();
+    }
+
 }

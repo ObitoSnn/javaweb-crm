@@ -1,10 +1,14 @@
 package com.obitosnn.crm.settings.web.controller;
 
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
+import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.DeptService;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.MD5Util;
+import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,7 +74,7 @@ public class PermissionController {
 
     @PostMapping("/user/updateUserById")
     @ResponseBody
-    public Map<String, Object> updateUserById(HttpServletRequest request, User user) {
+    public Map<String, Object> updateUserById(HttpServletRequest request, User user) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         String editBy = ((User) request.getSession().getAttribute("user")).getName();
         user.setEditBy(editBy);
@@ -81,6 +85,40 @@ public class PermissionController {
             success = userService.updateUserById(user);
         } catch (FailToUpdateException e) {
             e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @GetMapping("/user/getDeptList")
+    @ResponseBody
+    public List<Dept> getDeptList() {
+        return deptService.getDeptList();
+    }
+
+    @PostMapping(value = "/user/checkAct", produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String checkAct(String loginAct) {
+        return userService.checkAct(loginAct);
+    }
+
+    @PostMapping("/user/saveUser")
+    @ResponseBody
+    public Map<String, Object> saveUser(HttpServletRequest request, User user) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        user.setId(UUIDUtil.getUUID());
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        user.setCreateBy(createBy);
+        String createTime = DateTimeUtil.getSysTime();
+        user.setCreateTime(createTime);
+        user.setLoginPwd(MD5Util.getMD5(user.getLoginPwd()));
+        boolean success = false;
+        try {
+            success = userService.saveUser(user);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
         map.put("success", success);
         return map;

@@ -1,6 +1,7 @@
 package com.obitosnn.crm.settings.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.exception.LoginException;
 import com.obitosnn.crm.settings.dao.DeptDao;
@@ -127,6 +128,25 @@ public class UserServiceImpl implements UserService {
         Integer count = userDao.updateUserById(user);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("修改失败");
+        }
+        return true;
+    }
+
+    @Override
+    public String checkAct(String loginAct) {
+        Integer count = userDao.selectUserLoginActCount(loginAct);
+        String msg = "";
+        if (count.compareTo(1) == 0) {
+            msg = "该登录账号已存在";
+        }
+        return msg;
+    }
+
+    @Override
+    public boolean saveUser(User user) throws FailToSaveException {
+        Integer count = userDao.insertUser(user);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存失败");
         }
         return true;
     }

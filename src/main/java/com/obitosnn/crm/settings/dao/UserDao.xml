@@ -5,6 +5,47 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
 
+    <insert id="insertUser">
+
+        insert into `tbl_user`
+        (
+        `id`,
+        `loginAct`,
+        `name`,
+        `loginPwd`,
+        `email`,
+        `expireTime`,
+        `lockState`,
+        `deptno`,
+        `allowIps`,
+        `createTime`,
+        `createBy`
+        )
+        values
+        (
+        #{id},
+        #{loginAct},
+        #{name},
+        #{loginPwd},
+        #{email},
+        #{expireTime},
+        #{lockState},
+        #{deptno},
+        #{allowIps},
+        #{createTime},
+        #{createBy}
+        )
+
+    </insert>
+
+    <select id="selectUserLoginActCount" resultType="int">
+
+        select
+        count(*)
+        from `tbl_user` where `loginAct`=#{loginAct}
+
+    </select>
+
     <update id="updateUserById">
 
         update `tbl_user` set
@@ -109,6 +150,7 @@
             </if>
 
         </where>
+        order by u.`createTime` asc
 
     </select>
 
