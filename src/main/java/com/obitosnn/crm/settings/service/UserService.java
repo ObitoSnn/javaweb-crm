@@ -25,4 +25,8 @@ public interface UserService {
 
     PageVo<User> getUserPageVo(Map<String, Object> map);
 
+    User getUserDetail(String id);
+
+    boolean updateUserById(User user) throws FailToUpdateException;
+
 }

@@ -108,4 +108,27 @@ public class UserServiceImpl implements UserService {
         return pageVo;
     }
 
+    @Override
+    public User getUserDetail(String id) {
+        User user = userDao.selectUserDetailById(id);
+        if ("0".equals(user.getLockState())) {
+            user.setLockState("锁定");
+        }
+        if ("1".equals(user.getLockState())) {
+            user.setLockState("启用");
+        }
+        return user;
+    }
+
+    @Override
+    public boolean updateUserById(User user) throws FailToUpdateException {
+        user.setDeptno(deptDao.selectDeptnoByName(user.getDeptno()));
+        user.setLoginPwd(MD5Util.getMD5(user.getLoginPwd()));
+        Integer count = userDao.updateUserById(user);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("修改失败");
+        }
+        return true;
+    }
+
 }

@@ -24,4 +24,8 @@ public interface UserDao {
 
     Long selectUserTotalForPageVo(Map<String, Object> map);
 
+    User selectUserDetailById(String id);
+
+    Integer updateUserById(User user);
+
 }

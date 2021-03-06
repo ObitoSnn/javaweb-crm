@@ -5,6 +5,22 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DeptDao">
 
+    <select id="selectDeptnoByName" resultType="string">
+
+        select
+        `deptno`
+        from `tbl_dept` where `name`=#{name}
+
+    </select>
+
+    <select id="selectDeptNameList" resultType="string">
+
+        select
+        `name`
+        from `tbl_dept`
+
+    </select>
+
     <select id="selectDeptByDeptno" resultType="Dept">
 
         select

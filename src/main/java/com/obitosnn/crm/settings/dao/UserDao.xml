@@ -5,6 +5,41 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
 
+    <update id="updateUserById">
+
+        update `tbl_user` set
+        `loginAct`=#{loginAct},
+        `name`=#{name},
+        `loginPwd`=#{loginPwd},
+        `email`=#{email},
+        `expireTime`=#{expireTime},
+        `lockState`=#{lockState},
+        `deptno`=#{deptno},
+        `allowIps`=#{allowIps},
+        `editTime`=#{editTime},
+        `editBy`=#{editBy}
+        where `id`=#{id}
+
+    </update>
+
+    <select id="selectUserDetailById" resultType="User">
+
+        select
+        u.`id`,
+        u.`loginAct`,
+        u.`name`,
+        u.`email`,
+        u.`expireTime`,
+        u.`allowIps`,
+        d.`name` as `deptno`,
+        u.`lockState`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        where u.`id`=#{id}
+
+    </select>
+
     <select id="selectUserTotalForPageVo" resultType="long">
 
         select count(*) from

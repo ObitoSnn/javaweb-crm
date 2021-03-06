@@ -27,4 +27,8 @@ public interface DeptDao {
 
     Dept selectDeptByDeptno(String deptno);
 
+    List<String> selectDeptNameList();
+
+    String selectDeptnoByName(String name);
+
 }
