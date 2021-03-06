@@ -14,6 +14,13 @@
 
 		$(function () {
 
+			window.onpageshow = function (event) {
+				if (event.persisted || window.performance &&
+						window.performance.navigation.type == 2) {
+					window.location.reload();
+				}
+			}
+
 			//日历控件
 			$(".time").datetimepicker({
 				language:  "zh-CN",
