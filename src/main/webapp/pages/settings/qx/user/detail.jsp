@@ -54,7 +54,7 @@
 					"id": "${requestScope.user.id}",
 					"oldPwd": loginPwd
 				},
-				type: "get",
+				type: "post",
 				dataType: "text",
 				success: function (data) {
 					// {信息}
