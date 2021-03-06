@@ -48,7 +48,7 @@
 					"id": "${sessionScope.user.id}",
 					"oldPwd": oldPwd
 				},
-				type: "get",
+				type: "post",
 				dataType: "text",
 				success: function (data) {
 					// {信息}
