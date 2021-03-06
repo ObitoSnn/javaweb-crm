@@ -398,7 +398,7 @@
 					</c:forEach>
 				</select>
 			</div>
-			<label for="create-activitySource" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activityName" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openActivitySourceBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-activityName" placeholder="点击左侧图标添加，默认不添加">
 				<input type="hidden" id="activityId" name="activityId"/>
