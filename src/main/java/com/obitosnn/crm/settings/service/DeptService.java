@@ -6,6 +6,7 @@ import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.Dept;
 import com.obitosnn.crm.vo.PageVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,5 +24,7 @@ public interface DeptService {
     boolean updateDept(Dept dept) throws FailToUpdateException;
 
     boolean deleteDeptByIds(String[] id) throws FailToDeleteException;
+
+    List<String> getDeptNameList();
 
 }

@@ -1,16 +1,19 @@
 package com.obitosnn.crm.settings.web.controller;
 
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.settings.service.DeptService;
 import com.obitosnn.crm.settings.service.UserService;
+import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,8 @@ import java.util.Map;
 public class PermissionController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private DeptService deptService;
 
     @RequestMapping(value = {"/permissionManagement"})
     public ModelAndView permissionManagement() {
@@ -46,6 +51,39 @@ public class PermissionController {
         map.put("startDate", startDate);
         map.put("endDate", endDate);
         return  userService.getUserPageVo(map);
+    }
+
+    @GetMapping("/user/detail")
+    public ModelAndView detail(String id) {
+        ModelAndView mv = new ModelAndView();
+        User user = userService.getUserDetail(id);
+        mv.addObject("user", user);
+        mv.setViewName("forward:/pages/settings/qx/user/detail.jsp");
+        return mv;
+    }
+
+    @GetMapping("/user/getDeptNameList")
+    @ResponseBody
+    public List<String> getDeptNameList() {
+        return deptService.getDeptNameList();
+    }
+
+    @PostMapping("/user/updateUserById")
+    @ResponseBody
+    public Map<String, Object> updateUserById(HttpServletRequest request, User user) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        user.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        user.setEditTime(editTime);
+        boolean success = false;
+        try {
+            success = userService.updateUserById(user);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+        }
+        map.put("success", success);
+        return map;
     }
 
 }
