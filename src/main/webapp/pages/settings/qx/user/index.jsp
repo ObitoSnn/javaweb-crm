@@ -44,6 +44,46 @@
 				$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']").length == $("input[name='checkbox-single']:checked").length);
 			})
 
+			$("#create-loginAct").blur(function () {
+
+				var loginAct = $.trim($("#create-loginAct").val());
+				if (loginAct == "") {
+					return false;
+				}
+				$.ajax({
+					url : "settings/permission/user/checkAct",
+					data : {
+						"loginAct" : loginAct
+					},
+					type : "post",
+					dataType : "text",
+					success : function (data) {
+						// {信息}
+						if (data != "") {
+							$("#errorMsg").text(data);
+						} else {
+							$("#errorMsg").text("");
+						}
+					}
+				});
+
+			});
+
+			$("#create-confirmPwd").blur(function () {
+
+				if ($("#errorMsg").text() == "该登录账号已存在") {
+					return false;
+				}
+				var loginPwd = $.trim($("#create-loginPwd").val());
+				var confirmPwd = $.trim($("#create-confirmPwd").val());
+				if (loginPwd != confirmPwd) {
+					$("#errorMsg").text("登录密码与确认密码不一致");
+					return false;
+				}
+				$("#errorMsg").text("");
+
+			});
+
 		});
 
 		function pageList(pageNo, pageSize) {
@@ -84,20 +124,44 @@
                      */
 					var html = "";
 					$.each(data.dataList, function (i, obj) {
+						var editBy = obj.editBy;
+						if (editBy == null) {
+							editBy = "";
+						}
+						var editTime = obj.editTime;
+						if (editTime == null) {
+							editTime = "";
+						}
+						var userName = obj.name;
+						if (userName == null) {
+							userName = "";
+						}
+						var email = obj.email;
+						if (email == null) {
+							email = "";
+						}
+						var expireTime = obj.expireTime;
+						if (expireTime == null) {
+							expireTime = "";
+						}
+						var allowIps = obj.allowIps;
+						if (allowIps == null) {
+							allowIps = "";
+						}
 						html += '<tr>';
 						html += '<td><input type="checkbox" name="checkbox-single" value="' + obj.id + '"/></td>';
 						html += '<td>' + (i + 1) + '</td>';
 						html += '<td><a  href="settings/permission/user/detail?id=' + obj.id + '">' + obj.loginAct + '</a></td>';
-						html += '<td>' + obj.name + '</td>';
+						html += '<td>' + userName + '</td>';
 						html += '<td>' + obj.deptno + '</td>';
-						html += '<td>' + obj.email + '</td>';
-						html += '<td>' + obj.expireTime + '</td>';
-						html += '<td>' + obj.allowIps + '</td>';
+						html += '<td>' + email + '</td>';
+						html += '<td>' + expireTime + '</td>';
+						html += '<td>' + allowIps + '</td>';
 						html += '<td>' + obj.lockState + '</td>';
 						html += '<td>' + obj.createBy + '</td>';
 						html += '<td>' + obj.createTime + '</td>';
-						html += '<td>' + obj.editBy + '</td>';
-						html += '<td>' + obj.editTime + '</td>';
+						html += '<td>' + editBy + '</td>';
+						html += '<td>' + editTime + '</td>';
 						html += '</tr>';
 					});
 					$("#showUserTBody").html(html);
@@ -145,6 +209,92 @@
 
 		}
 
+		function openCreateUserModal() {
+
+			$("#createUserForm")[0].reset();
+			$.ajax({
+				url : "settings/permission/user/getDeptList",
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					// [{部门},...]
+					var html = "<option></option>";
+					$.each(data, function (i, obj) {
+						html += "<option value='" + obj.deptno + "'>" + obj.name + "</option>"
+					});
+					$("#create-deptno").html(html);
+				}
+			});
+			$("#createUserModal").modal("show");
+
+		}
+
+		function saveUser() {
+
+			var loginAct = $.trim($("#create-loginAct").val());
+			var name = $.trim($("#create-name").val());
+			var loginPwd = $.trim($("#create-loginPwd").val());
+			var confirmPwd = $.trim($("#create-confirmPwd").val());
+			var email = $.trim($("#create-email").val());
+			var expireTime = $.trim($("#create-expireTime").val());
+			var lockState = $.trim($("#create-lockState").val());
+			var deptno = $.trim($("#create-deptno").val());
+			var allowIps = $.trim($("#create-allowIps").val());
+			if ($("#errorMsg").text() == "该登录账号已存在") {
+				return false;
+			}
+			if (loginAct == "") {
+				$("#errorMsg").text("请输入登录账号");
+				return false;
+			}
+			if (loginPwd == "") {
+				$("#errorMsg").text("请输入登录密码");
+				return false;
+			}
+			if (confirmPwd == "") {
+				$("#errorMsg").text("请输入确认密码");
+				return false;
+			}
+			if (loginPwd != confirmPwd) {
+				$("#errorMsg").text("登录密码与确认密码不一致");
+				return false;
+			}
+			if (lockState == "") {
+				$("#errorMsg").text("请选择锁定状态");
+				return false;
+			}
+			if (deptno == "") {
+				$("#errorMsg").text("请选择部门");
+				return false;
+			}
+			$("#errorMsg").text("");
+			$.ajax({
+				url : "settings/permission/user/saveUser",
+				data : {
+					"loginAct" : loginAct,
+					"name" : name,
+					"loginPwd" : loginPwd,
+					"email" : email,
+					"expireTime" : expireTime,
+					"lockState" : lockState,
+					"deptno" : deptno,
+					"allowIps" : allowIps
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					if (data.success) {
+						$("#createUserModal").modal("hide");
+						//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+						pageList(1,$("#userPage").bs_pagination('getOption', 'rowsPerPage'));
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+
+		}
+
 	</script>
 </head>
 <body>
@@ -166,16 +316,16 @@
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form id="createUserForm" class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-loginActNo" class="col-sm-2 control-label">登录帐号<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-loginAct" class="col-sm-2 control-label">登录帐号<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-loginActNo">
+								<input type="text" class="form-control" id="create-loginAct">
 							</div>
-							<label for="create-username" class="col-sm-2 control-label">用户姓名</label>
+							<label for="create-name" class="col-sm-2 control-label">用户姓名</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-username">
+								<input type="text" class="form-control" id="create-name">
 							</div>
 						</div>
 						<div class="form-group">
@@ -195,24 +345,21 @@
 							</div>
 							<label for="create-expireTime" class="col-sm-2 control-label">失效时间</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-expireTime">
+								<input type="text" class="form-control time" id="create-expireTime">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="create-lockStatus" class="col-sm-2 control-label">锁定状态</label>
+							<label for="create-lockState" class="col-sm-2 control-label">锁定状态<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-lockStatus">
+								<select class="form-control" id="create-lockState">
 								  <option></option>
-								  <option>启用</option>
-								  <option>锁定</option>
+								  <option value="1">启用</option>
+								  <option value="0">锁定</option>
 								</select>
 							</div>
-							<label for="create-org" class="col-sm-2 control-label">部门<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-deptno" class="col-sm-2 control-label">部门<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="create-dept">
-                                    <option></option>
-                                    <option>市场部</option>
-                                    <option>策划部</option>
+                                <select class="form-control" id="create-deptno">
                                 </select>
                             </div>
 						</div>
@@ -220,13 +367,14 @@
 							<label for="create-allowIps" class="col-sm-2 control-label">允许访问的IP</label>
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control" id="create-allowIps" style="width: 280%" placeholder="多个用逗号隔开">
+								<span id="errorMsg" style="color: red;"></span>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" onclick="saveUser()">保存</button>
 				</div>
 			</div>
 		</div>
@@ -293,7 +441,7 @@
 	
 	<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;left: 30px; width: 110%; top: 20px;">
 		<div class="btn-group" style="position: relative; top: 18%;">
-		  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createUserModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+`		  <button type="button" class="btn btn-primary" onclick="openCreateUserModal()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 		  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 		

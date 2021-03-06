@@ -31,4 +31,6 @@ public interface DeptDao {
 
     String selectDeptnoByName(String name);
 
+    List<Dept> selectDeptList();
+
 }
