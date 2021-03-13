@@ -1,8 +1,14 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.settings.domain.User;
+import com.obitosnn.crm.settings.service.UserService;
+import com.obitosnn.crm.util.DateTimeUtil;
+import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.service.ContactsService;
+import com.obitosnn.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +28,10 @@ import java.util.Map;
 public class ContactsController {
     @Autowired
     private ContactsService contactsService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CustomerService customerService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -41,6 +52,38 @@ public class ContactsController {
         String birth = request.getParameter("birth");
         map.put("birth", birth);
         return contactsService.getContactsPageVo(map);
+    }
+
+    @RequestMapping(value = {"/getUserList"})
+    @ResponseBody
+    public List<User> getUserList() {
+        return userService.getUserList();
+    }
+
+    @RequestMapping(value = {"/getCustomerName"})
+    @ResponseBody
+    public List<String> getCustomerName(String name) {
+        return customerService.getCustomerName(name);
+    }
+
+    @RequestMapping(value = {"/saveContacts"})
+    @ResponseBody
+    public Map<String, Object> saveContacts(HttpServletRequest request, Contacts contacts, String customerName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        contacts.setId(UUIDUtil.getUUID());
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        contacts.setCreateBy(createBy);
+        String createTime = DateTimeUtil.getSysTime();
+        contacts.setCreateTime(createTime);
+        boolean success = false;
+        try {
+            success = contactsService.saveContacts(contacts, customerName);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
     }
 
 }

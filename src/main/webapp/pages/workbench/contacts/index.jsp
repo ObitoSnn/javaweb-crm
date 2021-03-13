@@ -15,12 +15,16 @@
 <link rel="stylesheet" type="text/css" href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="static/jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
 
-		$(".time").datetimepicker({
+		$(".timeBottom").datetimepicker({
 			minView: "month",
 			language:  'zh-CN',
 			format: 'yyyy-mm-dd', //显示格式
@@ -28,6 +32,16 @@
 			todayBtn: true,
 			clearBtn: true,
 			pickerPosition: "bottom-left"
+		});
+
+		$(".timeTop").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd', //显示格式
+			autoclose: true,
+			todayBtn: true,
+			clearBtn: true,
+			pickerPosition: "top-left"
 		});
 
 		//定制字段
@@ -50,7 +64,27 @@
 
 		//页面加载完毕后调用分页方法
 		pageList(1, 2);
-		
+
+		//自动补齐
+		$("#create-customerName").typeahead({
+			source: function (query, process) {
+				$.get(
+						"workbench/contacts/getCustomerName",
+						{ "name" : query },
+						function (data) {
+							//alert(data);
+							/*
+								data
+									[{"客户名1",...}]
+							 */
+							process(data);
+						},
+						"json"
+				);
+			},
+			delay: 1500
+		});
+
 	});
 
 	function searchContacts() {
@@ -150,7 +184,91 @@
 		});
 
 	}
-	
+
+	//打开添加联系人模态窗口
+	function addContacts() {
+
+		$.ajax({
+			url : "workbench/contacts/getUserList",
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				// [{用户},...]
+				var html = "";
+				$.each(data, function (i, obj) {
+					if ("root" == obj.loginAct) {
+						return true;
+					}
+					html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
+				});
+				$("#create-owner").html(html);
+
+				$("#create-owner").val("${sessionScope.user.id}");
+			}
+		});
+
+		$("#createContactsModal").modal("show");
+
+	}
+
+	//保存联系人
+	function saveContacts() {
+
+		var owner = $.trim($("#create-owner").val());
+		var source = $.trim($("#create-source").val());
+		var fullname = $.trim($("#create-fullname").val());
+		var appellation = $.trim($("#create-appellation").val());
+		var job = $.trim($("#create-job").val());
+		var mphone = $.trim($("#create-mphone").val());
+		var email = $.trim($("#create-email").val());
+		var birth = $.trim($("#create-birth").val());
+		var customerName = $.trim($("#create-customerName").val());
+		var description = $.trim($("#create-description").val());
+		var contactSummary = $.trim($("#create-contactSummary").val());
+		var nextContactTime = $.trim($("#create-nextContactTime").val());
+		var address = $.trim($("#create-address").val());
+
+		if (owner == "" || fullname == "") {
+			alert("请填写2项相关信息");
+		}  else if (customerName == "") {
+			alert("请填写客户名称");
+		} else {
+			$.ajax({
+				url : "workbench/contacts/saveContacts",
+				data : {
+					"owner" : owner,
+					"source" : source,
+					"fullname" : fullname,
+					"appellation" : appellation,
+					"job" : job,
+					"mphone" : mphone,
+					"email" : email,
+					"birth" : birth,
+					"customerName" : customerName,
+					"description" : description,
+					"contactSummary" : contactSummary,
+					"nextContactTime" : nextContactTime,
+					"address" : address
+				},
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					// {"success":true/false,"errorMsg",错误信息}
+					if (data.success) {
+						//清空表单内容
+						$("#createContactsForm")[0].reset();
+						$("#createContactsModal").modal("hide");
+						//保存数据后，刷新页面数据，回到第一页，每页显示数据数不变
+						pageList(1,$("#contactsPage").bs_pagination('getOption', 'rowsPerPage'));
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+		}
+
+	}
+
 </script>
 </head>
 <body>
@@ -171,53 +289,38 @@
 					<h4 class="modal-title" id="myModalLabelx">创建联系人</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form id="createContactsForm" class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-contactsOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-contactsOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="create-owner">
+
 								</select>
 							</div>
-							<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
+							<label for="create-source" class="col-sm-2 control-label">来源</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueSource">
+								<select class="form-control" id="create-source">
 								  <option></option>
-								  <option>广告</option>
-								  <option>推销电话</option>
-								  <option>员工介绍</option>
-								  <option>外部介绍</option>
-								  <option>在线商场</option>
-								  <option>合作伙伴</option>
-								  <option>公开媒介</option>
-								  <option>销售邮件</option>
-								  <option>合作伙伴研讨会</option>
-								  <option>内部研讨会</option>
-								  <option>交易会</option>
-								  <option>web下载</option>
-								  <option>web调研</option>
-								  <option>聊天</option>
+								  <c:forEach items="${applicationScope.sourceList}" var="s">
+									  <option value="${s.value}">${s.text}</option>
+								  </c:forEach>
 								</select>
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="create-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-fullname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-surname">
+								<input type="text" class="form-control" id="create-fullname">
 							</div>
-							<label for="create-call" class="col-sm-2 control-label">称呼</label>
+							<label for="create-appellation" class="col-sm-2 control-label">称呼</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-call">
+								<select class="form-control" id="create-appellation">
 								  <option></option>
-								  <option>先生</option>
-								  <option>夫人</option>
-								  <option>女士</option>
-								  <option>博士</option>
-								  <option>教授</option>
+								  <c:forEach items="${applicationScope.appellationList}" var="a">
+									  <option value="${a.value}">${a.text}</option>
+								  </c:forEach>
 								</select>
 							</div>
 							
@@ -241,7 +344,7 @@
 							</div>
 							<label for="create-birth" class="col-sm-2 control-label">生日</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-birth">
+								<input type="text" class="form-control timeBottom" id="create-birth">
 							</div>
 						</div>
 						
@@ -253,9 +356,9 @@
 						</div>
 						
 						<div class="form-group" style="position: relative;">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
@@ -263,15 +366,15 @@
 						
 						<div style="position: relative;top: 15px;">
 							<div class="form-group">
-								<label for="create-contactSummary1" class="col-sm-2 control-label">联系纪要</label>
+								<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 								<div class="col-sm-10" style="width: 81%;">
-									<textarea class="form-control" rows="3" id="create-contactSummary1"></textarea>
+									<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="create-nextContactTime1" class="col-sm-2 control-label">下次联系时间</label>
+								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime1">
+									<input type="text" class="form-control timeTop" id="create-nextContactTime">
 								</div>
 							</div>
 						</div>
@@ -280,9 +383,9 @@
 
                         <div style="position: relative;top: 20px;">
                             <div class="form-group">
-                                <label for="edit-address1" class="col-sm-2 control-label">详细地址</label>
+                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address1">北京大兴区大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="create-address"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +394,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" onclick="saveContacts()">保存</button>
 				</div>
 			</div>
 		</div>
@@ -500,7 +603,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createContactsModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" onclick="addContacts()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editContactsModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
