@@ -1,6 +1,7 @@
 package com.obitosnn.crm.workbench.web.controller;
 
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
 import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
@@ -12,6 +13,7 @@ import com.obitosnn.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,6 +81,36 @@ public class ContactsController {
         try {
             success = contactsService.saveContacts(contacts, customerName);
         } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = "/getUserListAndContactsById")
+    @ResponseBody
+    public Map<String, Object> getUserListAndContactsById(@RequestParam("contactsId") String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> uList = userService.getUserList();
+        Contacts contacts = contactsService.getContactsById(id);
+        map.put("uList", uList);
+        map.put("contacts", contacts);
+        return map;
+    }
+
+    @RequestMapping("/updateContacts")
+    @ResponseBody
+    public Map<String, Object> updateContacts(HttpServletRequest request, Contacts contacts) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        contacts.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        contacts.setEditTime(editTime);
+        boolean success = false;
+        try {
+            success = contactsService.updateContacts(contacts);
+        } catch (FailToUpdateException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
