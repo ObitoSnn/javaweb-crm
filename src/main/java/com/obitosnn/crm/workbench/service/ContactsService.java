@@ -2,6 +2,7 @@ package com.obitosnn.crm.workbench.service;
 
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Contacts;
 
@@ -23,5 +24,9 @@ public interface ContactsService {
     List<Contacts> getContactsListByCustomerId(String customerId);
 
     PageVo<Contacts> getContactsPageVo(Map<String, Object> map);
+
+    Contacts getContactsById(String id);
+
+    boolean updateContacts(Contacts contacts) throws FailToUpdateException;
 
 }

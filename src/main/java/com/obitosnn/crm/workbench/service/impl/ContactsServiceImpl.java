@@ -3,6 +3,7 @@ package com.obitosnn.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
+import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
@@ -82,6 +83,34 @@ public class ContactsServiceImpl implements ContactsService {
         pageVo.setTotal(total);
         pageVo.setDataList(aList);
         return pageVo;
+    }
+
+    @Override
+    public Contacts getContactsById(String id) {
+        return contactsDao.selectContactsById(id);
+    }
+
+    @Override
+    public boolean updateContacts(Contacts contacts) throws FailToUpdateException {
+        Customer cust = customerDao.selectByName(contacts.getCustomerId());
+        if (cust == null) {
+            cust = new Customer();
+            cust.setId(UUIDUtil.getUUID());
+            cust.setOwner(contacts.getOwner());
+            cust.setName(contacts.getCustomerId());
+            cust.setCreateBy(contacts.getEditBy());
+            cust.setCreateTime(DateTimeUtil.getSysTime());
+            Integer custCount = customerDao.insert(cust);
+            if (custCount.compareTo(1) != 0) {
+                throw new FailToUpdateException("更新失败");
+            }
+        }
+        contacts.setCustomerId(cust.getId());
+        Integer count = contactsDao.updateContacts(contacts);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("更新失败");
+        }
+        return true;
     }
 
 }

@@ -19,4 +19,8 @@ public interface ContactsDao {
 
     Long selectContactsTotalForPageVo(Map<String, Object> map);
 
+    Contacts selectContactsById(String id);
+
+    Integer updateContacts(Contacts contacts);
+
 }
