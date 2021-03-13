@@ -3,6 +3,7 @@ package com.obitosnn.crm.workbench.dao;
 import com.obitosnn.crm.workbench.domain.Contacts;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ContactsDao {
 
@@ -13,5 +14,9 @@ public interface ContactsDao {
     Integer deleteContactsByIds(String[] ids);
 
     List<Contacts> selectContactsListByCustomerId(String customerId);
+
+    List<Contacts> selectContactsListForPageVo(Map<String, Object> map);
+
+    Long selectContactsTotalForPageVo(Map<String, Object> map);
 
 }

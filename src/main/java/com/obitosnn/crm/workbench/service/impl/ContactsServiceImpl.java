@@ -1,9 +1,11 @@
 package com.obitosnn.crm.workbench.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
+import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ContactsDao;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.domain.Contacts;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -66,6 +69,19 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     public List<Contacts> getContactsListByCustomerId(String customerId) {
         return contactsDao.selectContactsListByCustomerId(customerId);
+    }
+
+    @Override
+    public PageVo<Contacts> getContactsPageVo(Map<String, Object> map) {
+        int pageNo = Integer.parseInt((String) map.get("pageNo"));
+        int pageSize =  Integer.parseInt((String) map.get("pageSize"));
+        PageHelper.startPage(pageNo, pageSize);
+        List<Contacts> aList = contactsDao.selectContactsListForPageVo(map);
+        PageVo<Contacts> pageVo = new PageVo<>();
+        Long total = contactsDao.selectContactsTotalForPageVo(map);
+        pageVo.setTotal(total);
+        pageVo.setDataList(aList);
+        return pageVo;
     }
 
 }
