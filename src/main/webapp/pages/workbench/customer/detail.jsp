@@ -457,6 +457,9 @@
 				// [{用户},...]
 				var html = "";
 				$.each(data, function (i, obj) {
+					if ("root" == obj.loginAct) {
+						return true;
+					}
 					html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
 				});
 				$("#create-owner").html(html);
