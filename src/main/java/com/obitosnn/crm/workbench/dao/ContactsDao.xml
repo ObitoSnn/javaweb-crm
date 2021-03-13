@@ -5,6 +5,74 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsDao">
 
+    <select id="selectContactsTotalForPageVo" resultType="long">
+
+        select
+        count(*)
+        from
+        (
+        select
+        con.`id`
+        from `tbl_contacts` con
+        inner join `tbl_user` u
+        on con.`owner`=u.`id`
+        left outer join `tbl_customer` cust
+        on con.`customerId`=cust.`id`
+        <where>
+            <if test="ownerName != null and ownerName != ''">
+                u.`name` like '%' #{ownerName} '%'
+            </if>
+            <if test="fullname != null and fullname != ''">
+                and con.`fullname` like '%' #{fullname} '%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and cust.`name` like '%' #{customerName} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and con.`source`=#{source}
+            </if>
+            <if test="birth != null and birth != ''">
+                and con.`birth` like '%' #{birth} '%'
+            </if>
+        </where>
+        ) `tbl_temp`
+
+    </select>
+
+    <select id="selectContactsListForPageVo" resultType="Contacts">
+
+        select
+        con.`id`,
+        con.`fullname`,
+        con.`source`,
+        cust.`name` as `customerId`,
+        u.`name` as `owner`,
+        con.`birth`
+        from `tbl_contacts` con
+        inner join `tbl_user` u
+        on con.`owner`=u.`id`
+        left outer join `tbl_customer` cust
+        on con.`customerId`=cust.`id`
+        <where>
+            <if test="ownerName != null and ownerName != ''">
+                u.`name` like '%' #{ownerName} '%'
+            </if>
+            <if test="fullname != null and fullname != ''">
+                and con.`fullname` like '%' #{fullname} '%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and cust.`name` like '%' #{customerName} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and con.`source`=#{source}
+            </if>
+            <if test="birth != null and birth != ''">
+                and con.`birth` like '%' #{birth} '%'
+            </if>
+        </where> order by con.`createTime` desc
+
+    </select>
+
     <delete id="deleteContactsByIds">
 
         delete from `tbl_contacts` where `id` in

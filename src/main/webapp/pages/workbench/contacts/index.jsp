@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -8,24 +9,157 @@
 <link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<link href="static/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
+<link rel="stylesheet" type="text/css" href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
-		
+
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd', //显示格式
+			autoclose: true,
+			todayBtn: true,
+			clearBtn: true,
+			pickerPosition: "bottom-left"
+		});
+
 		//定制字段
 		$("#definedColumns > li").click(function(e) {
 			//防止下拉菜单消失
 	        e.stopPropagation();
 	    });
+
+		//给控制总的复选框绑定单击事件
+		$("input[name='checkbox-manager']").click(function () {
+
+			$("input[name='checkbox-single']").prop("checked", this.checked);
+
+		});
+
+		//给单个的复选框绑定单击事件
+		$("#showContactsTBody").on("click", $("input[name='checkbox-single']"), function () {
+			$("input[name='checkbox-manager']").prop("checked", $("input[name='checkbox-single']:checked").length == $("input[name='checkbox-single']").length);
+		});
+
+		//页面加载完毕后调用分页方法
+		pageList(1, 2);
 		
 	});
+
+	function searchContacts() {
+
+		$("#hidden-owner").val($.trim($("#input-owner").val()));
+		$("#hidden-fullname").val($.trim($("#input-fullname").val()));
+		$("#hidden-customerId").val($.trim($("#input-customerId").val()));
+		$("#hidden-source").val($.trim($("#source").val()));
+		$("#hidden-birth").val($.trim($("#input-birth").val()));
+
+		//查询操作后，刷新页面数据，回到第一页，每页显示数据数不变
+		pageList(1
+				,$("#contactsPage").bs_pagination('getOption', 'rowsPerPage'));
+
+	}
+
+	function pageList(pageNo, pageSize) {
+
+		//刷新后台数据之前取消总复选框的选中状态
+		$("input[name='checkbox-manager']").prop("checked", false);
+
+		//分页之前从隐藏域中取出文本框信息
+		$("#input-owner").val($.trim($("#hidden-owner").val()));
+		$("#input-fullname").val($.trim($("#hidden-fullname").val()));
+		$("#input-customerId").val($.trim($("#hidden-customerId").val()));
+		$("#source").val($.trim($("#hidden-source").val()));
+		$("#input-birth").val($.trim($("#hidden-birth").val()));
+
+		var owner = $("#input-owner").val();
+		var fullname = $("#input-fullname").val();
+		var customerId = $("#input-customerId").val();
+		var source = $("#source").val();
+		var birth = $("#input-birth").val();
+
+				$.ajax({
+			url : "workbench/contacts/pageList",
+			data : {
+				"pageNo" : pageNo,
+				"pageSize" : pageSize,
+				"owner" : owner,
+				"fullname" : fullname,
+				"customerId" : customerId,
+				"source" : source,
+				"birth" : birth
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+                    data
+                        {"total":总记录数,"dataList":[{客户},{}...]}
+                 */
+				var html = "";
+				$.each(data.dataList, function (i, obj) {
+					var birth = obj.birth;
+					if (birth == null) {
+						birth = "";
+					}
+					var customerId = obj.customerId;
+					if (customerId == null) {
+						customerId = "";
+					}
+					html += '<tr>';
+					html += '<td><input name="checkbox-single" type="checkbox" /></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'pages/workbench/contacts/detail.jsp\';">' + obj.fullname + '</a></td>';
+					html += '<td>' + customerId + '</td>';
+					html += '<td>' + obj.owner + '</td>';
+					html += '<td>'+ obj.source + '</td>';
+					html += '<td>' + birth + '</td>';
+					html += '</tr>';
+				});
+				$("#showContactsTBody").html(html);
+
+				var totalPages = data.total % pageSize == 0 ? data.total / pageSize : Math.ceil(data.total / pageSize);
+
+				//数据处理完毕后，结合分页插件展现每页数据
+				$("#contactsPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//该回调函数是在点击分页组件的时候触发的
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		});
+
+	}
 	
 </script>
 </head>
 <body>
+	<input type="hidden" id="hidden-owner"/>
+	<input type="hidden" id="hidden-fullname"/>
+	<input type="hidden" id="hidden-customerId"/>
+	<input type="hidden" id="hidden-source"/>
+	<input type="hidden" id="hidden-birth"/>
 
-	
 	<!-- 创建联系人的模态窗口 -->
 	<div class="modal fade" id="createContactsModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 85%;">
@@ -321,21 +455,21 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-owner">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">姓名</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-fullname">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">客户名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="input-customerId">
 				    </div>
 				  </div>
 				  
@@ -344,22 +478,11 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">来源</div>
-				      <select class="form-control" id="edit-clueSource">
+				      <select class="form-control" id="source">
 						  <option></option>
-						  <option>广告</option>
-						  <option>推销电话</option>
-						  <option>员工介绍</option>
-						  <option>外部介绍</option>
-						  <option>在线商场</option>
-						  <option>合作伙伴</option>
-						  <option>公开媒介</option>
-						  <option>销售邮件</option>
-						  <option>合作伙伴研讨会</option>
-						  <option>内部研讨会</option>
-						  <option>交易会</option>
-						  <option>web下载</option>
-						  <option>web调研</option>
-						  <option>聊天</option>
+						  <c:forEach items="${applicationScope.sourceList}" var="s">
+							  <option value="${s.value}">${s.text}</option>
+						  </c:forEach>
 						</select>
 				    </div>
 				  </div>
@@ -367,11 +490,11 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">生日</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control time" type="text" id="input-birth">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" onclick="searchContacts()" class="btn btn-default">查询</button>
 				  
 				</form>
 			</div>
@@ -388,7 +511,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input name="checkbox-manager" type="checkbox" /></td>
 							<td>姓名</td>
 							<td>客户名称</td>
 							<td>所有者</td>
@@ -396,60 +519,13 @@
 							<td>生日</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/contacts/detail.jsp';">李四</a></td>
-							<td>动力节点</td>
-							<td>zhangsan</td>
-							<td>广告</td>
-							<td>2000-10-10</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='pages/workbench/contacts/detail.jsp';">李四</a></td>
-                            <td>动力节点</td>
-                            <td>zhangsan</td>
-                            <td>广告</td>
-                            <td>2000-10-10</td>
-                        </tr>
+					<tbody id="showContactsTBody">
 					</tbody>
 				</table>
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 10px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+				<div id="contactsPage"></div>
 			</div>
 			
 		</div>
