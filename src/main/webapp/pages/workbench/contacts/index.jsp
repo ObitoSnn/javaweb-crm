@@ -377,6 +377,40 @@
 
 	}
 
+	//删除联系人，可删除多条
+	function deleteContacts() {
+
+		var $checkbox = $("input[name='checkbox-single']:checked");
+		if ($checkbox.length == 0) {
+			alert("请选择要删除的联系人信息");
+		} else if (confirm("你确定要删除所选联系人吗？")) {
+			var param = "";
+			for (var i = 0; i < $checkbox.length; i++) {
+				var id = $($checkbox[i]).val();
+				param += "id=" + id;
+				if (i < $checkbox.length - 1) {
+					param += "&";
+				}
+			}
+			$.ajax({
+				url : "workbench/contacts/deleteContacts",
+				data : param,
+				type : "post",
+				dataType : "json",
+				success : function (data) {
+					// {"success":true/false,"errorMsg":错误信息}
+					if (data.success) {
+						//删除操作后，刷新页面数据，回到第一页，每页显示数据数不变
+						pageList(1,$("#contactsPage").bs_pagination('getOption', 'rowsPerPage'));
+					} else {
+						alert(data.errorMsg);
+					}
+				}
+			});
+		}
+
+	}
+
 </script>
 </head>
 <body>
@@ -697,7 +731,7 @@
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" onclick="addContacts()"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="openEditContactsModal()"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" onclick="deleteContacts()"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
