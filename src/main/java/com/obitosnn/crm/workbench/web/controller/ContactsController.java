@@ -1,5 +1,6 @@
 package com.obitosnn.crm.workbench.web.controller;
 
+import com.obitosnn.crm.exception.FailToDeleteException;
 import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.settings.domain.User;
@@ -111,6 +112,21 @@ public class ContactsController {
         try {
             success = contactsService.updateContacts(contacts);
         } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping("/deleteContacts")
+    @ResponseBody
+    public Map<String, Object> deleteContacts(String[] id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = contactsService.deleteContactsByIds(id);
+        } catch (FailToDeleteException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
