@@ -5,6 +5,58 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsRemarkDao">
 
+    <update id="updateContactsRemark">
+
+        update `tbl_contacts_remark` set
+        `noteContent`=#{noteContent},
+        `editBy`=#{editBy},
+        `editTime`=#{editTime},
+        `editFlag`=#{editFlag} where `id`=#{id}
+
+    </update>
+
+    <delete id="deleteContactsRemark">
+
+        delete from `tbl_contacts_remark` where `id`=#{id}
+
+    </delete>
+
+    <insert id="insertContactsRemark">
+
+        insert into `tbl_contacts_remark`
+        (
+        `id`,
+        `noteContent`,
+        `createBy`,
+        `createTime`,
+        `editFlag`,
+        `contactsId`
+        )
+        values
+        (
+        #{id},
+        #{noteContent},
+        #{createBy},
+        #{createTime},
+        #{editFlag},
+        #{contactsId}
+        )
+
+    </insert>
+
+    <select id="selectContactsRemarkList" resultType="ContactsRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createBy`,
+        `createTime`,
+        `editBy`,
+        `editTime`,
+        `editFlag`
+        from `tbl_contacts_remark` where `contactsId`=#{contactsId} order by `createTime` desc
+
+    </select>
 
     <insert id="insert">
 

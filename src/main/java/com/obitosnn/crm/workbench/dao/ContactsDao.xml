@@ -5,6 +5,36 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsDao">
 
+    <select id="selectContactsDetail" resultType="Contacts">
+
+        select
+        con.`id`,
+        u.`name` as `owner`,
+        con.`source`,
+        cust.`name` as `customerId`,
+        con.`fullname`,
+        con.`appellation`,
+        con.`email`,
+        con.`mphone`,
+        con.`job`,
+        con.`birth`,
+        con.`createBy`,
+        con.`createTime`,
+        con.`editBy`,
+        con.`editTime`,
+        con.`description`,
+        con.`contactSummary`,
+        con.`nextContactTime`,
+        con.`address`
+        from `tbl_contacts` con
+        inner join `tbl_customer` cust
+        on con.`customerId`=cust.`id`
+        inner join `tbl_user` u
+        on u.`id`=con.`owner`
+        where con.`id`=#{id}
+
+    </select>
+
     <update id="updateContacts">
 
         update `tbl_contacts` set

@@ -8,8 +8,10 @@ import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.dao.ContactsDao;
+import com.obitosnn.crm.workbench.dao.ContactsRemarkDao;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.domain.Contacts;
+import com.obitosnn.crm.workbench.domain.ContactsRemark;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class ContactsServiceImpl implements ContactsService {
     private ContactsDao contactsDao;
     @Autowired
     private CustomerDao customerDao;
+    @Autowired
+    private ContactsRemarkDao contactsRemarkDao;
 
     @Override
     public List<Contacts> getContactByName(String contactName) {
@@ -107,6 +111,43 @@ public class ContactsServiceImpl implements ContactsService {
         }
         contacts.setCustomerId(cust.getId());
         Integer count = contactsDao.updateContacts(contacts);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("更新失败");
+        }
+        return true;
+    }
+
+    @Override
+    public Contacts getContactsDetail(String id) {
+        return contactsDao.selectContactsDetail(id);
+    }
+
+    @Override
+    public List<ContactsRemark> getContactsRemarkList(String contactsId) {
+        return contactsRemarkDao.selectContactsRemarkList(contactsId);
+    }
+
+    @Override
+    public boolean saveContactsRemark(ContactsRemark contactsRemark) throws FailToSaveException {
+        Integer count = contactsRemarkDao.insertContactsRemark(contactsRemark);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteContactsRemark(String id) throws FailToDeleteException {
+        Integer count = contactsRemarkDao.deleteContactsRemark(id);
+        if (count.compareTo(1) != 0) {
+            throw new FailToDeleteException("删除失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateContactsRemark(ContactsRemark contactsRemark) throws FailToUpdateException {
+        Integer count = contactsRemarkDao.updateContactsRemark(contactsRemark);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("更新失败");
         }

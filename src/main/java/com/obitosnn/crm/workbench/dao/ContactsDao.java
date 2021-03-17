@@ -23,4 +23,6 @@ public interface ContactsDao {
 
     Integer updateContacts(Contacts contacts);
 
+    Contacts selectContactsDetail(String id);
+
 }
