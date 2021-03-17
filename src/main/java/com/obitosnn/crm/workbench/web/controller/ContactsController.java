@@ -9,13 +9,16 @@ import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Contacts;
+import com.obitosnn.crm.workbench.domain.ContactsRemark;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -131,6 +134,79 @@ public class ContactsController {
             throw new Exception(e.getMessage());
         }
         map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping("/detail")
+    public ModelAndView detail(String id) {
+        ModelAndView mv = new ModelAndView();
+        Contacts contacts = contactsService.getContactsDetail(id);
+        mv.addObject("contacts", contacts);
+        mv.setViewName("forward:/pages/workbench/contacts/detail.jsp");
+        return mv;
+    }
+
+    @RequestMapping("/getContactsRemarkList")
+    @ResponseBody
+    public List<ContactsRemark> getContactsRemarkList(@RequestParam("id") String contactsId) {
+        return contactsService.getContactsRemarkList(contactsId);
+    }
+
+    @RequestMapping("/saveContactsRemark")
+    @ResponseBody
+    public Map<String, Object> saveContactsRemark(HttpServletRequest request, ContactsRemark contactsRemark) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        contactsRemark.setId(UUIDUtil.getUUID());
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        contactsRemark.setCreateBy(createBy);
+        String createTime = DateTimeUtil.getSysTime();
+        contactsRemark.setCreateTime(createTime);
+        contactsRemark.setEditFlag("0");
+        boolean success = false;
+        try {
+            success = contactsService.saveContactsRemark(contactsRemark);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        map.put("contactsRemark", contactsRemark);
+        return map;
+    }
+
+    @RequestMapping("/deleteContactsRemark")
+    @ResponseBody
+    public Map<String, Object> deleteContactsRemark(String id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = contactsService.deleteContactsRemark(id);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping("updateContactsRemark")
+    @ResponseBody
+    public Map<String, Object> updateContactsRemark(HttpServletRequest request, ContactsRemark contactsRemark) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        contactsRemark.setEditBy(editBy);
+        String editTime = DateTimeUtil.getSysTime();
+        contactsRemark.setEditTime(editTime);
+        contactsRemark.setEditFlag("1");
+        boolean success = false;
+        try {
+            success = contactsService.updateContactsRemark(contactsRemark);
+        } catch (FailToUpdateException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        map.put("contactsRemark", contactsRemark);
         return map;
     }
 

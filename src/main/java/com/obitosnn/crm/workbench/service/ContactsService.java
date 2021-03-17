@@ -5,6 +5,7 @@ import com.obitosnn.crm.exception.FailToSaveException;
 import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Contacts;
+import com.obitosnn.crm.workbench.domain.ContactsRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -28,5 +29,15 @@ public interface ContactsService {
     Contacts getContactsById(String id);
 
     boolean updateContacts(Contacts contacts) throws FailToUpdateException;
+
+    Contacts getContactsDetail(String id);
+
+    List<ContactsRemark> getContactsRemarkList(String contactsId);
+
+    boolean saveContactsRemark(ContactsRemark contactsRemark) throws FailToSaveException;
+
+    boolean deleteContactsRemark(String id) throws FailToDeleteException;
+
+    boolean updateContactsRemark(ContactsRemark contactsRemark) throws FailToUpdateException;
 
 }
