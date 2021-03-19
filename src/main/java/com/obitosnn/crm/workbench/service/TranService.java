@@ -50,4 +50,6 @@ public interface TranService {
 
     List<Tran> getTranListByCustomerId(String customerId);
 
+    List<Tran> getTranListByContactsId(String contactsId);
+
 }
