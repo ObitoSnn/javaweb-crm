@@ -60,6 +60,7 @@
     <select id="selectContactsById" resultType="Contacts">
 
         select
+        con.`id`,
         con.`owner`,
         con.`source`,
         cust.`name` as `customerId`,

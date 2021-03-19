@@ -1,10 +1,28 @@
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+	Map<String, String> pMap = (Map<String, String>) application.getAttribute("possibility");
+	Set<String> keySet = pMap.keySet();
+%>
 <!DOCTYPE html>
 <html>
 <head>
 	<%@ include file="../../common/base_css_jquery.jsp"%>
 <meta charset="UTF-8">
 <script type="text/javascript">
+
+	//阶段和可能性对应关系的json串
+	var possibilityJson = {
+		<%
+            for (String key : keySet) {
+                String value = pMap.get(key);
+        %>
+		"<%=key%>" : <%=value%>,
+		<%
+            }
+        %>
+	};
 
 	//默认情况下取消和保存按钮是隐藏的
 	var cancelAndSaveBtnDefault = true;
@@ -53,6 +71,16 @@
 		$("#remarkBody").on("mouseout",".remarkDiv",function(){
 			$(this).children("div").children("div").hide();
 		});
+
+		window.onpageshow = function (event) {
+			if (event.persisted || window.performance &&
+					window.performance.navigation.type == 2) {
+				window.location.reload();
+			}
+		}
+
+		//页面加载完毕，显示交易列表
+		getTranList();
 
 	});
 
@@ -181,10 +209,107 @@
 
 	}
 
+	function getTranList() {
+
+		$.ajax({
+			url : "workbench/contacts/getTranListByContactsId",
+			data : {
+				"contactsId" : "${requestScope.contacts.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				// [{交易},...]
+				var html = "";
+				$.each(data, function (i, obj) {
+					var type = obj.type;
+					if (type == null || type == "") {
+						type = "";
+					}
+					var stage = obj.stage;
+					var possibility = possibilityJson[stage];
+					if (stage == null || stage == "") {
+						possibility = "";
+					}
+					html += '<tr>';
+					html += '<td><a href="workbench/transaction/detail?id=' + obj.id + '" style="text-decoration: none;">' + obj.name + '</a></td>';
+					html += '<td>' + obj.money + '</td>';
+					html += '<td>' + stage + '</td>';
+					html += '<td>' + possibility + '</td>';
+					html += '<td>' + obj.expectedDate + '</td>';
+					html += '<td>' + type + '</td>';
+					html += '<td><a href="javascript:void(0);" onclick="openRemoveTransactionModal(\'' + obj.id + '\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>';
+					html += '</tr>';
+				});
+				$("#showTranTBody").html(html);
+			}
+		});
+
+	}
+
+	function openRemoveTransactionModal(id) {
+
+		//给隐藏域赋id值
+		$("#tranId").val(id);
+		$("#removeTransactionModal").modal("show");
+
+	}
+
+	function addTran() {
+
+		window.location.href = "workbench/transaction/add?intent=getContactsFullname&contactsId=${requestScope.contacts.id}";
+
+	}
+
+	function deleteTran() {
+
+		var id = $("#tranId").val();
+		$.ajax({
+			url : "workbench/contacts/deleteTran",
+			data : {
+				"id" : id
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+				// {"success":true/false,"errorMsg":错误信息}
+				if (data.success) {
+					getTranList();
+					$("#removeTransactionModal").modal("hide");
+				} else {
+					alert(data.errorMsg);
+				}
+			}
+		});
+
+	}
+	
 </script>
 
 </head>
 <body>
+
+	<!-- 删除交易的模态窗口 -->
+	<div class="modal fade" id="removeTransactionModal" role="dialog">
+		<input type="hidden" id="tranId">
+		<div class="modal-dialog" role="document" style="width: 30%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title">删除交易</h4>
+				</div>
+				<div class="modal-body">
+					<p>您确定要删除该交易吗？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button onclick="deleteTran()" type="button" class="btn btn-danger">删除</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- 修改联系人备注的模态窗口 -->
 	<div class="modal fade" id="editRemarkModal" role="dialog">
@@ -558,22 +683,13 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="../transaction/detail.html" style="text-decoration: none;">动力节点-交易01</a></td>
-							<td>5,000</td>
-							<td>谈判/复审</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>新业务</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>
-						</tr>
+					<tbody id="showTranTBody">
 					</tbody>
 				</table>
 			</div>
 			
 			<div>
-				<a href="pages/workbench/transaction/save.jsp" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
+				<a href="javascript:void(0)" onclick="addTran()" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
 			</div>
 		</div>
 	</div>

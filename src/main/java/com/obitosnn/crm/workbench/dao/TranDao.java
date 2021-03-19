@@ -29,4 +29,6 @@ public interface TranDao {
 
     List<Tran> selectTranListByCustomerId(String customerId);
 
+    List<Tran> selectTranListByContactsId(String contactsId);
+
 }

@@ -50,6 +50,10 @@ public class TranController {
             Customer cust = customerService.getCustomerById(request.getParameter("customerId"));
             mv.addObject("customerName", cust.getName());
         }
+        if ("getContactsFullname".equals(intent)) {
+            Contacts contacts = contactsService.getContactsById(request.getParameter("contactsId"));
+            mv.addObject("contacts", contacts);
+        }
         List<User> uList = userService.getUserList();
         mv.addObject("uList", uList);
         mv.setViewName("forward:/pages/workbench/transaction/save.jsp");

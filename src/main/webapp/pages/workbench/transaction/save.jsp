@@ -44,6 +44,7 @@
 				format: 'yyyy-mm-dd', //显示格式
 				autoclose: true,
 				todayBtn: true,
+				clearBtn: true,
 				pickerPosition: "top-left"
 			});
 
@@ -53,6 +54,7 @@
 				format: 'yyyy-mm-dd', //显示格式
 				autoclose: true,
 				todayBtn: true,
+				clearBtn: true,
 				pickerPosition: "bottom-left"
 			});
 
@@ -208,10 +210,31 @@
 				|| customerName == "" || stage == "") {
 					alert("请填写5项相关信息");
 				} else {
-
+					var money = $.trim($("#create-money").val());
+					var type = $.trim($("#type").val());
+					var source = $.trim($("#source").val());
+					var activityId = $.trim($("#activityId").val());
+					var contactsId = $.trim($("#contactsId").val());
+					var description = $.trim($("#create-description").val());
+					var contactSummary = $.trim($("#create-contactSummary").val());
+					var nextContactTime = $.trim($("#create-nextContactTime").val());
                     $.ajax({
                         url : "workbench/transaction/saveTran",
-                        data : $("#tranForm").serialize(),
+                        data : {
+                        	"owner" : owner,
+                        	"money" : money,
+                        	"name" : name,
+                        	"expectedDate" : expectedDate,
+                        	"customerName" : customerName,
+                        	"stage" : stage,
+                        	"type" : type,
+                        	"source" : source,
+                        	"activityId" : activityId,
+                        	"contactsId" : contactsId,
+                        	"description" : description,
+                        	"contactSummary" : contactSummary,
+                        	"nextContactTime" : nextContactTime
+						},
                         type : "post",
                         dataType : "json",
                         success : function (data) {
@@ -408,8 +431,8 @@
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName" placeholder="点击左侧图标添加，默认不添加">
-				<input type="hidden" id="contactsId" name="contactsId"/>
+				<input type="text" class="form-control" id="create-contactsName" placeholder="点击左侧图标添加，默认不添加" value="${requestScope.contacts.fullname}">
+				<input type="hidden" id="contactsId" name="contactsId" value="${requestScope.contacts.id}"/>
 			</div>
 		</div>
 		

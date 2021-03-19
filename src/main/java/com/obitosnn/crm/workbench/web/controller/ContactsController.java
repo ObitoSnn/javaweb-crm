@@ -10,11 +10,12 @@ import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
 import com.obitosnn.crm.workbench.domain.Contacts;
 import com.obitosnn.crm.workbench.domain.ContactsRemark;
+import com.obitosnn.crm.workbench.domain.Tran;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
+import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +39,8 @@ public class ContactsController {
     private UserService userService;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private TranService tranService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -207,6 +210,28 @@ public class ContactsController {
         }
         map.put("success", success);
         map.put("contactsRemark", contactsRemark);
+        return map;
+    }
+
+    @RequestMapping("/getTranListByContactsId")
+    @ResponseBody
+    public List<Tran> getTranListByContactsId(String contactsId) {
+        return tranService.getTranListByContactsId(contactsId);
+    }
+
+    @RequestMapping(value = {"/deleteTran"})
+    @ResponseBody
+    public Map<String, Object> deleteTranByIds(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String[] ids = request.getParameterValues("id");
+        boolean success = false;
+        try {
+            success = tranService.deleteTranByIds(ids);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
         return map;
     }
 
