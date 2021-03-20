@@ -7,6 +7,7 @@
 	<link href="static/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 	<script type="text/javascript" src="static/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="static/jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 <meta charset="UTF-8">
 <script type="text/javascript">
 
@@ -14,6 +15,25 @@
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+
+		$("#activityNameInput").typeahead({
+			source: function (query, process) {
+				$.get(
+					"workbench/clue/getActivityName",
+					{ "name" : query },
+					function (data) {
+						//alert(data);
+						/*
+							data
+								[{"市场活动名",...}]
+						 */
+						process(data);
+					},
+					"json"
+				);
+			},
+			delay: 1500
+		});
 
 		//时间控件
 		$(".time").datetimepicker({

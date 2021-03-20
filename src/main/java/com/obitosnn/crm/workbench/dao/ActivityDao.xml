@@ -33,6 +33,14 @@
         )
     </insert>
 
+    <select id="selectActivityName" resultType="string">
+
+        select
+        `name`
+        from `tbl_activity` where `name` like '%' #{name} '%'
+
+    </select>
+
     <select id="selectActivityList" resultType="Activity">
 
         select
