@@ -94,10 +94,10 @@ public class ClueServiceImpl implements ClueService {
     }
 
     @Override
-    public boolean deleteCarByCarId(String carId) throws FailToUpdateException {
+    public boolean deleteCarByCarId(String carId) throws FailToDeleteException {
         Integer count = clueActivityRelationDao.deleteClueActivityRelationById(carId);
         if (count.compareTo(1) != 0) {
-            throw new FailToUpdateException("解除关联失败");
+            throw new FailToDeleteException("解除关联失败");
         }
         return true;
     }
