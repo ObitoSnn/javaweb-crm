@@ -1,4 +1,4 @@
-package com.obitosnn.crm.web.handler;
+package com.obitosnn.crm.web.interceptor;
 
 import com.obitosnn.crm.settings.domain.User;
 import org.springframework.web.servlet.HandlerInterceptor;
