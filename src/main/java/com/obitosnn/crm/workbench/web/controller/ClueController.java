@@ -311,4 +311,10 @@ public class ClueController {
         return map;
     }
 
+    @RequestMapping("/getActivityName")
+    @ResponseBody
+    public List<String> getActivityName(String name) {
+        return activityService.getActivityName(name);
+    }
+
 }

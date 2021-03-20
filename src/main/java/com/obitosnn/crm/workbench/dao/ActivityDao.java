@@ -32,5 +32,7 @@ public interface ActivityDao {
 
     List<Activity> selectNotBindActivityListByName(Map<String, String> map);
 
+    List<String> selectActivityName(String name);
+
     List<Activity> getActivityByName(String activityName);
 }
