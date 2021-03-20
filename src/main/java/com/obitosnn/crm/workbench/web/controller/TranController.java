@@ -207,7 +207,6 @@ public class TranController {
         } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            //抛出异常，给WorkBenchGlobalExceptionHandler处理
             throw new Exception(errorMsg);
         }
         map.put("success", success);
@@ -235,7 +234,6 @@ public class TranController {
         } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            //抛出异常，给WorkBenchGlobalExceptionHandler处理
             throw new Exception(errorMsg);
         }
         map.put("success", success);
@@ -262,7 +260,6 @@ public class TranController {
         } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
-            //抛出异常，给WorkBenchGlobalExceptionHandler处理
             throw new Exception(errorMsg);
         }
         map.put("success", success);
