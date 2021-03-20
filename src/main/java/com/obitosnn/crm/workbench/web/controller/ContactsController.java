@@ -8,9 +8,8 @@ import com.obitosnn.crm.settings.service.UserService;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
-import com.obitosnn.crm.workbench.domain.Contacts;
-import com.obitosnn.crm.workbench.domain.ContactsRemark;
-import com.obitosnn.crm.workbench.domain.Tran;
+import com.obitosnn.crm.workbench.domain.*;
+import com.obitosnn.crm.workbench.service.ActivityService;
 import com.obitosnn.crm.workbench.service.ContactsService;
 import com.obitosnn.crm.workbench.service.CustomerService;
 import com.obitosnn.crm.workbench.service.TranService;
@@ -41,6 +40,8 @@ public class ContactsController {
     private CustomerService customerService;
     @Autowired
     private TranService tranService;
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping(value = {"/pageList"})
     @ResponseBody
@@ -233,6 +234,63 @@ public class ContactsController {
         }
         map.put("success", success);
         return map;
+    }
+
+    @RequestMapping("/getActivityListByContactsId")
+    @ResponseBody
+    public List<Activity> getActivityListByContactsId(String contactsId) {
+        return activityService.getActivityListByContactsId(contactsId);
+    }
+
+    @RequestMapping("/unBindCarByActivityIdAndContactsId")
+    @ResponseBody
+    public Map<String, Object> unBindCarByActivityIdAndContactsId(ContactsActivityRelation car) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = contactsService.deleteCarByActivityIdAndContactsId(car);
+        } catch (FailToDeleteException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping("/getActivityName")
+    @ResponseBody
+    public List<String> getActivityName(String name) {
+        return activityService.getActivityName(name);
+    }
+
+    @RequestMapping("/getNotBindActivityListByContactsId")
+    @ResponseBody
+    public List<Activity> getNotBindActivityListByContactsId(String contactsId) {
+        return activityService.getNotBindActivityListByContactsId(contactsId);
+    }
+
+    @RequestMapping("/bindActivityByContactsIdAndActivityIds")
+    @ResponseBody
+    public Map<String, Object> bindActivityByContactsIdAndActivityIds(String contactsId, String[] aid) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        boolean success = false;
+        try {
+            success = contactsService.saveCarByContactsIdAndActivityIds(contactsId, aid);
+        } catch (FailToSaveException e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+        map.put("success", success);
+        return map;
+    }
+
+    @RequestMapping(value = {"/getNotBindActivityListByContactsIdAndName"})
+    @ResponseBody
+    public List<Activity> getNotBindActivityListByContactsIdAndName(String name, String contactsId) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("name", name);
+        map.put("contactsId", contactsId);
+        return activityService.getNotBindActivityListByContactsIdAndName(map);
     }
 
 }

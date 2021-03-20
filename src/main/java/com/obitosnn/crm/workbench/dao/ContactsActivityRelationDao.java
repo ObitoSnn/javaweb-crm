@@ -6,4 +6,6 @@ public interface ContactsActivityRelationDao {
 
     Integer insert(ContactsActivityRelation contactsActivityRelation);
 
+    Integer deleteCarByActivityIdAndContactsId(ContactsActivityRelation car);
+
 }

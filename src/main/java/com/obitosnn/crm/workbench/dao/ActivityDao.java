@@ -35,4 +35,11 @@ public interface ActivityDao {
     List<String> selectActivityName(String name);
 
     List<Activity> getActivityByName(String activityName);
+
+    List<Activity> selectActivityListByContactsId(String contactsId);
+
+    List<Activity> selectNotBindActivityListByContactsId(String contactsId);
+
+    List<Activity> selectNotBindActivityListByContactsIdAndName(Map<String, String> map);
+
 }

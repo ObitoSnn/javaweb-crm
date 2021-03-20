@@ -5,6 +5,12 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ContactsActivityRelationDao">
 
+    <delete id="deleteCarByActivityIdAndContactsId">
+
+        delete from `tbl_contacts_activity_relation` where `contactsId`=#{contactsId} and `activityId`=#{activityId}
+
+    </delete>
+
     <insert id="insert">
 
         insert into tbl_contacts_activity_relation(

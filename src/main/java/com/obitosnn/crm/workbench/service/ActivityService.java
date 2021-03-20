@@ -48,4 +48,11 @@ public interface ActivityService {
     List<String> getActivityName(String name);
 
     List<Activity> getActivityByName(String activityName);
+
+    List<Activity> getActivityListByContactsId(String contactsId);
+
+    List<Activity> getNotBindActivityListByContactsId(String contactsId);
+
+    List<Activity> getNotBindActivityListByContactsIdAndName(Map<String, String> map);
+
 }

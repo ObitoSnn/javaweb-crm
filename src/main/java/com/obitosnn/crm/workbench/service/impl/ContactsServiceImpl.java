@@ -7,10 +7,12 @@ import com.obitosnn.crm.exception.FailToUpdateException;
 import com.obitosnn.crm.util.DateTimeUtil;
 import com.obitosnn.crm.util.UUIDUtil;
 import com.obitosnn.crm.vo.PageVo;
+import com.obitosnn.crm.workbench.dao.ContactsActivityRelationDao;
 import com.obitosnn.crm.workbench.dao.ContactsDao;
 import com.obitosnn.crm.workbench.dao.ContactsRemarkDao;
 import com.obitosnn.crm.workbench.dao.CustomerDao;
 import com.obitosnn.crm.workbench.domain.Contacts;
+import com.obitosnn.crm.workbench.domain.ContactsActivityRelation;
 import com.obitosnn.crm.workbench.domain.ContactsRemark;
 import com.obitosnn.crm.workbench.domain.Customer;
 import com.obitosnn.crm.workbench.service.ContactsService;
@@ -32,6 +34,8 @@ public class ContactsServiceImpl implements ContactsService {
     private CustomerDao customerDao;
     @Autowired
     private ContactsRemarkDao contactsRemarkDao;
+    @Autowired
+    private ContactsActivityRelationDao contactsActivityRelationDao;
 
     @Override
     public List<Contacts> getContactByName(String contactName) {
@@ -150,6 +154,33 @@ public class ContactsServiceImpl implements ContactsService {
         Integer count = contactsRemarkDao.updateContactsRemark(contactsRemark);
         if (count.compareTo(1) != 0) {
             throw new FailToUpdateException("更新失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteCarByActivityIdAndContactsId(ContactsActivityRelation car) throws FailToDeleteException {
+        Integer count = contactsActivityRelationDao.deleteCarByActivityIdAndContactsId(car);
+        if (count.compareTo(1) != 0) {
+            throw new FailToDeleteException("解除关联失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean saveCarByContactsIdAndActivityIds(String contactsId, String[] aid) throws FailToSaveException {
+        int count = 0;
+        ContactsActivityRelation car = null;
+        for (String id : aid) {
+            car = new ContactsActivityRelation();
+            car.setId(UUIDUtil.getUUID());
+            car.setContactsId(contactsId);
+            car.setActivityId(id);
+            contactsActivityRelationDao.insert(car);
+            count++;
+        }
+        if (count != aid.length) {
+            throw new FailToSaveException("关联市场活动失败");
         }
         return true;
     }

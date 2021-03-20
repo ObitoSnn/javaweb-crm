@@ -5,6 +5,61 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.ActivityDao">
 
+    <select id="selectNotBindActivityListByContactsIdAndName" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id` where a.`id` not in
+        (
+        select
+        `activityId`
+        from `tbl_contacts_activity_relation` where `contactsId`=#{contactsId}
+        ) and a.`name` like '%' #{name} '%'
+
+    </select>
+
+    <select id="selectNotBindActivityListByContactsId" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id` where a.`id` not in
+        (
+        select
+        `activityId`
+        from `tbl_contacts_activity_relation` where `contactsId`=#{contactsId}
+        )
+
+    </select>
+
+    <select id="selectActivityListByContactsId" resultType="Activity">
+
+        select
+        a.`id`,
+        a.`name`,
+        u.`name` as `owner`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id`
+        inner join `tbl_contacts_activity_relation` car
+        on a.`id`=car.`activityId`
+        where car.`contactsId`=#{contactsId}
+
+    </select>
+
     <insert id="insertActivity">
         insert into tbl_activity (
 
