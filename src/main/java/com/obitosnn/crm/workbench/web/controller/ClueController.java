@@ -155,7 +155,7 @@ public class ClueController {
         boolean success = false;
         try {
             success = clueService.deleteCarByCarId(carId);
-        } catch (FailToUpdateException e) {
+        } catch (FailToDeleteException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
