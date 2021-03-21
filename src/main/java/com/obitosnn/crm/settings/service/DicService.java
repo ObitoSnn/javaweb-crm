@@ -28,4 +28,18 @@ public interface DicService {
 
     boolean deleteDicTypeByCodes(String[] codes) throws FailToDeleteException;
 
+    PageVo<DicValue> getDicValuePageVo(String pageNo, String pageSize);
+
+    List<Map<String, Object>> getDicTypeCode();
+
+    boolean saveDicValue(DicValue dicValue) throws FailToSaveException;
+
+    String getDicValueTypeCodeById(String id);
+
+    DicValue getDicValueDetailById(String id);
+
+    boolean updateDicValue(DicValue dicValue) throws FailToUpdateException;
+
+    boolean deleteDicValueByIds(String[] ids) throws FailToDeleteException;
+
 }

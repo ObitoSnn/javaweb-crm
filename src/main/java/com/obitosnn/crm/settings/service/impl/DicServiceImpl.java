@@ -83,4 +83,57 @@ public class DicServiceImpl implements DicService {
         return true;
     }
 
+    @Override
+    public PageVo<DicValue> getDicValuePageVo(String pageNo, String pageSize) {
+        PageVo<DicValue> pageVo = new PageVo<DicValue>();
+        PageHelper.startPage(Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+        List<DicValue> dataList = dicValueDao.selectDicValueListForPageVo();
+        pageVo.setDataList(dataList);
+        Long total = dicValueDao.selectDicValueTotalForPageVo();
+        pageVo.setTotal(total);
+        return pageVo;
+    }
+
+    @Override
+    public List<Map<String, Object>> getDicTypeCode() {
+        return dicTypeDao.selectDicTypeCode();
+    }
+
+    @Override
+    public boolean saveDicValue(DicValue dicValue) throws FailToSaveException {
+        Integer count = dicValueDao.insertDicValue(dicValue);
+        if (count.compareTo(1) != 0) {
+            throw new FailToSaveException("保存字典值失败");
+        }
+        return true;
+    }
+
+    @Override
+    public String getDicValueTypeCodeById(String id) {
+        return dicValueDao.selectDicValueTypeCodeById(id);
+    }
+
+    @Override
+    public DicValue getDicValueDetailById(String id) {
+        return dicValueDao.selectDicValueDetailById(id);
+    }
+
+    @Override
+    public boolean updateDicValue(DicValue dicValue) throws FailToUpdateException {
+        Integer count = dicValueDao.updateDicValue(dicValue);
+        if (count.compareTo(1) != 0) {
+            throw new FailToUpdateException("修改字典值失败");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteDicValueByIds(String[] ids) throws FailToDeleteException {
+        Integer count = dicValueDao.deleteDicValueByIds(ids);
+        if (count.compareTo(ids.length) != 0) {
+            throw new FailToDeleteException("删除字典值失败");
+        }
+        return true;
+    }
+
 }

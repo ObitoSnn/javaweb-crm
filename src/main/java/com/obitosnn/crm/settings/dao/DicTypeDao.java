@@ -3,6 +3,7 @@ package com.obitosnn.crm.settings.dao;
 import com.obitosnn.crm.settings.domain.DicType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ObitoSnn
@@ -23,5 +24,7 @@ public interface DicTypeDao {
     Integer updateDicType(DicType dicType);
 
     Integer deleteDicTypeByCodes(String[] codes);
+
+    List<Map<String, Object>> selectDicTypeCode();
 
 }

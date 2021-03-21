@@ -5,6 +5,15 @@
 
 <mapper namespace="com.obitosnn.crm.settings.dao.DicTypeDao">
 
+    <select id="selectDicTypeCode" resultType="map">
+
+        select
+        `code`,
+        `name`
+        from `tbl_dic_type`
+
+    </select>
+
     <delete id="deleteDicTypeByCodes">
 
         delete from `tbl_dic_type` where `code` in
