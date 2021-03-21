@@ -41,7 +41,7 @@
 			//刷新后台数据之前取消总复选框的选中状态
 			$("input[name='checkbox-manager']").prop("checked", false);
 			$.ajax({
-				url : "settings/dictionary/pageList",
+				url : "settings/dictionary/type/pageList",
 				data : {
 					"pageNo" : pageNo,
 					"pageSize" : pageSize,
