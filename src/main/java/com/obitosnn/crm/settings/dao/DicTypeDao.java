@@ -12,4 +12,16 @@ public interface DicTypeDao {
 
     List<DicType> selectAllDicType();
 
+    List<DicType> selectDicTypeListForPageVo();
+
+    Long selectDicTypeTotalForPageVo();
+
+    Integer insertDicType(DicType dicType);
+
+    DicType selectDicTypeDetailByCode(String code);
+
+    Integer updateDicType(DicType dicType);
+
+    Integer deleteDicTypeByCodes(String[] codes);
+
 }
