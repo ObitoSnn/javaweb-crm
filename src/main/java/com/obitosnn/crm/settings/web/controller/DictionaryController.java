@@ -32,9 +32,9 @@ public class DictionaryController {
         return mv;
     }
 
-    @RequestMapping("/pageList")
+    @RequestMapping("/type/pageList")
     @ResponseBody
-    public PageVo<DicType> pageList(String pageNo, String pageSize) {
+    public PageVo<DicType> getDicTypePageList(String pageNo, String pageSize) {
         return dicService.getDicTypePageVo(pageNo, pageSize);
     }
 
