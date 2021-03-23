@@ -164,7 +164,7 @@
         select
         t.`id`
         from tbl_tran t
-        inner join tbl_customer cust
+        left outer join tbl_customer cust
         on t.`customerId`=cust.`id`
         inner join tbl_user u
         on u.`id`=t.`owner`
@@ -212,7 +212,7 @@
         t.`source`,
         con.`fullname` as `contactsId`
         from tbl_tran t
-        inner join tbl_customer cust
+        left outer join tbl_customer cust
         on t.`customerId`=cust.`id`
         inner join tbl_user u
         on u.`id`=t.`owner`
