@@ -277,6 +277,9 @@
                      */
 					var html = "";
 					$.each(data.uList, function (i, userObj) {
+						if ("root" == userObj.loginAct) {
+							return true;
+						}
 						html += "<option value='" + userObj.id + "'>" + userObj.name + "</option>";
 					});
 					$("#edit-owner").html(html);

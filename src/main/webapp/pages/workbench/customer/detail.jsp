@@ -572,6 +572,9 @@
 				// {"uList":[{用户1}...],"customer":{客户}}
 				var html = "";
 				$.each(data.uList, function (i, obj) {
+					if ("root" == obj.loginAct) {
+						return true;
+					}
 					html += "<option value='" + obj.id + "'>" + obj.name + "</option>";
 				});
 				$("#edit-owner").html(html);
