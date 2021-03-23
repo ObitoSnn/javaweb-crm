@@ -19,6 +19,8 @@ import com.obitosnn.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -192,6 +194,15 @@ public class TranServiceImpl implements TranService {
         Integer count = tranDao.deleteTranByIds(ids);
         if (count.compareTo(ids.length) != 0) {
             throw new FailToDeleteException("删除失败");
+        }
+        Iterator<String> iterator = Arrays.stream(ids).iterator();
+        while (iterator.hasNext()) {
+            String id = iterator.next();
+            List<TranHistory> tranHistoryList = tranHistoryDao.selectTranHistoryListByTranId(id);
+            Integer deleteCount = tranHistoryDao.deleteTranHistoryByTranId(id);
+            if (deleteCount.compareTo(tranHistoryList.size()) != 0) {
+                throw new FailToDeleteException("删除失败");
+            }
         }
         return true;
     }

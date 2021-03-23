@@ -5,6 +5,12 @@
 
 <mapper namespace="com.obitosnn.crm.workbench.dao.TranHistoryDao">
 
+    <delete id="deleteTranHistoryByTranId">
+
+        delete from `tbl_tran_history` where `tranId`=#{tranId}
+
+    </delete>
+
     <select id="selectTranHistoryListByTranId" resultType="TranHistory">
 
         select

@@ -10,4 +10,6 @@ public interface TranHistoryDao {
 
     List<TranHistory> selectTranHistoryListByTranId(String tranId);
 
+    Integer deleteTranHistoryByTranId(String tranId);
+
 }
