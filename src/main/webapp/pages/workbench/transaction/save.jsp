@@ -124,7 +124,7 @@
 				var activityId = $("input[name='radio-single']:checked").val();
 				var activityName = $("#activityName" + activityId).html();
 				//给文本框填充内容
-				$("#create-activitySource").val(activityName);
+				$("#create-activityName").val(activityName);
 				//隐藏域中保存市场活动id
 				$("#activityId").val(activityId);
 				//关闭模态窗口
