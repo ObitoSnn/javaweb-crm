@@ -39,7 +39,7 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <!--创建Controller的代理对象-->
+    <!--使用CGLIB动态代理来创建Controller的代理对象-->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 </beans>
