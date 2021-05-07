@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.workbench.dao.ActivityRemarkDao">
+
+    <select id="selectByIds" resultType="int">
+
+        select
+        count(*)
+        from tbl_activity_remark
+        where `activityId` in
+        <foreach collection="array" item="aId" open="(" close=")" separator=",">
+            #{aId}
+        </foreach>
+
+    </select>
+
+    <delete id="deleteByIds">
+
+        delete from tbl_activity_remark
+        where `activityId` in
+        <foreach collection="array" item="aId" open="(" close=")" separator=",">
+            #{aId}
+        </foreach>
+
+    </delete>
+
+    <select id="selectActivityRemarkListByActivityId" resultType="ActivityRemark">
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editTime`,
+        `editBy`,
+        `editFlag`,
+        `activityId`
+        from tbl_activity_remark where `activityId` = #{id} order by `createTime` desc
+    </select>
+
+    <delete id="deleteActivityRemarkById">
+
+        delete from tbl_activity_remark where `id` = #{id}
+
+    </delete>
+
+    <insert id="insertActivityRemark">
+
+        insert into tbl_activity_remark(
+            `id`,
+            `noteContent`,
+            `createTime`,
+            `createBy`,
+            `editFlag`,
+            `activityId`
+        )
+        values(
+            #{id},
+            #{noteContent},
+            #{createTime},
+            #{createBy},
+            #{editFlag},
+            #{activityId}
+        )
+
+    </insert>
+
+    <select id="selectActivityRemarkById" resultType="ActivityRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`
+        from tbl_activity_remark where `id` = #{id}
+
+    </select>
+
+    <update id="updateActivityRemarkById">
+
+        update tbl_activity_remark set
+        `noteContent` = #{noteContent},
+        `editTime` = #{editTime},
+        `editBy` = #{editBy},
+        `editFlag` = #{editFlag}
+        where `id` = #{id}
+
+    </update>
+
+</mapper>

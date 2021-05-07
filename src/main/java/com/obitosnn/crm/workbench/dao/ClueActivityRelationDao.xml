@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.workbench.dao.ClueActivityRelationDao">
+
+    <select id="selectListByClueId" resultType="ClueActivityRelation">
+
+        select
+        `id`,
+        `clueId`,
+        `activityId`
+        from tbl_clue_activity_relation where `clueId`=#{clueId}
+
+    </select>
+
+    <delete id="deleteClueActivityRelationById">
+
+        delete from tbl_clue_activity_relation where `id` = #{carId}
+
+    </delete>
+
+    <insert id="insertCarByClueIdAndActivityId">
+
+        insert into tbl_clue_activity_relation
+        values
+        (
+            #{carId},
+            #{cid},
+            #{aid}
+        )
+
+    </insert>
+
+</mapper>

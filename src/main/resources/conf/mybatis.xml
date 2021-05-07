@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--设值别名-->
+    <typeAliases>
+        <!--name：实体类的包名，类名就是别名-->
+        <package name="com.obitosnn.crm.settings.domain"/>
+        <package name="com.obitosnn.crm.workbench.domain"/>
+    </typeAliases>
+    
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="helperDialect" value="mysql"/>
+        </plugin>
+    </plugins>
+
+    <mappers>
+        <!--name：是包名，这个包中的所有mapper文件一次都能加载-->
+        <package name="com.obitosnn.crm.settings.dao"/>
+        <package name="com.obitosnn.crm.workbench.dao"/>
+    </mappers>
+
+</configuration>

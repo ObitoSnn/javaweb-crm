@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.settings.dao.UserDao">
+
+    <insert id="insertUser">
+
+        insert into `tbl_user`
+        (
+        `id`,
+        `loginAct`,
+        `name`,
+        `loginPwd`,
+        `email`,
+        `expireTime`,
+        `lockState`,
+        `deptno`,
+        `allowIps`,
+        `createTime`,
+        `createBy`
+        )
+        values
+        (
+        #{id},
+        #{loginAct},
+        #{name},
+        #{loginPwd},
+        #{email},
+        #{expireTime},
+        #{lockState},
+        #{deptno},
+        #{allowIps},
+        #{createTime},
+        #{createBy}
+        )
+
+    </insert>
+
+    <select id="selectUserLoginActCount" resultType="int">
+
+        select
+        count(*)
+        from `tbl_user` where `loginAct`=#{loginAct}
+
+    </select>
+
+    <update id="updateUserById">
+
+        update `tbl_user` set
+        `loginAct`=#{loginAct},
+        `name`=#{name},
+        `loginPwd`=#{loginPwd},
+        `email`=#{email},
+        `expireTime`=#{expireTime},
+        `lockState`=#{lockState},
+        `deptno`=#{deptno},
+        `allowIps`=#{allowIps},
+        `editTime`=#{editTime},
+        `editBy`=#{editBy}
+        where `id`=#{id}
+
+    </update>
+
+    <select id="selectUserDetailById" resultType="User">
+
+        select
+        u.`id`,
+        u.`loginAct`,
+        u.`name`,
+        u.`email`,
+        u.`expireTime`,
+        u.`allowIps`,
+        d.`name` as `deptno`,
+        u.`lockState`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        where u.`id`=#{id}
+
+    </select>
+
+    <select id="selectUserTotalForPageVo" resultType="long">
+
+        select count(*) from
+        (
+        select
+        u.`id`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        <where>
+
+            <if test="name != null and name != ''">
+                u.`name` like '%' #{name} '%'
+            </if>
+            <if test="deptno != null and deptno != ''">
+                and d.`name` like '%' #{deptno} '%'
+            </if>
+            <if test="lockState != null and lockState != ''">
+                and u.`lockState`=#{lockState}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and #{startDate} &lt;= u.`expireTime`
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and #{endDate} &gt;= u.`expireTime`
+            </if>
+
+        </where>
+        ) `tbl_temp`
+
+    </select>
+
+    <select id="selectUserListForPageVo" resultType="User">
+
+        select
+        u.`id`,
+        u.`loginAct`,
+        u.`name`,
+        u.`email`,
+        u.`expireTime`,
+        u.`lockState`,
+        d.`name` as `deptno`,
+        u.`allowIps`,
+        u.`createTime`,
+        u.`createBy`,
+        u.`editTime`,
+        u.`editBy`
+        from `tbl_user` u
+        inner join `tbl_dept` d
+        on u.`deptno`=d.`deptno`
+        <where>
+
+            <if test="name != null and name != ''">
+                u.`name` like '%' #{name} '%'
+            </if>
+            <if test="deptno != null and deptno != ''">
+                and d.`name` like '%' #{deptno} '%'
+            </if>
+            <if test="lockState != null and lockState != ''">
+                and u.`lockState`=#{lockState}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and #{startDate} &lt;= u.`expireTime`
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and #{endDate} &gt;= u.`expireTime`
+            </if>
+
+        </where>
+        order by u.`createTime` asc
+
+    </select>
+
+    <update id="updatePwd">
+
+        update `tbl_user` set
+        `loginPwd`=#{loginPwd}
+        where `id`=#{id}
+
+    </update>
+
+    <select id="selectUserLoginPwdById" resultType="string">
+
+        select
+        `loginPwd`
+        from `tbl_user` where `id`=#{id}
+
+    </select>
+
+    <select id="selectAll" resultType="User">
+        select `id`, `loginAct`,`name`, `loginPwd`, `email`,
+        `expireTime`, `lockState`, `deptno`, `allowIps`, `createTime`,
+        `createBy`, `editTime`, `editBy` from tbl_user
+    </select>
+
+    <select id="selectUserByUsernameAndPassword" resultType="User">
+        select `id`, `loginAct`,`name`, `loginPwd`, `email`,
+        `expireTime`, `lockState`, `deptno`, `allowIps`, `createTime`,
+        `createBy`, `editTime`, `editBy` from tbl_user where `loginAct` = #{loginAct}
+        and `loginPwd` = #{loginPwd}
+    </select>
+
+</mapper>

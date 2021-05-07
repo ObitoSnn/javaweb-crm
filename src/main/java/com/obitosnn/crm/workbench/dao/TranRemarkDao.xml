@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.workbench.dao.TranRemarkDao">
+
+    <update id="updateTranRemarkById">
+
+        update tbl_tran_remark set
+        `noteContent` = #{noteContent},
+        `editTime` = #{editTime},
+        `editBy` = #{editBy},
+        `editFlag` = #{editFlag}
+        where `id` = #{id}
+
+    </update>
+
+    <delete id="deleteTranRemarkById">
+
+        delete from tbl_tran_remark where `id`=#{id}
+
+    </delete>
+
+    <select id="selectTranRemarkListByTranId" resultType="TranRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editTime`,
+        `editBy`,
+        `editFlag`,
+        `tranId`
+        from tbl_tran_remark where `tranId` = #{id} order by `createTime` desc
+
+    </select>
+
+    <select id="selectTranRemarkById" resultType="TranRemark">
+
+        select
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`
+        from tbl_tran_remark where `id` = #{id}
+
+    </select>
+
+    <insert id="insertTranRemark">
+
+        insert into tbl_tran_remark(
+        `id`,
+        `noteContent`,
+        `createTime`,
+        `createBy`,
+        `editFlag`,
+        `tranId`
+        )
+        values(
+        #{id},
+        #{noteContent},
+        #{createTime},
+        #{createBy},
+        #{editFlag},
+        #{tranId}
+        )
+
+    </insert>
+
+</mapper>

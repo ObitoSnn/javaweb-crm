@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.settings.dao.DicValueDao">
+
+    <delete id="deleteDicValueByIds">
+
+        delete from `tbl_dic_value` where `id` in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <update id="updateDicValue">
+
+        update `tbl_dic_value` set
+        `value`=#{value},
+        `text`=#{text},
+        `orderNo`=#{orderNo},
+        `typeCode`=#{typeCode} where `id`=#{id}
+
+    </update>
+
+    <select id="selectDicValueDetailById" resultType="DicValue">
+
+        select
+        dv.`value`,
+        dv.`text`,
+        dv.`orderNo`,
+        dt.`name` as `typeCode`
+        from `tbl_dic_value` dv
+        inner join `tbl_dic_type` dt
+        on dv.`typeCode`=dt.`code` where dv.`id`=#{id}
+
+    </select>
+
+    <select id="selectDicValueTypeCodeById" resultType="string">
+
+        select
+        `typeCode`
+        from `tbl_dic_value` where `id`=#{id}
+
+    </select>
+
+    <insert id="insertDicValue">
+
+        insert into `tbl_dic_value` values
+        (
+        #{id},
+        #{value},
+        #{text},
+        #{orderNo},
+        #{typeCode}
+        )
+
+    </insert>
+
+    <select id="selectDicValueTotalForPageVo" resultType="long">
+
+        select count(*) from
+        (
+        select
+        `id`,
+        `value`,
+        `text`,
+        `orderNo`,
+        `typeCode`
+        from `tbl_dic_value` order by `typeCode` asc
+        ) `tbl_temp`
+
+    </select>
+
+    <select id="selectDicValueListForPageVo" resultType="DicValue">
+
+        select
+        `id`,
+        `value`,
+        `text`,
+        `orderNo`,
+        `typeCode`
+        from `tbl_dic_value` order by `typeCode` asc
+
+    </select>
+
+    <select id="selectDicValueByCode" resultType="DicValue">
+
+        select
+        `id`,
+        `value`,
+        `text`,
+        `orderNo`,
+        `typeCode`
+        from tbl_dic_value where `typeCode` = #{code} order by `orderNo` asc
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.workbench.dao.CustomerDao">
+
+    <delete id="deleteCustomerByIds">
+
+        delete from `tbl_customer` where `id` in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <update id="updateCustomerById">
+
+        update `tbl_customer` set
+        `name`=#{name},
+        `website`=#{website},
+        `phone`=#{phone},
+        `editBy`=#{editBy},
+        `editTime`=#{editTime},
+        `contactSummary`=#{contactSummary},
+        `nextContactTime`=#{nextContactTime},
+        `description`=#{description},
+        `address`=#{address}
+        where id=#{id}
+
+    </update>
+
+    <select id="selectCustomerById" resultType="Customer">
+
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `website`,
+        `phone`,
+        `contactSummary`,
+        `nextContactTime`,
+        `description`,
+        `address`
+        from tbl_customer where `id`=#{id}
+
+    </select>
+
+    <insert id="insertCustomer">
+
+        insert into tbl_customer(
+            `id`,
+            `owner`,
+            `name`,
+            `website`,
+            `phone`,
+            `createBy`,
+            `createTime`,
+            `contactSummary`,
+            `nextContactTime`,
+            `description`,
+            `address`
+        ) values(
+            #{id},
+            #{owner},
+            #{name},
+            #{website},
+            #{phone},
+            #{createBy},
+            #{createTime},
+            #{contactSummary},
+            #{nextContactTime},
+            #{description},
+            #{address}
+        )
+
+    </insert>
+
+    <select id="selectCustomerDetailById" resultType="Customer">
+
+        select
+        cust.`id`,
+        u.`name` as `owner`,
+        cust.`name`,
+        cust.`website`,
+        cust.`phone`,
+        cust.`createBy`,
+        cust.`createTime`,
+        cust.`editBy`,
+        cust.`editTime`,
+        cust.`contactSummary`,
+        cust.`nextContactTime`,
+        cust.`description`,
+        cust.`address`
+        from tbl_customer cust
+        inner join tbl_user u
+        on cust.`owner`=u.`id`
+        where cust.`id`=#{id}
+
+    </select>
+
+    <select id="selectCustomerTotalForPageVo" resultType="long">
+
+        select count(*) from (
+            select
+            cust.`id`
+            from tbl_customer cust
+            inner join tbl_user u
+            on cust.`owner`=u.`id`
+            <where>
+
+                <if test="name != null and name != ''">
+                    cust.`name` like '%' #{name} '%'
+                </if>
+
+                <if test="owner != null and owner != ''">
+                    and u.`name` like '%' #{owner} '%'
+                </if>
+
+                <if test="phone != null and phone != ''">
+                    and cust.`phone` like '%' #{phone} '%'
+                </if>
+
+                <if test="website != null and website != ''">
+                    and cust.`website` like '%' #{website} '%'
+                </if>
+
+            </where> order by cust.`createTime` desc
+
+        ) tbl_temp
+
+    </select>
+
+    <select id="selectCustomerListForPageVo" resultType="Customer">
+
+        select
+        cust.`id`,
+        u.`name` as `owner`,
+        cust.`name`,
+        cust.`website`,
+        cust.`phone`
+        from tbl_customer cust
+        inner join tbl_user u
+        on cust.`owner`=u.`id`
+        <where>
+
+            <if test="name != null and name != ''">
+                cust.`name` like '%' #{name} '%'
+            </if>
+
+            <if test="owner != null and owner != ''">
+                and u.`name` like '%' #{owner} '%'
+            </if>
+
+            <if test="phone != null and phone != ''">
+                and cust.`phone` like '%' #{phone} '%'
+            </if>
+
+            <if test="website != null and website != ''">
+                and cust.`website` like '%' #{website} '%'
+            </if>
+
+        </where> order by cust.`createTime` desc
+
+    </select>
+
+    <select id="selectNameListByName" resultType="string">
+
+        select `name` from tbl_customer where `name` like '%' #{name} '%'
+
+    </select>
+
+    <insert id="insert">
+
+        insert into tbl_customer(
+            `id`,
+            `owner`,
+            `name`,
+            `website`,
+            `phone`,
+            `createBy`,
+            `createTime`,
+            `contactSummary`,
+            `nextContactTime`,
+            `description`,
+            `address`
+        )
+        values(
+            #{id},
+            #{owner},
+            #{name},
+            #{website},
+            #{phone},
+            #{createBy},
+            #{createTime},
+            #{contactSummary},
+            #{nextContactTime},
+            #{description},
+            #{address}
+        )
+
+    </insert>
+
+    <select id="selectByName" resultType="Customer">
+
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `website`,
+        `phone`,
+        `createBy`,
+        `createTime`,
+        `editBy`,
+        `editTime`,
+        `contactSummary`,
+        `nextContactTime`,
+        `description`,
+        `address`
+        from tbl_customer where `name`=#{company}
+
+    </select>
+  	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

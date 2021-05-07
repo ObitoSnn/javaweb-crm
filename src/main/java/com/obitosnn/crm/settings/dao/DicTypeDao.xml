@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.settings.dao.DicTypeDao">
+
+    <select id="selectDicTypeCode" resultType="map">
+
+        select
+        `code`,
+        `name`
+        from `tbl_dic_type`
+
+    </select>
+
+    <delete id="deleteDicTypeByCodes">
+
+        delete from `tbl_dic_type` where `code` in
+        <foreach collection="array" item="code" open="(" close=")" separator=",">
+            #{code}
+        </foreach>
+
+    </delete>
+
+    <update id="updateDicType">
+
+        update `tbl_dic_type` set
+        `code`=#{code},
+        `name`=#{name},
+        `description`=#{description} where `code`=#{code}
+
+    </update>
+
+    <select id="selectDicTypeDetailByCode" resultType="DicType">
+
+        select
+        `code`,
+        `name`,
+        `description`
+        from `tbl_dic_type` where `code`=#{code}
+
+    </select>
+
+    <insert id="insertDicType">
+
+        insert into `tbl_dic_type` values
+        (
+        #{code},
+        #{name},
+        #{description}
+        )
+
+    </insert>
+
+    <select id="selectDicTypeTotalForPageVo" resultType="long">
+
+        select
+        count(*)
+        from
+        (
+        select
+        `code`,
+        `name`,
+        `description`
+        from `tbl_dic_type`
+        ) `tbl_temp`
+
+    </select>
+
+    <select id="selectDicTypeListForPageVo" resultType="DicType">
+
+        select
+        `code`,
+        `name`,
+        `description`
+        from `tbl_dic_type`
+
+    </select>
+
+    <select id="selectAllDicType" resultType="DicType">
+
+        select
+        `code`,
+        `name`,
+        `description`
+        from tbl_dic_type
+
+    </select>
+
+</mapper>

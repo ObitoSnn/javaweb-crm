@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/mvc 
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--
+        解决访问静态资源404
+        解决post请求中文乱码问题
+    -->
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
+
+    <!--声明系统设置模块控制器对象-->
+    <context:component-scan base-package="com.obitosnn.crm.settings.web.controller"/>
+    <!--声明工作台模块控制器对象-->
+    <context:component-scan base-package="com.obitosnn.crm.workbench.web.controller"/>
+    <!--声明整个项目全局处理异常的对象-->
+    <context:component-scan base-package="com.obitosnn.crm.web.handler"/>
+
+    <mvc:interceptors>
+        <!--检验用户是否登录-->
+        <mvc:interceptor>
+            <mvc:mapping path="/workbench/**"/>
+            <!--不拦截登录请求-->
+            <mvc:exclude-mapping path="/settings/user/login"/>
+            <bean class="com.obitosnn.crm.web.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <!--权限管理，验证登录用户是否为管理员-->
+            <mvc:mapping path="/settings/**"/>
+            <mvc:exclude-mapping path="/settings/user/**"/>
+            <bean class="com.obitosnn.crm.web.interceptor.ManagerInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--使用CGLIB动态代理来创建Controller的代理对象-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+</beans>

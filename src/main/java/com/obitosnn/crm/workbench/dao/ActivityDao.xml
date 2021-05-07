@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.obitosnn.crm.workbench.dao.ActivityDao">
+
+    <select id="selectNotBindActivityListByContactsIdAndName" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id` where a.`id` not in
+        (
+        select
+        `activityId`
+        from `tbl_contacts_activity_relation` where `contactsId`=#{contactsId}
+        ) and a.`name` like '%' #{name} '%'
+
+    </select>
+
+    <select id="selectNotBindActivityListByContactsId" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id` where a.`id` not in
+        (
+        select
+        `activityId`
+        from `tbl_contacts_activity_relation` where `contactsId`=#{contactsId}
+        )
+
+    </select>
+
+    <select id="selectActivityListByContactsId" resultType="Activity">
+
+        select
+        a.`id`,
+        a.`name`,
+        u.`name` as `owner`,
+        a.`startDate`,
+        a.`endDate`
+        from `tbl_activity` a
+        inner join `tbl_user` u
+        on a.`owner`=u.`id`
+        inner join `tbl_contacts_activity_relation` car
+        on a.`id`=car.`activityId`
+        where car.`contactsId`=#{contactsId}
+
+    </select>
+
+    <insert id="insertActivity">
+        insert into tbl_activity (
+
+            `id`,
+            `owner`,
+            `name`,
+            `startDate`,
+            `endDate`,
+            `cost`,
+            `description`,
+            `createTime`,
+            `createBy`
+
+        ) value (
+
+            #{id},
+            #{owner},
+            #{name},
+            #{startDate},
+            #{endDate},
+            #{cost},
+            #{description},
+            #{createTime},
+            #{createBy}
+
+        )
+    </insert>
+
+    <select id="selectActivityName" resultType="string">
+
+        select
+        `name`
+        from `tbl_activity` where `name` like '%' #{name} '%'
+
+    </select>
+
+    <select id="selectActivityList" resultType="Activity">
+
+        select
+
+        a.`id`,
+        a.`name`,
+        u.`name` as `owner`,
+        a.`startDate`,
+        a.`endDate`
+
+        from tbl_activity a
+        inner join tbl_user u
+        on a.`owner` = u.`id`
+
+        <where>
+            
+            <if test="name != null and name != ''">
+                a.`name` like '%' #{name} '%'
+            </if>
+            
+            <if test="owner != null and owner != ''">
+                and u.`name` = #{owner}
+            </if>
+
+            <if test="startDate != null and startDate != ''">
+                and a.`startDate` &gt;= #{startDate}
+            </if>
+
+            <if test="endDate != null and endDate != ''">
+                and a.`endDate` &lt;= #{endDate}
+            </if>
+
+        </where>
+
+        order by a.`createTime` desc
+
+    </select>
+
+    <select id="selectActivityTotal" resultType="long">
+
+        select count(*) from (
+
+        select
+
+        a.`id`
+
+        from tbl_activity a
+        inner join tbl_user u
+        on a.`owner` = u.`id`
+
+        <where>
+
+            <if test="name != null and name != ''">
+                a.`name` like '%' #{name} '%'
+            </if>
+
+            <if test="owner != null and owner != ''">
+                and u.`name` = #{owner}
+            </if>
+
+            <if test="startDate != null and startDate != ''">
+                and a.`startDate` &gt;= #{startDate}
+            </if>
+
+            <if test="endDate != null and endDate != ''">
+                and a.`endDate` &lt;= #{endDate}
+            </if>
+
+        </where>
+
+        order by a.`createTime` desc
+
+        ) tbl_activity
+
+    </select>
+
+    <delete id="deleteByIds">
+
+        delete from tbl_activity
+        where `id` in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <select id="selectActivityById" resultType="Activity">
+        select
+        `id`,
+        `owner`,
+        `name`,
+        `startDate`,
+        `endDate`,
+        `cost`,
+        `description`
+        from tbl_activity where `id` = #{id}
+    </select>
+
+    <update id="updateActivity">
+        update tbl_activity set
+        `owner` = #{owner},
+        `name` = #{name},
+        `startDate` = #{startDate},
+        `endDate` = #{endDate},
+        `cost` = #{cost},
+        `description` = #{description},
+        `editTime` = #{editTime},
+        `editBy` = #{editBy}
+        where `id` = #{id}
+    </update>
+
+    <select id="selectActivityDetailById" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`,
+        a.`cost`,
+        a.`description`,
+        a.`createTime`,
+        a.`createBy`,
+        a.`editTime`,
+        a.`editBy`
+        from tbl_activity a
+        inner join tbl_user u
+        on a.`owner` = u.`id`
+        where a.`id` = #{id}
+
+
+    </select>
+
+    <select id="selectActivityListByClueId" resultType="Activity">
+
+        select
+        car.`id` as `id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id` = a.`owner`
+        inner join tbl_clue_activity_relation car
+        on car.`activityId` = a.`id`
+        where car.`clueId` = #{clueId}
+
+    </select>
+
+    <select id="selectNotBindActivityListByClueId" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id`=a.`owner`
+        where a.`id` not in
+        (
+        select
+        `activityId`
+        from tbl_clue_activity_relation
+        where `clueId`=#{clueId}
+        )
+
+    </select>
+
+    <select id="selectNotBindActivityListByName" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id`=a.`owner`
+        where a.`id` not in
+        (
+        select
+        `activityId`
+        from tbl_clue_activity_relation
+        where `clueId`=#{clueId}
+        ) and a.`name` like '%' #{name} '%'
+
+    </select>
+
+    <select id="getActivityByName" resultType="Activity">
+
+        select
+        a.`id`,
+        u.`name` as `owner`,
+        a.`name`,
+        a.`startDate`,
+        a.`endDate`
+        from tbl_activity a
+        inner join tbl_user u
+        on u.`id`=a.`owner`
+        where a.`name` like '%' #{activityName} '%'
+
+    </select>
+
+</mapper>
